@@ -985,11 +985,16 @@ async function _initTournoiInner(){
 
     // Si pas de cache valide, appel API
     if(!donneFichiers){
-      const res=await fetch(`https://api.github.com/repos/${user}/${repo}/contents/`,
-        {headers:{Accept:'application/vnd.github.v3+json'}});
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),8000);
+      let res;
+      try{
+        res=await fetch(`https://api.github.com/repos/${user}/${repo}/contents/`,
+          {headers:{Accept:'application/vnd.github.v3+json'}, signal:controller.signal});
+      }finally{ clearTimeout(timer); }
       if(!res.ok){
         if(res.status===403) throw new Error('Limite API atteinte');
-        throw new Error();
+        throw new Error('Erreur HTTP '+res.status);
       }
       const files=await res.json();
       donneFichiers=files
