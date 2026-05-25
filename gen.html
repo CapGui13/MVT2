@@ -587,6 +587,8 @@ async function generate() {
     uploadBtn.disabled = false;
     if (result.ok) {
       showStatus('ok', `✓  ${fname} téléchargé & publié sur ${GH_OWNER}/${GH_REPO}`);
+      // Invalider le cache de la liste dans l'index
+      try { localStorage.removeItem('bridge_tournoi_list'); } catch(e) {}
     } else {
       showStatus('err', `✓  Téléchargé, mais upload échoué : ${result.msg}`);
     }
