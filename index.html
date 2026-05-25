@@ -117,7 +117,13 @@
   </div>
   <p class="section-sub" id="tournoi-sub">Chargement...</p>
   <div class="options-list" id="tournoi-list"></div>
-  <button class="btn-go" style="margin-top:.5rem;background:var(--bg3);color:var(--text2);font-size:13px" onclick="try{localStorage.removeItem('bridge_tournoi_list');}catch(e){}initTournoi()">↺ Rafraîchir la liste</button>
+  <button class="btn-go" style="margin-top:.5rem;background:var(--bg3);color:var(--text2);font-size:13px" onclick="
+    try{localStorage.removeItem('bridge_tournoi_list');}catch(e){}
+    document.getElementById('tournoi-list').innerHTML='';
+    document.getElementById('tournoi-sub').textContent='Chargement...';
+    _initRunning=false;
+    initTournoi();
+  ">↺ Rafraîchir la liste</button>
   <button class="btn-go" style="margin-top:.5rem;background:var(--bg3);color:var(--text2);font-size:14px" onclick="const b=document.getElementById('btn-charger-donnes');if(b)b.style.display='';goTo('s-paires')">Continuer sans donnes →</button>
 </div>
 
