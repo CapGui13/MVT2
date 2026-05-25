@@ -169,8 +169,6 @@
     <input type="number" id="f-paires" min="6" max="36" value="" step="1" oninput="updateOptions()" onfocus="this.select()"/>
     <p class="err" id="e-paires">Entre 6 et 36 paires</p>
   </div>
-  <p class="section-title">Mouvements possibles</p>
-  <p class="section-sub" id="options-sub"></p>
   <div class="options-list" id="options-list"></div>
 </div>
 
@@ -737,8 +735,7 @@ function updateOptions(){
   const p=parseInt(document.getElementById('f-paires').value)||0;
   const el=document.getElementById('options-list');
   const errEl=document.getElementById('e-paires');
-  const sub=document.getElementById('options-sub');
-  if(p<6||p>36){errEl.style.display='block';el.innerHTML='';sub.textContent='';return;}
+  if(p<6||p>36){errEl.style.display='block';el.innerHTML='';return;}
   errEl.style.display='none';
 
   const mitchellGroups=getGrouped(p,DB);
@@ -746,8 +743,7 @@ function updateOptions(){
   const allGroups=[...mitchellGroups,...howellGroups];
 
   el.innerHTML='';
-  if(!allGroups.length){el.innerHTML='<p class="no-options">Aucun mouvement disponible</p>';sub.textContent='';return;}
-  sub.textContent=allGroups.length===1?'Un seul mouvement possible':'Choisissez un mouvement';
+  if(!allGroups.length){el.innerHTML='<p class="no-options">Aucun mouvement disponible</p>';return;}
 
   if(mitchellGroups.length){
     const sep=document.createElement('p');sep.className='section-sep';sep.textContent='Mitchell';el.appendChild(sep);
