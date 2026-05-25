@@ -113,7 +113,7 @@
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem">
     <p class="section-title" style="margin-bottom:0">Choisir un tournoi</p>
-    <button onclick="window.location.href='gen.html'" style="font-size:12px;padding:5px 11px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);color:var(--green);font-family:inherit;white-space:nowrap;line-height:1;display:inline-flex;align-items:center;cursor:pointer">🗂 Générateur</button>
+    <button onclick="goTo('s-gen')" style="font-size:12px;padding:5px 11px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);color:var(--green);font-family:inherit;white-space:nowrap;line-height:1;display:inline-flex;align-items:center;cursor:pointer">🗂 Générateur</button>
   </div>
   <p class="section-sub" id="tournoi-sub">Chargement...</p>
   <div class="options-list" id="tournoi-list"></div>
@@ -235,6 +235,123 @@
     <button type="button" class="nav-btn fwd" id="btn-next">Suivant →</button>
   </div>
   <button class="reset" onclick="reset()">← Quitter le tournoi</button>
+</div>
+
+<!-- ÉCRAN GÉNÉRATEUR -->
+<div class="screen" id="s-gen">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
+    <p class="section-title" style="margin-bottom:0">Générateur de donnes</p>
+    <button class="back-btn" onclick="goBack()">← Retour</button>
+  </div>
+
+  <!-- Colonnes -->
+  <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:.75rem">
+    <div style="padding:.6rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+      <span style="width:18px;height:18px;border-radius:50%;background:#1d4ed8;color:#bfdbfe;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</span>
+      <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text2)">Colonnes</span>
+    </div>
+    <div style="padding:1rem;display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)">N° donne</span>
+        <select id="gen-col-num" onchange="genUpdatePreview()">
+          <option value="0">Col. A</option><option value="1">Col. B</option>
+          <option value="2">Col. C</option><option value="3">Col. D</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)">NS</span>
+        <select id="gen-col-ns" onchange="genUpdatePreview()">
+          <option value="0">A</option><option value="1" selected>B</option>
+          <option value="2">C</option><option value="3">D</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)">EO</span>
+        <select id="gen-col-eo" onchange="genUpdatePreview()">
+          <option value="0">A</option><option value="1">B</option>
+          <option value="2" selected>C</option><option value="3">D</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)">Note</span>
+        <select id="gen-col-note" onchange="genUpdatePreview()">
+          <option value="0">A</option><option value="1">B</option>
+          <option value="2">C</option><option value="3" selected>D</option>
+          <option value="-1">— aucune</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Données Excel -->
+  <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:.75rem">
+    <div style="padding:.6rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+      <span style="width:18px;height:18px;border-radius:50%;background:#1d4ed8;color:#bfdbfe;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</span>
+      <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text2)">Données Excel</span>
+    </div>
+    <div style="padding:1rem">
+      <p style="font-size:12px;color:var(--text2);margin-bottom:8px">Copie-colle directement depuis Excel. Les lignes vides et en-têtes sont ignorés.</p>
+      <textarea id="gen-input" rows="6" placeholder="Colle ici tes données Excel…"
+        style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:12px;font-family:monospace;resize:vertical;line-height:1.7"
+        oninput="genUpdatePreview()"></textarea>
+    </div>
+  </div>
+
+  <!-- Token GitHub -->
+  <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:.75rem">
+    <div style="padding:.6rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+      <span style="width:18px;height:18px;border-radius:50%;background:#1d4ed8;color:#bfdbfe;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</span>
+      <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text2)">GitHub — upload automatique</span>
+    </div>
+    <div style="padding:1rem">
+      <p style="font-size:12px;color:var(--text2);margin-bottom:8px">Token pour publier directement sur <strong id="gen-repo-label">…</strong>. Stocké uniquement dans ce navigateur.</p>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="gen-token-input" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+          style="flex:1;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;font-family:monospace"
+          oninput="genOnTokenInput()"
+          onfocus="if(/^•+/.test(this.value)){this.value='';}"/>
+        <button class="btn-go" style="background:var(--bg3);color:var(--text2);font-size:13px;padding:8px 14px;margin:0;width:auto" onclick="genClearToken()">Supprimer</button>
+      </div>
+      <div style="margin-top:8px" id="gen-token-status"></div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:.75rem">
+    <button class="btn-go" style="margin:0;width:auto;padding:11px 20px" id="gen-btn-generate" onclick="genGenerate()">⬇ Générer et télécharger</button>
+    <button class="btn-go" style="margin:0;width:auto;padding:11px 16px;background:var(--bg3);color:var(--text2);font-size:13px" onclick="genReset()">Effacer</button>
+    <span id="gen-status" style="display:none;font-size:12px;font-weight:500;padding:7px 12px;border-radius:10px"></span>
+    <span id="gen-date-chip" style="display:none;font-size:12px;font-weight:500;padding:7px 12px;border-radius:10px;background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.3)"></span>
+  </div>
+
+  <!-- Aperçu -->
+  <div id="gen-results" style="display:none;flex-direction:column;gap:.75rem">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+      <div style="background:rgba(96,165,250,.06);border:1.5px solid rgba(96,165,250,.4);border-radius:12px;padding:1rem">
+        <div style="font-size:28px;font-weight:700;color:var(--blue);letter-spacing:-.03em;line-height:1;margin-bottom:4px" id="gen-s-total">0</div>
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)">Donnes</div>
+      </div>
+      <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:1rem">
+        <div style="font-size:28px;font-weight:700;color:var(--text);letter-spacing:-.03em;line-height:1;margin-bottom:4px" id="gen-s-scores">0</div>
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)">Avec score</div>
+      </div>
+      <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:1rem">
+        <div style="font-size:28px;font-weight:700;color:var(--text);letter-spacing:-.03em;line-height:1;margin-bottom:4px" id="gen-s-notes">0</div>
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)">Avec note</div>
+      </div>
+    </div>
+    <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;overflow:hidden">
+      <div style="background:var(--bg3);border-bottom:1px solid var(--border);padding:8px 12px;display:flex;align-items:center;gap:8px">
+        <div style="display:flex;gap:5px">
+          <div style="width:10px;height:10px;border-radius:50%;background:#fe5f57"></div>
+          <div style="width:10px;height:10px;border-radius:50%;background:#febc2e"></div>
+          <div style="width:10px;height:10px;border-radius:50%;background:#28c840"></div>
+        </div>
+        <span id="gen-preview-fname" style="font-size:11px;font-family:monospace;color:var(--text2);margin-left:4px">donnes.json</span>
+      </div>
+      <div id="gen-preview" style="padding:1rem;font-size:11px;font-family:monospace;color:#7ec8a0;max-height:200px;overflow-y:auto;white-space:pre;line-height:1.8;background:var(--bg)"></div>
+    </div>
+  </div>
 </div>
 
 </div>
@@ -529,7 +646,7 @@ function showScreen(to, from){
 }
 
 function goTo(to){
-  const screens=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu'];
+  const screens=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen'];
   const current=screens.find(s=>document.getElementById(s).classList.contains('active'));
   if(current){ navHistory.push(current); document.getElementById(current).classList.remove('active'); }
   document.getElementById(to).classList.add('active');
@@ -537,7 +654,7 @@ function goTo(to){
 
 function goBack(){
   if(!navHistory.length) return;
-  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu'].find(s=>document.getElementById(s).classList.contains('active'));
+  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen'].find(s=>document.getElementById(s).classList.contains('active'));
   if(current) document.getElementById(current).classList.remove('active');
   const prev=navHistory.pop();
   document.getElementById(prev).classList.add('active');
@@ -835,7 +952,7 @@ function reset(){
   if(btn) btn.style.display='';
   document.getElementById('tournoi-sub').textContent='Chargement...';
   document.getElementById('tournoi-list').innerHTML='';
-  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu'].find(s=>document.getElementById(s).classList.contains('active'));
+  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen'].find(s=>document.getElementById(s).classList.contains('active'));
   if(current) document.getElementById(current).classList.remove('active');
   document.getElementById('s-tournoi').classList.add('active');
   initTournoi();
@@ -1085,6 +1202,195 @@ function addNavListener(id, delta){
 }
 addNavListener('btn-prev', -1);
 addNavListener('btn-next', 1);
+
+// ============================================================
+// GÉNÉRATEUR
+// ============================================================
+(function(){
+  const GH_OWNER_GEN = window.location.hostname.endsWith('github.io')
+    ? window.location.hostname.split('.')[0] : 'capgui13';
+  const GH_REPO_GEN = window.location.hostname.endsWith('github.io')
+    ? (window.location.pathname.split('/').filter(Boolean)[0]||'MVT') : 'MVT';
+  const GH_BRANCH_GEN = 'main';
+
+  // Afficher le repo cible
+  const rl = document.getElementById('gen-repo-label');
+  if(rl) rl.textContent = GH_OWNER_GEN+'/'+GH_REPO_GEN;
+
+  // Token
+  function getToken(){ return localStorage.getItem('gh_token')||''; }
+  function saveToken(t){ localStorage.setItem('gh_token',t.trim()); }
+
+  window.genRenderTokenStatus = function(){
+    const t=getToken();
+    const inp=document.getElementById('gen-token-input');
+    const st=document.getElementById('gen-token-status');
+    if(!inp||!st) return;
+    if(t){
+      inp.value='•'.repeat(12)+t.slice(-4);
+      st.innerHTML='<span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:7px 12px;border-radius:10px;background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.3)">✓ Token enregistré</span>';
+    } else {
+      inp.value='';
+      st.innerHTML='';
+    }
+  };
+
+  window.genOnTokenInput = function(){
+    const v=document.getElementById('gen-token-input').value.trim();
+    if(!v||/^•+/.test(v)) return;
+    saveToken(v);
+    genRenderTokenStatus();
+  };
+
+  window.genClearToken = function(){
+    localStorage.removeItem('gh_token');
+    document.getElementById('gen-token-input').value='';
+    document.getElementById('gen-token-status').innerHTML='';
+  };
+
+  // Date
+  const JOUR_MAP={'di':0,'dim':0,'dimanche':0,'lu':1,'lun':1,'lundi':1,'ma':2,'mar':2,'mardi':2,'me':3,'mer':3,'mercredi':3,'je':4,'jeu':4,'jeudi':4,'ve':5,'ven':5,'vendredi':5,'sa':6,'sam':6,'samedi':6};
+  function detectDate(raw){
+    const tokens=raw.trim().split(/[\s\t\n]+/).filter(Boolean);
+    if(tokens.length<2) return null;
+    const jour=parseInt(tokens[1]);
+    if(isNaN(jour)||jour<1||jour>31) return null;
+    const key=(tokens[0]||'').toLowerCase().replace(/[^a-z]/g,'');
+    if(!(key in JOUR_MAP)) return null;
+    const jourSem=JOUR_MAP[key];
+    const today=new Date();
+    for(let offset=0;offset<=60;offset++){
+      const d=new Date(today.getFullYear(),today.getMonth(),today.getDate()+offset);
+      if(d.getDate()===jour) return d;
+    }
+    return null;
+  }
+  function dateToISO(d){
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  function getFname(raw){ const d=detectDate(raw); return d?'donnes'+dateToISO(d)+'.json':'donnes.json'; }
+
+  // Parse
+  function parse(){
+    const raw=document.getElementById('gen-input').value;
+    const cNum=parseInt(document.getElementById('gen-col-num').value);
+    const cNs=parseInt(document.getElementById('gen-col-ns').value);
+    const cEo=parseInt(document.getElementById('gen-col-eo').value);
+    const cNote=parseInt(document.getElementById('gen-col-note').value);
+    const lines=raw.split('\n');
+    const result={};
+    let count=0,withScores=0,withNotes=0;
+    lines.forEach(line=>{
+      const cols=line.replace(/\u00a0/g,' ').split('\t');
+      if(cols.length<=cNum) return;
+      const numStr=(cols[cNum]||'').trim();
+      const num=parseInt(numStr);
+      if(!numStr||isNaN(num)) return;
+      const ns=(cols.length>cNs?cols[cNs]||'':'').trim();
+      const eo=(cols.length>cEo?cols[cEo]||'':'').trim();
+      const note=cNote>=0&&cols.length>cNote?(cols[cNote]||'').trim():'';
+      result[num]={ns,eo,note};
+      count++;
+      if(ns||eo) withScores++;
+      if(note) withNotes++;
+    });
+    const sorted={};
+    Object.keys(result).map(Number).sort((a,b)=>a-b).forEach(k=>{sorted[k]=result[k];});
+    return {sorted,count,withScores,withNotes};
+  }
+
+  window.genUpdatePreview = function(){
+    const raw=document.getElementById('gen-input').value.trim();
+    const rs=document.getElementById('gen-results');
+    if(!raw){rs.style.display='none';return;}
+    const {sorted,count,withScores,withNotes}=parse();
+    if(count===0){rs.style.display='none';return;}
+    const fname=getFname(raw);
+    document.getElementById('gen-preview').textContent=JSON.stringify(sorted,null,2);
+    document.getElementById('gen-preview-fname').textContent=fname;
+    document.getElementById('gen-s-total').textContent=count;
+    document.getElementById('gen-s-scores').textContent=withScores;
+    document.getElementById('gen-s-notes').textContent=withNotes;
+    const d=detectDate(raw);
+    const dc=document.getElementById('gen-date-chip');
+    if(d){
+      const label=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+      dc.textContent='📅 '+label.charAt(0).toUpperCase()+label.slice(1);
+      dc.style.display='inline-flex';
+    } else { dc.style.display='none'; }
+    rs.style.display='flex';
+  };
+
+  function showGenStatus(type,msg){
+    const el=document.getElementById('gen-status');
+    el.textContent=msg;
+    el.style.display='inline-flex';
+    if(type==='ok'){ el.style.background='rgba(74,222,128,.1)'; el.style.color='var(--green)'; el.style.border='1px solid rgba(74,222,128,.3)'; }
+    else { el.style.background='rgba(248,113,113,.1)'; el.style.color='var(--err)'; el.style.border='1px solid rgba(248,113,113,.3)'; }
+  }
+
+  async function uploadToGitHub(fname,jsonStr){
+    const token=getToken();
+    if(!token) return {ok:false,msg:'Token GitHub manquant'};
+    const apiUrl=`https://api.github.com/repos/${GH_OWNER_GEN}/${GH_REPO_GEN}/contents/${fname}`;
+    let sha;
+    try{
+      const check=await fetch(apiUrl,{headers:{Authorization:`token ${token}`,Accept:'application/vnd.github.v3+json'}});
+      if(check.ok){const data=await check.json();sha=data.sha;}
+    }catch(e){}
+    const body={message:`Ajout donnes ${fname}`,content:btoa(unescape(encodeURIComponent(jsonStr))),branch:GH_BRANCH_GEN};
+    if(sha) body.sha=sha;
+    const res=await fetch(apiUrl,{method:'PUT',headers:{Authorization:`token ${token}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(res.ok) return {ok:true};
+    const err=await res.json().catch(()=>({}));
+    return {ok:false,msg:err.message||`Erreur ${res.status}`};
+  }
+
+  window.genGenerate = async function(){
+    const raw=document.getElementById('gen-input').value;
+    if(!raw.trim()){showGenStatus('err','✕  Colle des données d\'abord');return;}
+    const {sorted,count}=parse();
+    if(count===0){showGenStatus('err','✕  Aucune donne reconnue');return;}
+    const fname=getFname(raw.trim());
+    const json=JSON.stringify(sorted,null,2);
+    const blob=new Blob([json],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download=fname;a.click();
+    URL.revokeObjectURL(url);
+    const token=getToken();
+    if(token){
+      showGenStatus('ok','⏳  Upload vers GitHub…');
+      const btn=document.getElementById('gen-btn-generate');
+      btn.disabled=true;
+      const result=await uploadToGitHub(fname,json);
+      btn.disabled=false;
+      if(result.ok){
+        showGenStatus('ok',`✓  ${fname} publié sur ${GH_OWNER_GEN}/${GH_REPO_GEN}`);
+        try{localStorage.removeItem('bridge_tournoi_list');}catch(e){}
+      } else {
+        showGenStatus('err',`✓  Téléchargé, upload échoué : ${result.msg}`);
+      }
+    } else {
+      showGenStatus('ok',`✓  ${fname} téléchargé`);
+    }
+  };
+
+  window.genReset = function(){
+    document.getElementById('gen-input').value='';
+    document.getElementById('gen-status').style.display='none';
+    document.getElementById('gen-results').style.display='none';
+    document.getElementById('gen-date-chip').style.display='none';
+  };
+
+  // Init token au chargement de l'écran (appelé depuis goTo)
+  const _origGoTo = window.goTo || null;
+  const _goToOrig = goTo;
+  goTo = function(id){
+    _goToOrig(id);
+    if(id==='s-gen') genRenderTokenStatus();
+  };
+})();
 </script>
 </body>
 </html>
