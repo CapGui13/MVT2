@@ -306,7 +306,7 @@
       <span class="block-title">GitHub — upload automatique</span>
     </div>
     <div class="block-body">
-      <p class="hint">Optionnel. Si renseigné, le fichier JSON sera aussi publié directement sur <strong>capgui13/MVT</strong> sans passer par l'explorateur de fichiers.<br>Créez un token sur <a href="https://github.com/settings/tokens/new?scopes=repo&description=MVT+generateur" target="_blank" style="color:var(--blue)">github.com/settings/tokens</a> avec la permission <code style="background:var(--bg);padding:1px 5px;border-radius:4px;font-family:monospace;font-size:11px">repo</code> (ou <code style="background:var(--bg);padding:1px 5px;border-radius:4px;font-family:monospace;font-size:11px">contents: write</code>). Il est stocké uniquement dans votre navigateur.</p>
+      <p class="hint">Optionnel. Si renseigné, le fichier JSON sera aussi publié directement sur <strong id="gh-repo-label">…</strong> sans passer par l'explorateur de fichiers.<br>Créez un token sur <a href="https://github.com/settings/tokens/new?scopes=repo&description=MVT+generateur" target="_blank" style="color:var(--blue)">github.com/settings/tokens</a> avec la permission <code style="background:var(--bg);padding:1px 5px;border-radius:4px;font-family:monospace;font-size:11px">repo</code> (ou <code style="background:var(--bg);padding:1px 5px;border-radius:4px;font-family:monospace;font-size:11px">contents: write</code>). Il est stocké uniquement dans votre navigateur.</p>
       <div style="display:flex;gap:8px;align-items:center">
         <input id="gh-token-input" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
           style="flex:1;padding:8px 12px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;font-family:var(--mono);transition:border-color .15s"
@@ -586,7 +586,7 @@ async function generate() {
     const result = await uploadToGitHub(fname, json);
     uploadBtn.disabled = false;
     if (result.ok) {
-      showStatus('ok', `✓  ${fname} téléchargé & publié sur GitHub`);
+      showStatus('ok', `✓  ${fname} téléchargé & publié sur ${GH_OWNER}/${GH_REPO}`);
     } else {
       showStatus('err', `✓  Téléchargé, mais upload échoué : ${result.msg}`);
     }
@@ -605,6 +605,10 @@ function reset() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Afficher le repo cible dans le hint
+  const label = document.getElementById('gh-repo-label');
+  if(label) label.textContent = GH_OWNER + '/' + GH_REPO;
+
   renderTokenStatus();
   document.getElementById('input').addEventListener('input', updatePreview);
   ['col-num','col-ns','col-eo','col-note'].forEach(id => {
