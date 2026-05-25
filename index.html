@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Mvt App"/>
+<meta name="theme-color" content="#111111"/>
+<title>Mvt App</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  :root{--bg:#111;--bg2:#1a1a1a;--bg3:#222;--text:#f5f5f5;--text2:#999;--border:#333;--blue:#60a5fa;--green:#4ade80;--chip-bg:#1d4ed8;--chip-text:#bfdbfe;}
+  @media(prefers-color-scheme:light){:root{--bg:#f8f8f7;--bg2:#fff;--bg3:#efefed;--text:#111;--text2:#666;--border:#ddd;--chip-bg:#dbeafe;--chip-text:#1e3a8a;}}
+  body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;padding-bottom:env(safe-area-inset-bottom);}
+  .wrap{max-width:480px;margin:0 auto;padding:1.5rem 1rem}
+  .screen{display:none}
+  .screen.active{display:block}
+  #s-jeu{display:none;flex-direction:column}
+  #s-jeu.active{display:flex;position:fixed;top:0;left:0;right:0;bottom:0;padding:1.5rem 1rem;overflow:hidden;overscroll-behavior:none;background:var(--bg);}
+  .header{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem}
+  .header-icon{width:40px;height:40px;border-radius:10px;background:#1d4ed8;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+  .header h1{font-size:20px;font-weight:600;color:var(--text)}
+  .header p{font-size:13px;color:var(--text2)}
+  .field{margin-bottom:1.1rem}
+  .field label{display:block;font-size:13px;color:var(--text2);margin-bottom:6px;font-weight:500}
+  .seg{display:flex;gap:8px}
+  .seg-btn{flex:1;padding:11px 8px;border-radius:10px;font-size:14px;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--text2);transition:all 0.15s;font-family:inherit;}
+  .seg-btn:active{transform:scale(0.97)}
+  input[type=number]{width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg2);color:var(--text);font-size:16px;font-family:inherit;-webkit-appearance:none;}
+  input[type=number]:focus{outline:none;border-color:var(--blue)}
+  .err{font-size:12px;color:#f87171;margin-top:5px;display:none}
+  .btn-go{width:100%;margin-top:1.4rem;padding:14px;border:none;border-radius:12px;background:var(--text);color:var(--bg);font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity 0.15s;}
+  .btn-go:active{opacity:0.8}
+  .section-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:.3rem}
+  .section-sub{font-size:12px;color:var(--text2);margin-bottom:.8rem}
+  .back-btn{display:inline-flex;align-items:center;gap:4px;border:none;background:none;color:var(--text2);font-size:13px;cursor:pointer;font-family:inherit;margin-bottom:1.1rem;padding:0;}
+
+  /* Options */
+  .options-list{display:flex;flex-direction:column;gap:8px}
+  .option-btn{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;font-family:inherit;cursor:pointer;text-align:left;transition:all 0.15s;display:flex;justify-content:space-between;align-items:center;min-height:64px}
+  .option-btn:active{transform:scale(0.98);opacity:0.8}
+  .option-main{font-weight:600;font-size:14px}
+  .option-detail{font-size:12px;color:var(--text2);margin-top:2px}
+  .option-badge{font-size:11px;padding:3px 8px;border-radius:999px;font-weight:600;flex-shrink:0;margin-left:8px}
+  .badge-simple{background:#dbeafe;color:#1e3a8a}
+  .badge-saut-opt{background:#fef3c7;color:#92400e}
+  .badge-guerid-opt{background:#d1fae5;color:#065f46}
+  .badge-howell{background:#f3e8ff;color:#6b21a8}
+  .section-sep{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;padding:4px 2px 2px}
+  .no-options{font-size:13px;color:var(--text2);padding:12px;background:var(--bg3);border-radius:10px;text-align:center}
+
+  /* Sélection tours */
+  .tours-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+  .tour-btn{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;font-family:inherit;cursor:pointer;text-align:left;transition:all 0.15s;display:flex;justify-content:space-between;align-items:center;min-height:60px}
+  .tour-btn:active{transform:scale(0.98);opacity:0.8}
+  .tour-main{font-weight:600}
+  .tour-detail{font-size:12px;color:var(--text2)}
+
+  /* Jeu */
+  .prog{height:3px;background:var(--border);border-radius:2px;margin-bottom:.75rem;overflow:hidden}
+  .prog-fill{height:100%;background:var(--blue);border-radius:2px;transition:width 0.4s}
+  .big-card{background:var(--bg2);border-radius:14px;padding:.75rem 1rem;text-align:center;margin-bottom:.6rem;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:12px;}
+  .big-label{font-size:11px;color:var(--text2);letter-spacing:0.08em;text-transform:uppercase}
+  .big-num{font-size:42px;font-weight:700;color:var(--text);line-height:1}
+  .big-sub{font-size:13px;color:var(--text2)}
+  .badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;margin-top:4px}
+  .badge-saut{background:#fef3c7;color:#92400e}
+  .badge-guerid{background:#d1fae5;color:#065f46}
+  .meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:.6rem}
+  .meta-cell{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center}
+  .meta-label{font-size:10px;color:var(--text2);margin-bottom:3px}
+  .meta-val{font-size:14px;font-weight:600;color:var(--text)}
+  .boards-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:.85rem;margin-bottom:.75rem;min-height:200px;flex:1;overflow-y:auto}
+  .boards-label{font-size:10px;color:var(--text2);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
+  .chips{display:flex;flex-direction:column;gap:6px}
+  .chip{background:var(--chip-bg);color:var(--chip-text);border-radius:10px;padding:9px 14px;font-size:17px;font-weight:700;text-align:center}
+  .chip-rich{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:8px 12px;display:flex;gap:10px;align-items:center}
+  .chip-num{font-size:18px;font-weight:700;color:var(--chip-text);background:var(--chip-bg);border-radius:8px;padding:4px 10px;flex-shrink:0;min-width:44px;text-align:center;line-height:1.4}
+  .chip-info{flex:1;display:flex;flex-direction:column;gap:2px}
+  .chip-scores{display:flex;gap:12px}
+  .chip-score-item{font-size:13px;font-weight:600;color:var(--text)}
+  .chip-score-label{font-size:10px;color:var(--text2);margin-right:3px}
+  .chip-note{font-size:12px;color:var(--text2);font-style:italic;visibility:hidden}
+  /* Écran donnes */
+  .donnes-textarea{width:100%;height:140px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg2);color:var(--text);font-size:13px;font-family:inherit;resize:none;line-height:1.4}
+  .donnes-textarea:focus{outline:none;border-color:var(--blue)}
+  .donnes-status{font-size:12px;margin-top:6px;padding:6px 10px;border-radius:8px;display:none}
+  .donnes-status.ok{display:block;background:#d1fae5;color:#065f46}
+  .donnes-status.err{display:block;background:#fee2e2;color:#991b1b}
+  .nav{display:flex;gap:8px}
+  .nav-btn{flex:1;padding:13px;border:1.5px solid var(--border);border-radius:12px;background:transparent;color:var(--text);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:all 0.15s;}
+  .nav-btn:active{transform:scale(0.97)}
+  .nav-btn:disabled{opacity:0.2;cursor:default}
+  .nav-btn.fwd{background:var(--text);color:var(--bg);border-color:transparent}
+  .reset{display:block;width:100%;margin-top:.6rem;padding:6px;border:none;background:none;color:var(--text2);font-size:13px;cursor:pointer;text-decoration:underline;font-family:inherit;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ÉCRAN 1 : CHOIX DU TOURNOI -->
+<div class="screen active" id="s-tournoi">
+  <div id="s-tournoi-resume" style="display:none">
+    <p class="section-title">Tournoi en cours</p>
+    <div id="resume-card" style="background:var(--bg2);border:1.5px solid var(--blue);border-radius:12px;padding:14px;margin-bottom:1rem;cursor:pointer" onclick="resumeTournoi()">
+      <p id="resume-desc" style="font-size:14px;font-weight:600;color:var(--text)"></p>
+      <p id="resume-sub" style="font-size:12px;color:var(--text2);margin-top:4px"></p>
+    </div>
+    <button class="btn-go" onclick="resumeTournoi()">↩ Reprendre</button>
+    <button class="btn-go" style="margin-top:.6rem;background:var(--bg3);color:var(--text2);font-size:14px" onclick="clearResume()">Ignorer et recommencer</button>
+    <div style="margin:1.5rem 0;border-top:1px solid var(--border)"></div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem">
+    <p class="section-title" style="margin-bottom:0">Choisir un tournoi</p>
+    <a href="https://capgui13.github.io/MVT/gen" style="font-size:12px;padding:5px 11px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);color:var(--green);text-decoration:none;font-family:inherit;white-space:nowrap;line-height:1;display:inline-flex;align-items:center">🗂 Générateur</a>
+  </div>
+  <p class="section-sub" id="tournoi-sub">Chargement...</p>
+  <div class="options-list" id="tournoi-list"></div>
+  <button class="btn-go" style="margin-top:1rem;background:var(--bg3);color:var(--text2);font-size:14px" onclick="const b=document.getElementById('btn-charger-donnes');if(b)b.style.display='';goTo('s-paires')">Continuer sans donnes →</button>
+</div>
+
+<div class="screen" id="s-paires">
+  <button class="back-btn" onclick="goBack()">← Retour</button>
+  <p class="section-title" style="margin-bottom:.3rem">Nombre de paires</p>
+  <div class="field">
+    <input type="number" id="f-paires" min="6" max="36" value="" step="1" oninput="updateOptions()" onfocus="this.select()"/>
+    <p class="err" id="e-paires">Entre 6 et 36 paires</p>
+  </div>
+  <p class="section-title">Mouvements possibles</p>
+  <p class="section-sub" id="options-sub"></p>
+  <div class="options-list" id="options-list"></div>
+</div>
+
+<!-- ÉCRAN 2 : CHOIX DU NOMBRE DE TOURS -->
+<div class="screen" id="s-tours">
+  <button class="back-btn" onclick="goBack()">← Retour</button>
+  <p class="section-title" id="tours-title">Choisissez le nombre de tours</p>
+  <p class="section-sub" id="tours-sub"></p>
+  <div class="tours-grid" id="tours-list"></div>
+</div>
+
+<!-- ÉCRAN 3 : CONFIG -->
+<div class="screen" id="s-config">
+  <button class="back-btn" onclick="goBack()">← Retour</button>
+  <!-- Howell : numéro de paire -->
+  <div class="field" id="field-paire-howell" style="display:none">
+    <label>Votre numéro de paire</label>
+    <input type="number" id="f-paire-howell" min="1" value="1" step="1" onfocus="this.select()"/>
+    <p class="err" id="e-paire-howell">Numéro invalide</p>
+  </div>
+  <!-- Mitchell : sens -->
+  <div class="field" id="field-sens">
+    <label>Votre sens</label>
+    <div class="seg">
+      <button class="seg-btn" id="btn-ns" onclick="setSens('NS')">Nord / Sud</button>
+      <button class="seg-btn" id="btn-eo" onclick="setSens('EO')">Est / Ouest</button>
+    </div>
+  </div>
+  <!-- Mitchell : table de départ -->
+  <div class="field" id="field-table">
+    <label>Votre table de départ</label>
+    <input type="number" id="f-table" min="1" value="1" step="1" onfocus="this.select()"/>
+    <p class="err" id="e-table">Entre 1 et le nombre de tables</p>
+  </div>
+  <!-- Mitchell impair : ligne du relais -->
+  <div class="field" id="field-relais" style="display:none">
+    <label id="label-relais">Ligne du relais (table N)</label>
+    <div class="seg">
+      <button class="seg-btn" id="btn-relais-ns" onclick="setRelais('NS')">Nord / Sud</button>
+      <button class="seg-btn" id="btn-relais-eo" onclick="setRelais('EO')">Est / Ouest</button>
+    </div>
+    <p style="font-size:12px;color:var(--text2);margin-top:6px">La ligne qui a une paire de plus (celle qui sera en relais à tour de rôle)</p>
+  </div>
+  <!-- Champs cachés conservés pour la logique existante -->
+  <input type="number" id="f-tables" style="display:none" value="8"/>
+  <input type="number" id="f-tours" style="display:none" value="7"/>
+  <input type="number" id="f-dpt" style="display:none" value="4"/>
+  <!-- Champs cachés : erreurs conservées pour compatibilité -->
+  <p class="err" id="e-tables" style="display:none"></p>
+  <p class="err" id="e-tours" style="display:none"></p>
+  <p class="err" id="e-dpt" style="display:none"></p>
+  <!-- Mode caché (déjà fixé par le choix précédent) -->
+  <div id="field-mode" style="display:none">
+    <button id="btn-mitchell"></button>
+    <button id="btn-guerid"></button>
+  </div>
+  <button class="btn-go" onclick="start()">Commencer le tournoi</button>
+  <button class="btn-go" id="btn-charger-donnes" style="margin-top:.6rem;background:var(--bg3);color:var(--text2);font-size:14px" onclick="goTo('s-donnes')">📋 Charger les infos des donnes (optionnel)</button>
+</div>
+
+<!-- ÉCRAN DONNES -->
+<div class="screen" id="s-donnes">
+  <button class="back-btn" onclick="goBack()">← Retour</button>
+  <p class="section-title">Infos des donnes</p>
+  <p class="section-sub">Copiez-collez depuis Excel (colonnes : N° · NS · EO · Note)</p>
+  <div class="field">
+    <textarea class="donnes-textarea" id="donnes-input" placeholder="Collez ici le contenu copié depuis Excel..." oninput="parseDonnes()"></textarea>
+    <div class="donnes-status" id="donnes-status"></div>
+  </div>
+  <button class="btn-go" onclick="goBack()">← Retour à la config</button>
+</div>
+
+<!-- ÉCRAN 4 : JEU -->
+<div class="screen" id="s-jeu">
+  <div class="prog"><div class="prog-fill" id="prog"></div></div>
+  <div class="big-card">
+    <p class="big-num" id="d-tour">1</p>
+    <div>
+      <p class="big-label">Tour</p>
+      <p class="big-sub" id="d-tour-sub">—</p>
+      <span class="badge badge-saut" id="d-saut" style="visibility:hidden">Tour du saut</span>
+      <span class="badge badge-guerid" id="d-guerid" style="visibility:hidden">Tables miroir</span>
+      <span class="badge" id="d-relais" style="visibility:hidden;background:#f3e8ff;color:#6b21a8">Relais — pas de jeu</span>
+    </div>
+  </div>
+  <div class="meta">
+    <div class="meta-cell"><p class="meta-label">Mouvement</p><p class="meta-val" id="d-mode">—</p></div>
+    <div class="meta-cell"><p class="meta-label" id="d-label-table">Table</p><p class="meta-val" id="d-table">—</p></div>
+    <div class="meta-cell"><p class="meta-label" id="d-label-sens">Sens</p><p class="meta-val" id="d-sens">—</p></div>
+  </div>
+  <div class="boards-card">
+    <p class="boards-label">Donnes à jouer</p>
+    <div class="chips" id="d-donnes"></div>
+  </div>
+  <div class="nav">
+    <button type="button" class="nav-btn" id="btn-prev">← Précédent</button>
+    <button type="button" class="nav-btn fwd" id="btn-next">Suivant →</button>
+  </div>
+  <button class="reset" onclick="reset()">← Quitter le tournoi</button>
+</div>
+
+</div>
+<script>
+let mode='mitchell', sens='NS', relaisLigne='EO', cfg={}, tourActuel=0, sim=[];
+let donnesData={}; // {numDonne: {ns, eo, note}}
+
+// DB Mitchell : [paires, tables, mouvement, positions_jouees, dpt, deficient]
+// donnes en circulation = tables × dpt
+const DB=[
+  [11,6,'guerid',6,4,true],
+  [12,6,'guerid',6,4,false],
+  [13,7,'simple',7,4,false],
+  [14,7,'simple',6,4,false],
+  [15,8,'saut',7,4,false],[15,8,'guerid',8,3,true],
+  [16,8,'saut',6,4,false],[16,8,'saut',7,4,false],[16,8,'guerid',8,3,false],
+  [17,9,'simple',7,4,false],[17,9,'simple',9,3,true],  // 36 ou 27 en circ
+  [18,9,'simple',8,3,false],[18,9,'simple',7,4,false],  // 8x3 avant, 27 ou 36 en circ
+  [19,10,'saut',9,3,false],[19,10,'guerid',10,3,true],
+  [20,10,'saut',8,3,false],[20,10,'saut',9,3,false],[20,10,'guerid',10,3,true],  // guéridon déficient
+  [21,11,'simple',9,3,false],[21,11,'simple',10,3,false],
+  [22,11,'simple',8,3,false],[22,11,'simple',9,3,false],[22,11,'simple',10,3,false],
+  [23,12,'saut',9,3,false],[23,12,'saut',10,3,false],[23,12,'guerid',12,2,true],
+  [24,12,'saut',9,3,false],[24,12,'saut',10,3,false],[24,12,'saut',11,3,false],[24,12,'guerid',12,2,false],
+  [25,13,'simple',8,3,false],[25,13,'simple',9,3,false],   // 39 en circ, recommandé
+  [25,13,'simple',13,2,true],                               // 26 en circ, déficient
+  [26,13,'simple',12,2,false],[26,13,'simple',13,2,false],  // 26 en circ
+  [26,13,'simple',8,3,false],[26,13,'simple',9,3,false],    // 39 en circ
+  [27,14,'saut',13,2,false],[27,14,'guerid',14,2,true],
+  [28,14,'saut',12,2,false],[28,14,'saut',13,2,false],[28,14,'guerid',14,2,false],
+  [29,15,'simple',13,2,false],
+  [30,15,'simple',12,2,false],[30,15,'simple',13,2,false],
+  [31,16,'saut',12,2,false],[31,16,'saut',13,2,false],
+  [32,16,'saut',12,2,false],[32,16,'saut',13,2,false],
+  [33,17,'simple',13,2,false],
+  [34,17,'simple',12,2,false],[34,17,'simple',13,2,false],
+  [35,18,'saut',13,2,false],
+  [36,18,'saut',12,2,false],[36,18,'saut',13,2,false],
+];
+
+// DB Howell : [paires, tables, mouvement, positions_jouees, dpt, donnesCirc, deficient]
+const DB_HOWELL=[
+  [6, 3,'classique',5,5,25,false],
+  [7, 4,'heredia', 7,4,28,false],
+  [8, 4,'heredia', 6,4,32,false],
+  [8, 4,'classique',6,4,32,false],[8,4,'classique',7,4,32,false],
+  [9, 5,'heredia', 9,3,27,false],
+  [10,5,'heredia', 8,3,30,false],
+  [10,5,'classique',8,3,27,false],[10,5,'classique',9,3,27,false],
+  [11,6,'heredia', 9,3,30,false],
+  [12,6,'heredia', 8,3,30,false],
+  [12,6,'classique',8,3,33,false],[12,6,'classique',9,3,33,false],
+];
+
+const MOUV_LABEL={
+  simple:'Mitchell simple',saut:'Mitchell avec saut',guerid:'Guéridon',
+  heredia:'Howell Hérédia',classique:'Howell Classique'
+};
+const MOUV_BADGE={
+  simple:'badge-simple',saut:'badge-saut-opt',guerid:'badge-guerid-opt',
+  heredia:'badge-howell',classique:'badge-howell'
+};
+const MOUV_SHORT={
+  simple:'Simple',saut:'Saut',guerid:'Guéridon',
+  heredia:'Hérédia',classique:'Classique'
+};
+
+const OFF  ={background:'transparent',color:'var(--text2)',border:'1.5px solid var(--border)',fontWeight:'400'};
+const BLUE ={background:'#60a5fa',color:'#000',border:'1.5px solid #60a5fa',fontWeight:'700'};
+const GREEN={background:'#4ade80',color:'#000',border:'1.5px solid #4ade80',fontWeight:'700'};
+
+function applyStyle(el,s){Object.assign(el.style,s);}
+
+// ============================================================
+// HOWELL - Tableaux de mouvement complets
+// Format classique: tables = [[ns,eo,[debut,fin]], ...]  par tour
+// Format hérédia:  paires = {p: [{t,o,e:[debut,fin]} ou {relais:true}], ...}
+// ============================================================
+const HOWELL_MOVES = {
+  // --- CLASSIQUE 6 paires, 5 donnes/tour, 5 tours ---
+  'classique_6_5': {
+    type:'classique', nbPaires:6, dpt:5, nbTours:5,
+    tables:[
+      [[6,1,[1,5]],[6,2,[6,10]],[6,3,[11,15]],[6,4,[16,20]],[6,5,[21,25]]],
+      [[2,5,[1,5]],[3,1,[6,10]],[4,2,[11,15]],[5,3,[16,20]],[1,4,[21,25]]],
+      [[3,4,[1,5]],[4,5,[6,10]],[5,1,[11,15]],[1,2,[16,20]],[2,3,[21,25]]],
+    ]
+  },
+  // --- CLASSIQUE 8 paires, 4 donnes/tour, 6 ou 7 tours ---
+  'classique_8_4': {
+    type:'classique', nbPaires:8, dpt:4, nbTours:7,
+    tables:[
+      [[8,1,[1,4]],[8,2,[5,8]],[8,3,[9,12]],[8,4,[13,16]],[8,5,[17,20]],[8,6,[21,24]],[8,7,[25,28]]],
+      [[2,7,[1,4]],[3,1,[5,8]],[4,2,[9,12]],[5,3,[13,16]],[6,4,[17,20]],[7,5,[21,24]],[1,6,[25,28]]],
+      [[3,6,[1,4]],[4,7,[5,8]],[5,1,[9,12]],[6,2,[13,16]],[7,3,[17,20]],[1,4,[21,24]],[2,5,[25,28]]],
+      [[4,5,[1,4]],[5,6,[5,8]],[6,7,[9,12]],[7,1,[13,16]],[1,2,[17,20]],[2,3,[21,24]],[3,4,[25,28]]],
+    ]
+  },
+  // --- CLASSIQUE 10 paires, 3 donnes/tour, 9 tours ---
+  'classique_10_3': {
+    type:'classique', nbPaires:10, dpt:3, nbTours:9,
+    tables:[
+      [[10,1,[1,3]],[10,2,[4,6]],[10,3,[7,9]],[10,4,[10,12]],[10,5,[13,15]],[10,6,[16,18]],[10,7,[19,21]],[10,8,[22,24]],[10,9,[25,27]]],
+      [[8,9,[4,6]],[9,1,[7,9]],[1,2,[10,12]],[2,3,[13,15]],[3,4,[16,18]],[4,5,[19,21]],[5,6,[22,24]],[6,7,[25,27]],[7,8,[1,3]]],
+      [[6,4,[7,9]],[7,5,[10,12]],[8,6,[13,15]],[9,7,[16,18]],[1,8,[19,21]],[2,9,[22,24]],[3,1,[25,27]],[4,2,[1,3]],[5,3,[4,6]]],
+      [[3,7,[22,24]],[4,8,[25,27]],[5,9,[1,3]],[6,1,[4,6]],[7,2,[7,9]],[8,3,[10,12]],[9,4,[13,15]],[1,5,[16,18]],[2,6,[19,21]]],
+      [[2,5,[25,27]],[3,6,[1,3]],[4,7,[4,6]],[5,8,[7,9]],[6,9,[10,12]],[7,1,[13,15]],[8,2,[16,18]],[9,3,[19,21]],[1,4,[22,24]]],
+    ]
+  },
+  // --- CLASSIQUE 12 paires, 3 donnes/tour, 11 tours ---
+  'classique_12_3': {
+    type:'classique', nbPaires:12, dpt:3, nbTours:11,
+    tables:[
+      [[12,1,[1,3]],[12,2,[4,6]],[12,3,[7,9]],[12,4,[10,12]],[12,5,[13,15]],[12,6,[16,18]],[12,7,[19,21]],[12,8,[22,24]],[12,9,[25,27]],[12,10,[28,30]],[12,11,[31,33]]],
+      [[6,11,[7,9]],[7,1,[10,12]],[8,2,[13,15]],[9,3,[16,18]],[10,4,[19,21]],[11,5,[22,24]],[1,6,[25,27]],[2,7,[28,30]],[3,8,[31,33]],[4,9,[1,3]],[5,10,[4,6]]],
+      [[5,9,[19,21]],[6,10,[22,24]],[7,11,[25,27]],[8,1,[28,30]],[9,2,[31,33]],[10,3,[1,3]],[11,4,[4,6]],[1,5,[7,9]],[2,6,[10,12]],[3,7,[13,15]],[4,8,[16,18]]],
+      [[2,3,[22,24]],[3,4,[25,27]],[4,5,[28,30]],[5,6,[31,33]],[6,7,[1,3]],[7,8,[4,6]],[8,9,[7,9]],[9,10,[10,12]],[10,11,[13,15]],[11,1,[16,18]],[1,2,[19,21]]],
+      [[10,8,[25,27]],[11,9,[28,30]],[1,10,[31,33]],[2,11,[1,3]],[3,1,[4,6]],[4,2,[7,9]],[5,3,[10,12]],[6,4,[13,15]],[7,5,[16,18]],[8,6,[19,21]],[9,7,[22,24]]],
+      [[4,7,[31,33]],[5,8,[1,3]],[6,9,[4,6]],[7,10,[7,9]],[8,11,[10,12]],[9,1,[13,15]],[10,2,[16,18]],[11,3,[19,21]],[1,4,[22,24]],[2,5,[25,27]],[3,6,[1,3]]],
+    ]
+  },
+  // --- HÉRÉDIA 7 paires, 4 donnes/tour, 6 jouées + 1 relais ---
+  'heredia_7_4': {
+    type:'heredia', nbPaires:7, dpt:4, nbTours:7,
+    paires:{
+      1:[{e:[13,16]},{e:[17,20]},{e:[25,28]},{e:[21,24]},{e:[5,8]},{e:[9,12]},{relais:true}],
+      2:[{e:[9,12]},{e:[1,4]},{e:[17,20]},{e:[21,24]},{e:[13,16]},{relais:true},{e:[25,28]}],
+      3:[{e:[21,24]},{e:[1,4]},{e:[25,28]},{e:[17,20]},{relais:true},{e:[5,8]},{e:[13,16]}],
+      4:[{e:[21,24]},{e:[17,20]},{e:[5,8]},{relais:true},{e:[9,12]},{e:[1,4]},{e:[25,28]}],
+      5:[{e:[9,12]},{e:[21,24]},{relais:true},{e:[25,28]},{e:[5,8]},{e:[1,4]},{e:[13,16]}],
+      6:[{e:[13,16]},{relais:true},{e:[17,20]},{e:[25,28]},{e:[9,12]},{e:[5,8]},{e:[1,4]}],
+      7:[{relais:true},{e:[21,24]},{e:[5,8]},{e:[17,20]},{e:[13,16]},{e:[9,12]},{e:[1,4]}],
+    }
+  },
+  // --- HÉRÉDIA 8 paires, 4 donnes/tour, 6 tours ---
+  'heredia_8_4': {
+    type:'heredia', nbPaires:8, dpt:4, nbTours:6,
+    paires:{
+      1:[{e:[21,24]},{e:[17,20]},{e:[13,16]},{e:[9,12]},{e:[25,28]},{e:[29,32]}],
+      2:[{e:[13,16]},{e:[9,12]},{e:[29,32]},{e:[25,28]},{e:[21,24]},{e:[17,20]}],
+      3:[{e:[29,32]},{e:[1,4]},{e:[5,8]},{e:[21,24]},{e:[25,28]},{e:[17,20]}],
+      4:[{e:[25,28]},{e:[5,8]},{e:[1,4]},{e:[17,20]},{e:[21,24]},{e:[29,32]}],
+      5:[{e:[29,32]},{e:[5,8]},{e:[13,16]},{e:[25,28]},{e:[1,4]},{e:[9,12]}],
+      6:[{e:[25,28]},{e:[1,4]},{e:[29,32]},{e:[9,12]},{e:[5,8]},{e:[13,16]}],
+      7:[{e:[13,16]},{e:[17,20]},{e:[1,4]},{e:[21,24]},{e:[5,8]},{e:[9,12]}],
+      8:[{e:[21,24]},{e:[9,12]},{e:[5,8]},{e:[17,20]},{e:[1,4]},{e:[13,16]}],
+    }
+  },
+  // --- HÉRÉDIA 9 paires, 3 donnes/tour, 8 jouées + 1 relais ---
+  'heredia_9_3': {
+    type:'heredia', nbPaires:9, dpt:3, nbTours:9,
+    paires:{
+      1:[{e:[10,12]},{e:[25,27]},{e:[16,18]},{e:[13,15]},{e:[7,9]},{e:[22,24]},{e:[4,6]},{e:[19,21]},{relais:true}],
+      2:[{e:[19,21]},{e:[13,15]},{e:[16,18]},{e:[22,24]},{e:[25,27]},{e:[1,3]},{e:[7,9]},{relais:true},{e:[10,12]}],
+      3:[{e:[19,21]},{e:[25,27]},{e:[13,15]},{e:[1,3]},{e:[4,6]},{e:[10,12]},{relais:true},{e:[22,24]},{e:[16,18]}],
+      4:[{e:[4,6]},{e:[16,18]},{e:[19,21]},{e:[13,15]},{e:[25,27]},{relais:true},{e:[1,3]},{e:[22,24]},{e:[7,9]}],
+      5:[{e:[10,12]},{e:[19,21]},{e:[7,9]},{e:[22,24]},{relais:true},{e:[4,6]},{e:[1,3]},{e:[25,27]},{e:[16,18]}],
+      6:[{e:[4,6]},{e:[13,15]},{e:[7,9]},{relais:true},{e:[22,24]},{e:[10,12]},{e:[25,27]},{e:[19,21]},{e:[1,3]}],
+      7:[{e:[13,15]},{e:[16,18]},{relais:true},{e:[10,12]},{e:[4,6]},{e:[22,24]},{e:[7,9]},{e:[25,27]},{e:[1,3]}],
+      8:[{e:[13,15]},{relais:true},{e:[19,21]},{e:[1,3]},{e:[7,9]},{e:[4,6]},{e:[25,27]},{e:[16,18]},{e:[10,12]}],
+      9:[{relais:true},{e:[19,21]},{e:[13,15]},{e:[10,12]},{e:[22,24]},{e:[1,3]},{e:[4,6]},{e:[16,18]},{e:[7,9]}],
+    }
+  },
+  // --- HÉRÉDIA 10 paires, 3 donnes/tour, 8 tours ---
+  'heredia_10_3': {
+    type:'heredia', nbPaires:10, dpt:3, nbTours:8,
+    paires:{
+      1: [{e:[13,15]},{e:[4,6]},{e:[22,24]},{e:[16,18]},{e:[19,21]},{e:[7,9]},{e:[25,27]},{e:[28,30]}],
+      2: [{e:[7,9]},{e:[10,12]},{e:[13,15]},{e:[19,21]},{e:[28,30]},{e:[25,27]},{e:[1,3]},{e:[16,18]}],
+      3: [{e:[28,30]},{e:[1,3]},{e:[16,18]},{e:[19,21]},{e:[10,12]},{e:[4,6]},{e:[25,27]},{e:[22,24]}],
+      4: [{e:[4,6]},{e:[13,15]},{e:[7,9]},{e:[1,3]},{e:[22,24]},{e:[25,27]},{e:[19,21]},{e:[28,30]}],
+      5: [{e:[4,6]},{e:[1,3]},{e:[22,24]},{e:[10,12]},{e:[25,27]},{e:[28,30]},{e:[7,9]},{e:[16,18]}],
+      6: [{e:[7,9]},{e:[4,6]},{e:[1,3]},{e:[13,15]},{e:[10,12]},{e:[22,24]},{e:[19,21]},{e:[25,27]}],
+      7: [{e:[28,30]},{e:[16,18]},{e:[13,15]},{e:[10,12]},{e:[22,24]},{e:[7,9]},{e:[4,6]},{e:[25,27]}],
+      8: [{e:[10,12]},{e:[13,15]},{e:[1,3]},{e:[16,18]},{e:[28,30]},{e:[4,6]},{e:[7,9]},{e:[19,21]}],
+      9: [{e:[10,12]},{e:[16,18]},{e:[7,9]},{e:[13,15]},{e:[19,21]},{e:[28,30]},{e:[1,3]},{e:[22,24]}],
+      10:[{e:[13,15]},{e:[10,12]},{e:[16,18]},{e:[1,3]},{e:[25,27]},{e:[22,24]},{e:[4,6]},{e:[19,21]}],
+    }
+  },
+  // --- HÉRÉDIA 11 paires, 3 donnes/tour, 8 jouées + 1 relais ---
+  'heredia_11_3': {
+    type:'heredia', nbPaires:11, dpt:3, nbTours:9,
+    paires:{
+      1: [{e:[7,9]},{e:[22,24]},{e:[16,18]},{e:[25,27]},{e:[10,12]},{e:[19,21]},{e:[28,30]},{e:[4,6]},{relais:true}],
+      2: [{e:[22,24]},{e:[16,18]},{e:[10,12]},{e:[28,30]},{e:[25,27]},{e:[7,9]},{e:[13,15]},{e:[1,3]},{relais:true}],
+      3: [{e:[4,6]},{e:[28,30]},{e:[1,3]},{e:[25,27]},{e:[19,21]},{e:[22,24]},{e:[16,18]},{relais:true},{e:[10,12]}],
+      4: [{e:[22,24]},{e:[1,3]},{e:[25,27]},{e:[13,15]},{e:[7,9]},{e:[19,21]},{relais:true},{e:[16,18]},{e:[4,6]}],
+      5: [{e:[19,21]},{e:[28,30]},{e:[22,24]},{e:[7,9]},{e:[25,27]},{relais:true},{e:[10,12]},{e:[4,6]},{e:[1,3]}],
+      6: [{e:[4,6]},{e:[22,24]},{e:[25,27]},{e:[10,12]},{relais:true},{e:[1,3]},{e:[13,15]},{e:[19,21]},{e:[7,9]}],
+      7: [{e:[7,9]},{e:[16,18]},{e:[1,3]},{relais:true},{e:[28,30]},{e:[25,27]},{e:[10,12]},{e:[13,15]},{e:[4,6]}],
+      8: [{e:[13,15]},{e:[4,6]},{relais:true},{e:[10,12]},{e:[19,21]},{e:[7,9]},{e:[28,30]},{e:[16,18]},{e:[1,3]}],
+      9: [{e:[19,21]},{relais:true},{e:[16,18]},{e:[28,30]},{e:[7,9]},{e:[1,3]},{e:[4,6]},{e:[13,15]},{e:[10,12]}],
+      10:[{relais:true},{e:[4,6]},{e:[22,24]},{e:[13,15]},{e:[10,12]},{e:[25,27]},{e:[16,18]},{e:[1,3]},{e:[7,9]}],
+      11:[{e:[13,15]},{e:[1,3]},{e:[10,12]},{e:[7,9]},{e:[28,30]},{e:[22,24]},{e:[4,6]},{e:[19,21]},{relais:true}],
+    }
+  },
+  // --- HÉRÉDIA 12 paires, 3 donnes/tour, 8 tours ---
+  'heredia_12_3': {
+    type:'heredia', nbPaires:12, dpt:3, nbTours:8,
+    paires:{
+      1: [{e:[16,18]},{e:[7,9]},{e:[10,12]},{e:[13,15]},{e:[28,30]},{e:[22,24]},{e:[19,21]},{e:[4,6]}],
+      2: [{e:[22,24]},{e:[13,15]},{e:[25,27]},{e:[10,12]},{e:[1,3]},{e:[7,9]},{e:[16,18]},{e:[19,21]}],
+      3: [{e:[4,6]},{e:[16,18]},{e:[19,21]},{e:[1,3]},{e:[10,12]},{e:[22,24]},{e:[25,27]},{e:[13,15]}],
+      4: [{e:[13,15]},{e:[1,3]},{e:[25,27]},{e:[19,21]},{e:[4,6]},{e:[28,30]},{e:[7,9]},{e:[22,24]}],
+      5: [{e:[25,27]},{e:[22,24]},{e:[19,21]},{e:[7,9]},{e:[28,30]},{e:[4,6]},{e:[16,18]},{e:[10,12]}],
+      6: [{e:[22,24]},{e:[28,30]},{e:[13,15]},{e:[19,21]},{e:[7,9]},{e:[10,12]},{e:[1,3]},{e:[4,6]}],
+      7: [{e:[4,6]},{e:[1,3]},{e:[16,18]},{e:[13,15]},{e:[25,27]},{e:[7,9]},{e:[22,24]},{e:[10,12]}],
+      8: [{e:[13,15]},{e:[7,9]},{e:[4,6]},{e:[28,30]},{e:[1,3]},{e:[10,12]},{e:[25,27]},{e:[16,18]}],
+      9: [{e:[1,3]},{e:[22,24]},{e:[16,18]},{e:[10,12]},{e:[7,9]},{e:[28,30]},{e:[19,21]},{e:[13,15]}],
+      10:[{e:[16,18]},{e:[13,15]},{e:[4,6]},{e:[7,9]},{e:[10,12]},{e:[19,21]},{e:[1,3]},{e:[22,24]}],
+      11:[{e:[1,3]},{e:[16,18]},{e:[13,15]},{e:[28,30]},{e:[25,27]},{e:[4,6]},{e:[7,9]},{e:[19,21]}],
+      12:[{e:[25,27]},{e:[28,30]},{e:[10,12]},{e:[1,3]},{e:[4,6]},{e:[19,21]},{e:[22,24]},{e:[16,18]}],
+    }
+  },
+};
+
+// Mapping nbPaires -> clé réelle dans HOWELL_MOVES
+const HOWELL_KEY_MAP = {
+  'classique_6_5':  'classique_6_5',
+  'classique_8_4':  'classique_8_4',
+  'classique_10_3': 'classique_10_3',
+  'classique_12_3': 'classique_12_3',
+  'heredia_7_4':  'heredia_7_4',
+  'heredia_8_4':  'heredia_8_4',
+  'heredia_9_3':  'heredia_9_3',
+  'heredia_10_3': 'heredia_10_3',
+  'heredia_11_3': 'heredia_11_3',
+  'heredia_12_3': 'heredia_12_3',
+};
+
+function howellDonnes(key, paire, tour) {
+  const realKey = HOWELL_KEY_MAP[key] || key;
+  const mv = HOWELL_MOVES[realKey];
+  if(!mv) return null;
+  if(mv.type==='classique') {
+    // chercher dans les tables
+    for(const table of mv.tables) {
+      const t = table[tour];
+      if(!t) continue;
+      const [ns,eo,e] = t;
+      if(ns===paire||eo===paire) return Array.from({length:e[1]-e[0]+1},(_,i)=>e[0]+i);
+    }
+    return null;
+  } else {
+    // heredia
+    const pos = mv.paires[paire]?.[tour];
+    if(!pos||pos.relais) return null;
+    return Array.from({length:pos.e[1]-pos.e[0]+1},(_,i)=>pos.e[0]+i);
+  }
+}
+
+// Clé Howell pour la config actuelle
+function howellKey(mouvement, nbPaires, dpt) {
+  return mouvement+'_'+nbPaires+'_'+dpt;
+}
+
+function parseDonnes(){
+  const raw=document.getElementById('donnes-input').value;
+  const status=document.getElementById('donnes-status');
+  donnesData={};
+  if(!raw.trim()){status.className='donnes-status';return;}
+
+  const lines=raw.split('\n');
+  let count=0;
+  lines.forEach(line=>{
+    const cols=line.split('\t');
+    // Colonne A = numéro de donne (ignorer les lignes sans numéro valide)
+    const num=parseInt(cols[0]);
+    if(!num||isNaN(num)) return;
+    const ns=(cols[1]||'').trim();
+    const eo=(cols[2]||'').trim();
+    const note=(cols[3]||'').trim();
+    if(ns||eo||note){
+      donnesData[num]={ns,eo,note};
+      count++;
+    }
+  });
+
+  if(count===0){
+    status.className='donnes-status err';
+    status.textContent='Aucune donne reconnue. Vérifiez le format (copier depuis Excel).';
+  } else {
+    status.className='donnes-status ok';
+    status.textContent=count+' donne'+(count>1?'s':'')+' chargée'+(count>1?'s':'')+' ✓';
+  }
+}
+let navHistory=[];
+
+function showScreen(to, from){
+  if(from) document.getElementById(from).classList.remove('active');
+  document.getElementById(to).classList.add('active');
+}
+
+function goTo(to){
+  const screens=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu'];
+  const current=screens.find(s=>document.getElementById(s).classList.contains('active'));
+  if(current){ navHistory.push(current); document.getElementById(current).classList.remove('active'); }
+  document.getElementById(to).classList.add('active');
+}
+
+function goBack(){
+  if(!navHistory.length) return;
+  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu'].find(s=>document.getElementById(s).classList.contains('active'));
+  if(current) document.getElementById(current).classList.remove('active');
+  const prev=navHistory.pop();
+  document.getElementById(prev).classList.add('active');
+  if(prev==='s-tournoi'){
+    donnesData={};
+    window._donnesFichier=null;
+    window._nbPairesConfig=null;
+    window._nbPairesHowell=null;
+    const btn=document.getElementById('btn-charger-donnes');
+    if(btn) btn.style.display='';
+    document.getElementById('tournoi-sub').textContent='Chargement...';
+    document.getElementById('tournoi-list').innerHTML='';
+    initTournoi();
+  }
+  if(prev==='s-paires'){
+    window._nbPairesConfig=null;
+    window._nbPairesHowell=null;
+  }
+}
+
+// Groupe les entrées DB par mouvement+dpt pour un nb de paires donné
+// (mouvement+dpt = clé unique car donnes en circ = tables × dpt)
+function getGrouped(p, dbSource){
+  const rows=dbSource.filter(r=>r[0]===p);
+  const groups={};
+  rows.forEach(row=>{
+    const isHowell=dbSource===DB_HOWELL;
+    const [,t,m,r,d,dc,def]=isHowell?row:[...row.slice(0,5),row[1]*row[4],row[5]];
+    const key=m+'_'+d; // grouper par mouvement ET dpt
+    if(!groups[key]) groups[key]={mouvement:m,tables:t,options:[],deficient:true};
+    groups[key].options.push({tours:r,dpt:d,donnesCirc:dc,deficient:def});
+    if(!def) groups[key].deficient=false;
+  });
+  return Object.values(groups);
+}
+
+function renderOptionBtn(el,g,best){
+  const btn=document.createElement('button');
+  btn.className='option-btn';
+  const dc=g.options[0].donnesCirc;
+  const defStyle=g.deficient?'visibility:visible':'visibility:hidden';
+  const bestStyle=best?'visibility:visible':'visibility:hidden';
+  const toursLabel=g.options.length===1?g.options[0].tours+'x'+g.options[0].dpt:g.options.map(o=>o.tours+'x'+o.dpt).join(' ou ');
+  btn.innerHTML=`
+    <div style="flex:1">
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="option-main" style="line-height:1">${MOUV_LABEL[g.mouvement]}</span>
+        <span style="font-size:11px;line-height:1;position:relative;top:-1px;${bestStyle}">⭐</span>
+        <span style="font-size:11px;color:#f87171;font-weight:600;line-height:1;position:relative;top:-1px;${defStyle}">déficient</span>
+      </div>
+      <div class="option-detail">${g.tables} tables · ${toursLabel} donnes · ${dc} en circulation</div>
+    </div>
+    <span class="option-badge ${MOUV_BADGE[g.mouvement]}">${MOUV_SHORT[g.mouvement]}</span>`;
+  btn.onclick=()=>selectMouvement(g);
+  el.appendChild(btn);
+}
+
+function updateOptions(){
+  const p=parseInt(document.getElementById('f-paires').value)||0;
+  const el=document.getElementById('options-list');
+  const errEl=document.getElementById('e-paires');
+  const sub=document.getElementById('options-sub');
+  if(p<6||p>36){errEl.style.display='block';el.innerHTML='';sub.textContent='';return;}
+  errEl.style.display='none';
+
+  const mitchellGroups=getGrouped(p,DB);
+  const howellGroups=getGrouped(p,DB_HOWELL);
+  const allGroups=[...mitchellGroups,...howellGroups];
+
+  el.innerHTML='';
+  if(!allGroups.length){el.innerHTML='<p class="no-options">Aucun mouvement disponible</p>';sub.textContent='';return;}
+  sub.textContent=allGroups.length===1?'Un seul mouvement possible':'Choisissez un mouvement';
+
+  if(mitchellGroups.length){
+    const sep=document.createElement('p');sep.className='section-sep';sep.textContent='Mitchell';el.appendChild(sep);
+    const hasAlt=mitchellGroups.some(g=>!g.deficient)&&mitchellGroups.some(g=>g.deficient);
+    mitchellGroups.forEach(g=>renderOptionBtn(el,g,hasAlt&&!g.deficient));
+  }
+  if(howellGroups.length){
+    const sep=document.createElement('p');sep.className='section-sep';sep.textContent='Howell';el.appendChild(sep);
+    howellGroups.forEach(g=>renderOptionBtn(el,g,false));
+  }
+}
+
+function selectMouvement(g){
+  const p=parseInt(document.getElementById('f-paires').value)||0;
+  if(g.options.length===1){
+    applyConfig(g.mouvement,g.tables,g.options[0].tours,g.options[0].dpt,p);
+  } else {
+    const el=document.getElementById('tours-list');
+    el.innerHTML='';
+    document.getElementById('tours-title').textContent='Nombre de positions — '+MOUV_LABEL[g.mouvement];
+    document.getElementById('tours-sub').textContent=g.tables+' tables · '+g.options[0].donnesCirc+' donnes en circulation';
+    g.options.forEach(o=>{
+      const btn=document.createElement('button');
+      btn.className='tour-btn';
+      const defStyle2=o.deficient?'visibility:visible':'visibility:hidden';
+      btn.innerHTML=`
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:6px">
+            <div class="tour-main">${o.tours} positions · ${o.dpt} donnes/tour</div>
+            <span style="font-size:11px;color:#f87171;font-weight:600;line-height:1;position:relative;top:-1px;${defStyle2}">déficient</span>
+          </div>
+          <div class="tour-detail">${o.donnesCirc} donnes en circulation</div>
+        </div>
+        <span style="font-size:13px;color:var(--text2)">→</span>`;
+      btn.onclick=()=>applyConfig(g.mouvement,g.tables,o.tours,o.dpt,p);
+      el.appendChild(btn);
+    });
+    goTo('s-tours'); // showScreen gardé pour compatibilité interne
+  }
+}
+
+function applyConfig(mv,tables,tours,dpt,nbPaires){
+  const isHowell=['classique','heredia'].includes(mv);
+  mode=isHowell?mv:(mv==='guerid'?'guerid':mv==='saut'?'saut':'mitchell');
+  document.getElementById('f-tables').value=tables;
+  document.getElementById('f-tours').value=tours;
+  document.getElementById('f-dpt').value=dpt;
+  document.getElementById('field-paire-howell').style.display=isHowell?'':'none';
+  document.getElementById('field-sens').style.display=isHowell?'none':'';
+  document.getElementById('field-table').style.display=isHowell?'none':'';
+  // Champ relais : uniquement Mitchell/Guéridon avec nombre impair de paires
+  const impair=!isHowell&&mv!=='guerid'&&(nbPaires%2!==0);
+  document.getElementById('field-relais').style.display=impair?'':'none';
+  if(impair){
+    document.getElementById('label-relais').textContent='Ligne du relais (table '+tables+')';
+    setRelais('EO');
+  }
+  if(!isHowell){
+    applyStyle(document.getElementById('btn-ns'),sens==='NS'?GREEN:OFF);
+    applyStyle(document.getElementById('btn-eo'),sens==='EO'?GREEN:OFF);
+  }
+  window._nbPairesHowell = nbPaires || tables*2;
+  window._nbPairesConfig = nbPaires;
+  goTo('s-config');
+}
+
+function setRelais(r){relaisLigne=r;applyStyle(document.getElementById('btn-relais-ns'),r==='NS'?GREEN:OFF);applyStyle(document.getElementById('btn-relais-eo'),r==='EO'?GREEN:OFF);}
+function setMode(m){mode=m;applyStyle(document.getElementById('btn-mitchell'),m==='mitchell'?BLUE:OFF);applyStyle(document.getElementById('btn-guerid'),m==='guerid'?BLUE:OFF);}
+function setSens(s){sens=s;applyStyle(document.getElementById('btn-ns'),s==='NS'?GREEN:OFF);applyStyle(document.getElementById('btn-eo'),s==='EO'?GREEN:OFF);}
+
+function int(id){return parseInt(document.getElementById(id).value)||0;}
+function err(id,v){document.getElementById(id).style.display=v?'block':'none';}
+
+function tToSlot(t,N){if(t===1||t===N)return 0;if(t<=N/2)return t-1;return t;}
+
+function buildSim(T,N,R,mode,sens){
+  const withSaut=(mode==='saut')||(mode==='mitchell'&&N%2===0);
+  const isGuerid=mode==='guerid';
+  const sautApres=withSaut?N/2-1:-1;
+  let blocs=Array.from({length:N},(_,i)=>i);
+  let eoPos=T-1,eoTable=T;
+  const tours=[];
+  for(let t=0;t<R;t++){
+    let tableAffichee,blocIdx,estSaut=false;
+    if(isGuerid){
+      const tRef=sens==='NS'?T:eoTable;
+      const slot=tToSlot(tRef,N);
+      blocIdx=blocs[slot];
+      tableAffichee=(tRef===1||tRef===N)?'1 & '+N:String(tRef);
+    }else{
+      if(sens==='NS'){blocIdx=blocs[T-1];tableAffichee=String(T);}
+      else{blocIdx=blocs[eoPos];tableAffichee=String(eoPos+1);estSaut=withSaut&&t===sautApres+1;}
+    }
+    tours.push({blocIdx,tableAffichee,estSaut});
+    const nd=Array(N);
+    if(isGuerid){for(let i=0;i<N;i++)nd[i]=blocs[(i+1)%N];}
+    else{nd[N-1]=blocs[0];for(let i=0;i<N-1;i++)nd[i]=blocs[i+1];}
+    blocs=nd;
+    if(isGuerid)eoTable=(eoTable%N)+1;
+    else{const pas=withSaut&&t===sautApres?2:1;eoPos=(eoPos+pas)%N;}
+  }
+  return tours;
+}
+
+function start(){
+  const isHowell=['classique','heredia'].includes(mode);
+  const N=int('f-tables'),R=int('f-tours'),D=int('f-dpt');
+  if(isHowell){
+    const P=int('f-paire-howell');
+    const nbP=window._nbPairesHowell||N*2;
+    if(P<1||P>nbP){err('e-paire-howell',1);return;}
+    err('e-paire-howell',0);
+    cfg={N,R,D,mode,paireHowell:P,nbPaires:nbP};
+  } else {
+    const T=int('f-table');
+    if(T<1||T>N){err('e-table',1);return;}
+    err('e-table',0);
+    const nbPaires=window._nbPairesConfig||N*2;
+    const impair=nbPaires%2!==0;
+    cfg={T,N,R,D,sens,mode,relaisLigne,impair};
+    sim=buildSim(T,N,R,mode,sens);
+  }
+  tourActuel=0;
+  saveState();
+  goTo('s-jeu');
+  render();
+}
+
+function render(){
+  if(!cfg||!cfg.R) return;
+  const t=tourActuel,n=t+1;
+  const {R,D,mode:m,N}=cfg;
+  const isHowell=['classique','heredia'].includes(m);
+
+  document.getElementById('d-tour').textContent=n;
+  document.getElementById('d-tour-sub').textContent='sur '+R;
+  document.getElementById('d-saut').style.visibility='hidden';
+  document.getElementById('d-guerid').style.visibility='hidden';
+  document.getElementById('d-relais').style.visibility='hidden';
+
+  let donnes=[];
+  if(isHowell){
+    document.getElementById('d-label-table').textContent='Paire';
+    document.getElementById('d-label-sens').textContent='Type';
+    const nbP=cfg.nbPaires||cfg.N*2;
+    const hkey=m+'_'+nbP+'_'+D;
+    const d=howellDonnes(hkey, cfg.paireHowell, t);
+    donnes=d||[];
+    document.getElementById('d-table').textContent='Paire '+cfg.paireHowell;
+    document.getElementById('d-sens').textContent=m==='classique'?'Classique':'Hérédia';
+    document.getElementById('d-mode').textContent=MOUV_LABEL[m]||m;
+    document.getElementById('d-relais').style.visibility=d?'hidden':'visible';
+  } else {
+    document.getElementById('d-label-table').textContent='Table';
+    document.getElementById('d-label-sens').textContent='Sens';
+    const {sens:s,relaisLigne:rl,impair}=cfg;
+    const etat=sim&&sim[t];
+    if(!etat) return;
+    const first=etat.blocIdx*D+1;
+    donnes=Array.from({length:D},(_,i)=>first+i);
+    document.getElementById('d-table').textContent=etat.tableAffichee;
+    document.getElementById('d-sens').textContent=s==='NS'?'N / S':'E / O';
+    document.getElementById('d-mode').textContent=m==='guerid'?'Guéridon':m==='saut'?'Saut':'Simple';
+    document.getElementById('d-saut').style.visibility=(s==='EO'&&etat.estSaut)?'visible':'hidden';
+    document.getElementById('d-guerid').style.visibility=(m==='guerid'&&etat.tableAffichee.includes('&'))?'visible':'hidden';
+    // Relais : relaisLigne = ligne avec une paire de plus → quand une paire de cette ligne arrive table N, elle n'a pas d'adversaire
+    const estRelais=!!(impair && s===rl && etat.tableAffichee===String(N));
+    document.getElementById('d-relais').style.visibility=estRelais?'visible':'hidden';
+  }
+  const container=document.getElementById('d-donnes');
+  container.innerHTML='';
+  donnes.forEach(d=>{
+    const info=donnesData[d];
+    if(info){
+      const div=document.createElement('div');
+      div.className='chip-rich';
+      const nsVis=info.ns?'visible':'hidden';
+      const eoVis=info.eo?'visible':'hidden';
+      const noteVis=info.note?'visible':'hidden';
+      div.innerHTML=`
+        <div class="chip-num">${d}</div>
+        <div class="chip-info">
+          <div class="chip-scores">
+            <span class="chip-score-item" style="visibility:${nsVis}"><span class="chip-score-label">NS</span>${info.ns||'—'}</span>
+            <span class="chip-score-item" style="visibility:${eoVis}"><span class="chip-score-label">EO</span>${info.eo||'—'}</span>
+          </div>
+          <div class="chip-note" style="visibility:${noteVis}">${info.note||'—'}</div>
+        </div>`;
+      container.appendChild(div);
+    } else {
+      const c=document.createElement('span');
+      c.className='chip';
+      c.textContent='N°'+d;
+      container.appendChild(c);
+    }
+  });
+  document.getElementById('btn-prev').disabled=t===0;
+  document.getElementById('btn-next').disabled=t===R-1;
+  document.getElementById('prog').style.width=Math.round(n/R*100)+'%';
+}
+
+let _rafPending=false;
+function go(d){
+  const next=Math.max(0,Math.min(cfg.R-1,tourActuel+d));
+  if(next===tourActuel) return;
+  tourActuel=next;
+  setTimeout(saveState, 0);
+  if(!_rafPending){
+    _rafPending=true;
+    requestAnimationFrame(()=>{ _rafPending=false; render(); });
+  }
+}
+
+function reset(){
+  localStorage.removeItem('bridge_state');
+  navHistory=[];
+  donnesData={};
+  window._donnesFichier=null;
+  window._nbPairesConfig=null;
+  window._nbPairesHowell=null;
+  try{ localStorage.removeItem('bridge_tournoi_list'); }catch(e){}
+  const btn=document.getElementById('btn-charger-donnes');
+  if(btn) btn.style.display='';
+  document.getElementById('tournoi-sub').textContent='Chargement...';
+  document.getElementById('tournoi-list').innerHTML='';
+  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu'].find(s=>document.getElementById(s).classList.contains('active'));
+  if(current) document.getElementById(current).classList.remove('active');
+  document.getElementById('s-tournoi').classList.add('active');
+  initTournoi();
+}
+
+// ============================================================
+// SAUVEGARDE / RESTAURATION D'ÉTAT
+// ============================================================
+function saveState(){
+  try{
+    localStorage.setItem('bridge_state', JSON.stringify({
+      cfg, sim, tourActuel, mode, sens,
+      donnesFichier: window._donnesFichier||null,
+      ts: Date.now()
+    }));
+  }catch(e){}
+}
+
+function loadState(){
+  try{
+    const raw=localStorage.getItem('bridge_state');
+    if(!raw) return null;
+    const s=JSON.parse(raw);
+    // Expire après 24h
+    if(Date.now()-s.ts > 24*3600*1000){ localStorage.removeItem('bridge_state'); return null; }
+    return s;
+  }catch(e){ return null; }
+}
+
+function clearResume(){
+  localStorage.removeItem('bridge_state');
+  try{ localStorage.removeItem('bridge_tournoi_list'); }catch(e){}
+  document.getElementById('s-tournoi-resume').style.display='none';
+}
+
+function resumeTournoi(){
+  const s=loadState();
+  if(!s) return;
+  cfg=s.cfg; sim=s.sim; tourActuel=s.tourActuel; mode=s.mode; sens=s.sens||'NS'; relaisLigne=s.cfg.relaisLigne||'EO';
+  navHistory=[];
+  goTo('s-jeu');
+  render();
+}
+
+function modeLabel(m){
+  const l={mitchell:'Mitchell simple',saut:'Mitchell saut',guerid:'Guéridon',heredia:'Howell Hérédia',classique:'Howell Classique'};
+  return l[m]||m;
+}
+
+// ============================================================
+// SÉLECTION DU TOURNOI
+// ============================================================
+function _afficherTournois(donneFichiers, base, list, sub){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const futurs=[], passes=[];
+  donneFichiers.forEach(fname=>{
+    const match=fname.match(/(\d{4}-\d{2}-\d{2})/);
+    const date=match?new Date(match[1]+'T12:00:00'):null;
+    const passe=date&&date<today;
+    (passe?passes:futurs).push({fname,date});
+  });
+  futurs.sort((a,b)=>(a.date||0)-(b.date||0));
+  passes.sort((a,b)=>(b.date||0)-(a.date||0));
+  const tous=[...futurs,...passes];
+
+  list.innerHTML='';
+  tous.forEach(({fname,date})=>{
+    const btn=document.createElement('button');
+    btn.className='option-btn';
+    const passe=date&&date<today;
+    const match=fname.match(/(\d{4}-\d{2}-\d{2})/);
+    let label='Tournoi';
+    if(match){
+      const d=new Date(match[1]+'T12:00:00');
+      label=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+      label=label.charAt(0).toUpperCase()+label.slice(1);
+    }
+    const safeId=fname.replace(/[^a-z0-9_-]/gi,'_');
+    const countSpan=`<span id="count-${safeId}" style="font-style:italic;font-size:12px;color:var(--text2);margin-left:8px">…</span>`;
+    if(passe) btn.style.opacity='0.4';
+    btn.innerHTML=`<div style="flex:1;display:flex;align-items:center"><div class="option-main">${label}</div>${countSpan}</div><span style="font-size:18px">→</span>`;
+    btn.onclick=()=>chargerTournoi(base+fname, fname);
+    list.appendChild(btn);
+  });
+
+  // Charger les counts en arrière-plan
+  tous.forEach(({fname})=>{
+    const safeId=fname.replace(/[^a-z0-9_-]/gi,'_');
+    fetch(base+fname+'?t='+Date.now())
+      .then(r=>r.ok?r.json():null)
+      .then(data=>{ const s=document.getElementById('count-'+safeId); if(s) s.textContent=data?Object.keys(data).length+' donnes':''; })
+      .catch(()=>{ const s=document.getElementById('count-'+safeId); if(s) s.textContent=''; });
+  });
+}
+
+let _initRunning=false;
+async function initTournoi(){
+  if(_initRunning) return;
+  _initRunning=true;
+  try{ await _initTournoiInner(); }finally{ _initRunning=false; }
+}
+
+async function _initTournoiInner(){
+  // Vérifier s'il y a un état sauvegardé
+  const saved=loadState();
+  if(saved){
+    const resume=document.getElementById('s-tournoi-resume');
+    const d=new Date(saved.ts);
+    const dateStr=d.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
+    const timeStr=d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('resume-desc').textContent=modeLabel(saved.mode)+' — Tour '+(saved.tourActuel+1)+'/'+saved.cfg.R;
+    document.getElementById('resume-sub').textContent='Sauvegardé le '+dateStr+' à '+timeStr;
+    resume.style.display='';
+  }
+
+  const hostname=window.location.hostname;
+  const onGithub=hostname.endsWith('github.io');
+  const base=onGithub
+    ? window.location.href.replace(/\/[^/]*$/,'/')
+    : 'https://capgui13.github.io/MVT/';
+  const list=document.getElementById('tournoi-list');
+  const sub=document.getElementById('tournoi-sub');
+
+  // Appel API GitHub avec cache localStorage
+  try{
+    const parts=hostname.split('.');
+    let user=null, repo=null;
+    if(parts.length>=3 && parts[1]==='github' && parts[2]==='io'){
+      user=parts[0];
+      repo=window.location.pathname.split('/').filter(Boolean)[0]||null;
+    }
+    // Fallback local
+    if(!user||!repo){ user='capgui13'; repo='MVT'; }
+
+    const CACHE_KEY='bridge_tournoi_list';
+    const CACHE_TTL=60*60*1000; // 1 heure
+
+    // Essayer le cache d'abord
+    let donneFichiers=null;
+    try{
+      const cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');
+      if(cached && Date.now()-cached.ts < CACHE_TTL){
+        donneFichiers=cached.files;
+        sub.textContent='(cache) ';
+      }
+    }catch(e){}
+
+    // Si pas de cache valide, appel API
+    if(!donneFichiers){
+      const res=await fetch(`https://api.github.com/repos/${user}/${repo}/contents/`,
+        {headers:{Accept:'application/vnd.github.v3+json'}});
+      if(!res.ok){
+        if(res.status===403) throw new Error('Limite API atteinte');
+        throw new Error();
+      }
+      const files=await res.json();
+      donneFichiers=files
+        .filter(f=>f.type==='file' && /^donnes[-_]?\d{4}.*\.json$/i.test(f.name))
+        .sort((a,b)=>b.name.localeCompare(a.name))
+        .map(f=>f.name);
+      // Sauvegarder en cache
+      try{ localStorage.setItem(CACHE_KEY, JSON.stringify({ts:Date.now(), files:donneFichiers})); }catch(e){}
+    }
+
+    if(!donneFichiers.length){ sub.textContent='Aucun fichier de donnes trouvé.'; return; }
+    sub.textContent=donneFichiers.length+' tournoi'+(donneFichiers.length>1?'s':'')+' disponible'+(donneFichiers.length>1?'s':'');
+    _afficherTournois(donneFichiers, base, list, sub);
+  }catch(e){
+    if(e.message==='Limite API atteinte'){
+      // Tenter d'utiliser le cache même expiré
+      try{
+        const cached=JSON.parse(localStorage.getItem('bridge_tournoi_list')||'null');
+        if(cached&&cached.files&&cached.files.length){
+          sub.textContent='Limite API GitHub atteinte — liste en cache.';
+          // Relancer avec les données en cache
+          _afficherTournois(cached.files, base, list, sub);
+          return;
+        }
+      }catch(e2){}
+      sub.textContent='Limite API GitHub atteinte — réessaie dans une heure.';
+    } else {
+      sub.textContent='Impossible de charger la liste des tournois.';
+    }
+  }
+}
+
+async function chargerTournoi(url, fichier, silencieux=false){
+  try{
+    const res=await fetch(url+'?t='+Date.now());
+    if(!res.ok) throw new Error();
+    donnesData=await res.json();
+    window._donnesFichier=fichier;
+    if(!silencieux){
+      const sub=document.getElementById('tournoi-sub');
+      sub.textContent='✓ '+Object.keys(donnesData).length+' donnes chargées';
+    }
+  }catch(e){
+    donnesData={};
+    if(!silencieux) console.log('Impossible de charger',url);
+  }
+  if(!silencieux){
+    // Masquer le bouton "charger les donnes" puisqu'elles sont déjà chargées
+    const btn=document.getElementById('btn-charger-donnes');
+    if(btn) btn.style.display='none';
+    goTo('s-paires');
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+if('serviceWorker' in navigator){
+  const sw=`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>{e.respondWith(caches.open('bridge-v6').then(cache=>cache.match(e.request).then(r=>r||fetch(e.request).then(res=>{cache.put(e.request,res.clone());return res;}))));});`;
+  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'})));
+}
+
+// Vérification de mise à jour via GitHub API
+async function checkForUpdate(){
+  try{
+    const hostname=window.location.hostname;
+    const parts=hostname.split('.');
+    if(parts.length<3||parts[1]!=='github'||parts[2]!=='io') return;
+    const user=parts[0];
+    const repo=window.location.pathname.split('/').filter(Boolean)[0];
+    const file=window.location.pathname.split('/').pop()||'bridge-mitchell.html';
+    if(!user||!repo) return;
+
+    // Cache : ne vérifier qu'une fois par heure
+    const CACHE_KEY='bridge_update_check';
+    const CACHE_TTL=60*60*1000;
+    try{
+      const cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');
+      if(cached && Date.now()-cached.ts < CACHE_TTL) return;
+    }catch(e){}
+
+    const res=await fetch(`https://api.github.com/repos/${user}/${repo}/commits?path=${file}&per_page=1`,
+      {headers:{Accept:'application/vnd.github.v3+json'}});
+    if(!res.ok) return;
+    const data=await res.json();
+    if(!data.length) return;
+
+    // Sauvegarder le timestamp de la vérification
+    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({ts:Date.now()})); }catch(e){}
+
+    const lastCommit=data[0].sha;
+    const storedCommit=localStorage.getItem('bridge_commit');
+
+    if(storedCommit && storedCommit!==lastCommit){
+      localStorage.setItem('bridge_commit', lastCommit);
+      if('caches' in window){
+        const keys=await caches.keys();
+        await Promise.all(keys.map(k=>caches.delete(k)));
+      }
+      showUpdateBanner();
+    } else {
+      localStorage.setItem('bridge_commit', lastCommit);
+    }
+  }catch(e){}
+}
+
+function showUpdateBanner(){
+  const banner=document.createElement('div');
+  banner.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#1d4ed8;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;z-index:999;font-family:inherit;padding-bottom:calc(14px + env(safe-area-inset-bottom))';
+  banner.innerHTML=`<span style="font-size:14px">🔄 Nouvelle version disponible</span><button onclick="location.reload(true)" style="background:#fff;color:#1d4ed8;border:none;border-radius:8px;padding:8px 16px;font-size:14px;font-weight:600;cursor:pointer">Mettre à jour</button>`;
+  document.body.appendChild(banner);
+}
+
+setSens('NS');
+initTournoi();
+checkForUpdate();
+
+// touchend sur les boutons nav pour éviter le délai 300ms iOS
+function addNavListener(id, delta){
+  const btn=document.getElementById(id);
+  if(!btn) return;
+  btn.addEventListener('touchend', e=>{ e.preventDefault(); go(delta); }, {passive:false});
+  btn.addEventListener('click', e=>{ go(delta); }); // fallback desktop
+}
+addNavListener('btn-prev', -1);
+addNavListener('btn-next', 1);
+</script>
+</body>
+</html>
