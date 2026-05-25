@@ -888,48 +888,6 @@ function modeLabel(m){
 // ============================================================
 // SÉLECTION DU TOURNOI
 // ============================================================
-function _afficherTournois(donneFichiers, base, list, sub){
-  const today=new Date(); today.setHours(0,0,0,0);
-  const futurs=[], passes=[];
-  donneFichiers.forEach(fname=>{
-    const match=fname.match(/(\d{4}-\d{2}-\d{2})/);
-    const date=match?new Date(match[1]+'T12:00:00'):null;
-    const passe=date&&date<today;
-    (passe?passes:futurs).push({fname,date});
-  });
-  futurs.sort((a,b)=>(a.date||0)-(b.date||0));
-  passes.sort((a,b)=>(b.date||0)-(a.date||0));
-  const tous=[...futurs,...passes];
-
-  list.innerHTML='';
-  tous.forEach(({fname,date})=>{
-    const btn=document.createElement('button');
-    btn.className='option-btn';
-    const passe=date&&date<today;
-    const match=fname.match(/(\d{4}-\d{2}-\d{2})/);
-    let label='Tournoi';
-    if(match){
-      const d=new Date(match[1]+'T12:00:00');
-      label=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-      label=label.charAt(0).toUpperCase()+label.slice(1);
-    }
-    const safeId=fname.replace(/[^a-z0-9_-]/gi,'_');
-    const countSpan=`<span id="count-${safeId}" style="font-style:italic;font-size:12px;color:var(--text2);margin-left:8px">…</span>`;
-    if(passe) btn.style.opacity='0.4';
-    btn.innerHTML=`<div style="flex:1;display:flex;align-items:center"><div class="option-main">${label}</div>${countSpan}</div><span style="font-size:18px">→</span>`;
-    btn.onclick=()=>chargerTournoi(base+fname, fname);
-    list.appendChild(btn);
-  });
-
-  // Charger les counts en arrière-plan
-  tous.forEach(({fname})=>{
-    const safeId=fname.replace(/[^a-z0-9_-]/gi,'_');
-    fetch(base+fname+'?t='+Date.now())
-      .then(r=>r.ok?r.json():null)
-      .then(data=>{ const s=document.getElementById('count-'+safeId); if(s) s.textContent=data?Object.keys(data).length+' donnes':''; })
-      .catch(()=>{ const s=document.getElementById('count-'+safeId); if(s) s.textContent=''; });
-  });
-}
 
 let _initRunning=false;
 async function initTournoi(){
@@ -939,7 +897,6 @@ async function initTournoi(){
 }
 
 async function _initTournoiInner(){
-  // Vérifier s'il y a un état sauvegardé
   const saved=loadState();
   if(saved){
     const resume=document.getElementById('s-tournoi-resume');
@@ -959,7 +916,6 @@ async function _initTournoiInner(){
   const list=document.getElementById('tournoi-list');
   const sub=document.getElementById('tournoi-sub');
 
-  // Appel API GitHub avec cache localStorage
   try{
     const parts=hostname.split('.');
     let user=null, repo=null;
@@ -967,63 +923,70 @@ async function _initTournoiInner(){
       user=parts[0];
       repo=window.location.pathname.split('/').filter(Boolean)[0]||null;
     }
-    // Fallback local
     if(!user||!repo){ user='capgui13'; repo='MVT'; }
 
-    const CACHE_KEY='bridge_tournoi_list';
-    const CACHE_TTL=60*60*1000; // 1 heure
-
-    // Essayer le cache d'abord
-    let donneFichiers=null;
-    try{
-      const cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');
-      if(cached && Date.now()-cached.ts < CACHE_TTL){
-        donneFichiers=cached.files;
-        sub.textContent='(cache) ';
-      }
-    }catch(e){}
-
-    // Si pas de cache valide, appel API
-    if(!donneFichiers){
-      const controller=new AbortController();
-      const timer=setTimeout(()=>controller.abort(),8000);
-      let res;
-      try{
-        res=await fetch(`https://api.github.com/repos/${user}/${repo}/contents/`,
-          {headers:{Accept:'application/vnd.github.v3+json'}, signal:controller.signal});
-      }finally{ clearTimeout(timer); }
-      if(!res.ok){
-        if(res.status===403) throw new Error('Limite API atteinte');
-        throw new Error('Erreur HTTP '+res.status);
-      }
-      const files=await res.json();
-      donneFichiers=files
-        .filter(f=>f.type==='file' && /^donnes[-_]?\d{4}.*\.json$/i.test(f.name))
-        .sort((a,b)=>b.name.localeCompare(a.name))
-        .map(f=>f.name);
-      // Sauvegarder en cache
-      try{ localStorage.setItem(CACHE_KEY, JSON.stringify({ts:Date.now(), files:donneFichiers})); }catch(e){}
+    const res=await fetch(`https://api.github.com/repos/${user}/${repo}/contents/`,
+      {headers:{Accept:'application/vnd.github.v3+json'}});
+    if(!res.ok){
+      if(res.status===403) throw new Error('Limite API atteinte');
+      throw new Error();
     }
+    const files=await res.json();
+    const donneFichiers=files
+      .filter(f=>f.type==='file' && /^donnes[-_]?\d{4}.*\.json$/i.test(f.name))
+      .sort((a,b)=>b.name.localeCompare(a.name))
+      .map(f=>f.name);
 
     if(!donneFichiers.length){ sub.textContent='Aucun fichier de donnes trouvé.'; return; }
     sub.textContent=donneFichiers.length+' tournoi'+(donneFichiers.length>1?'s':'')+' disponible'+(donneFichiers.length>1?'s':'');
-    _afficherTournois(donneFichiers, base, list, sub);
+
+    const today=new Date(); today.setHours(0,0,0,0);
+    const futurs=[], passes=[];
+    donneFichiers.forEach(fname=>{
+      const match=fname.match(/(\d{4}-\d{2}-\d{2})/);
+      const date=match?new Date(match[1]+'T12:00:00'):null;
+      const passe=date&&date<today;
+      (passe?passes:futurs).push({fname,date});
+    });
+    futurs.sort((a,b)=>(a.date||0)-(b.date||0));
+    passes.sort((a,b)=>(b.date||0)-(a.date||0));
+    const tous=[...futurs,...passes];
+
+    tous.forEach(({fname,date})=>{
+      const btn=document.createElement('button');
+      btn.className='option-btn';
+      const passe=date&&date<today;
+      const match=fname.match(/(\d{4}-\d{2}-\d{2})/);
+      let label='Tournoi';
+      if(match){
+        const d=new Date(match[1]+'T12:00:00');
+        label=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+        label=label.charAt(0).toUpperCase()+label.slice(1);
+      }
+      const safeId=fname.replace(/[^a-z0-9_-]/gi,'_');
+      const countSpan=`<span id="count-${safeId}" style="font-style:italic;font-size:12px;color:var(--text2);margin-left:8px">…</span>`;
+      if(passe) btn.style.opacity='0.4';
+      btn.innerHTML=`<div style="flex:1;display:flex;align-items:center"><div class="option-main">${label}</div>${countSpan}</div><span style="font-size:18px">→</span>`;
+      btn.onclick=()=>chargerTournoi(base+fname, fname);
+      list.appendChild(btn);
+    });
+
+    tous.forEach(({fname})=>{
+      const safeId=fname.replace(/[^a-z0-9_-]/gi,'_');
+      fetch(base+fname+'?t='+Date.now())
+        .then(r=>r.ok?r.json():null)
+        .then(data=>{
+          const span=document.getElementById('count-'+safeId);
+          if(span) span.textContent=data?Object.keys(data).length+' donnes':'';
+        })
+        .catch(()=>{ const span=document.getElementById('count-'+safeId); if(span) span.textContent=''; });
+    });
+
   }catch(e){
     if(e.message==='Limite API atteinte'){
-      // Tenter d'utiliser le cache même expiré
-      try{
-        const cached=JSON.parse(localStorage.getItem('bridge_tournoi_list')||'null');
-        if(cached&&cached.files&&cached.files.length){
-          sub.textContent='Limite API GitHub atteinte — liste en cache.';
-          // Relancer avec les données en cache
-          _afficherTournois(cached.files, base, list, sub);
-          return;
-        }
-      }catch(e2){}
       sub.textContent='Limite API GitHub atteinte — réessaie dans une heure.';
     } else {
-      sub.textContent='Erreur : ' + (e.message || e.toString());
-    }
+      sub.textContent='Impossible de charger la liste des tournois.';
     }
   }
 }
