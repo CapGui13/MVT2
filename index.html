@@ -1017,7 +1017,8 @@ async function _initTournoiInner(){
       }catch(e2){}
       sub.textContent='Limite API GitHub atteinte — réessaie dans une heure.';
     } else {
-      sub.textContent='Impossible de charger la liste des tournois.';
+      sub.textContent='Erreur : ' + (e.message || e.toString());
+    }
     }
   }
 }
