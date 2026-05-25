@@ -357,10 +357,18 @@
 </main>
 
 <script>
-// ─── Config GitHub (fixe) ───────────────────────────────────────────────────
-const GH_OWNER = 'capgui13';
-const GH_REPO  = 'MVT';
-const GH_BRANCH = 'main'; // ou 'master' — ajustez si besoin
+// ─── Config GitHub (détectée depuis l'URL) ──────────────────────────────────
+(function(){
+  const parts = window.location.hostname.split('.');
+  if(parts.length>=3 && parts[1]==='github' && parts[2]==='io'){
+    window.GH_OWNER = parts[0];
+    window.GH_REPO  = window.location.pathname.split('/').filter(Boolean)[0] || 'MVT';
+  } else {
+    window.GH_OWNER = 'capgui13';
+    window.GH_REPO  = 'MVT';
+  }
+  window.GH_BRANCH = 'main';
+})();
 
 // ─── Détection de date ──────────────────────────────────────────────────────
 const JOUR_MAP = {
