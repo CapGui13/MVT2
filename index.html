@@ -94,6 +94,41 @@
   .nav-btn:disabled{opacity:0.2;cursor:default}
   .nav-btn.fwd{background:var(--text);color:var(--bg);border-color:transparent}
   .reset{display:block;width:100%;margin-top:.6rem;padding:6px;border:none;background:none;color:var(--text2);font-size:13px;cursor:pointer;text-decoration:underline;font-family:inherit;}
+  /* Générateur */
+  .gen-block{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:.75rem}
+  .gen-block-header{padding:.6rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+  .gen-step{width:18px;height:18px;border-radius:50%;background:#1d4ed8;color:#bfdbfe;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .gen-block-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text2)}
+  .gen-block-body{padding:1rem}
+  .gen-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .gen-col label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2);display:block;margin-bottom:4px}
+  select{width:100%;padding:9px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg2);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;padding-right:26px;}
+  select:focus{outline:none;border-color:var(--blue)}
+  .gen-textarea{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:12px;font-family:monospace;resize:vertical;line-height:1.7;min-height:120px}
+  .gen-textarea:focus{outline:none;border-color:var(--blue)}
+  .gen-textarea::placeholder{color:var(--text2)}
+  .gen-token-input{width:100%;padding:9px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;font-family:monospace}
+  .gen-token-input:focus{outline:none;border-color:var(--blue)}
+  .gen-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:.75rem}
+  .gen-btn-primary{padding:12px 18px;border:none;border-radius:12px;background:var(--text);color:var(--bg);font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity 0.15s;white-space:nowrap}
+  .gen-btn-primary:active{opacity:0.8}
+  .gen-btn-primary:disabled{opacity:0.4;cursor:default}
+  .gen-btn-secondary{padding:12px 14px;border:1.5px solid var(--border);border-radius:12px;background:transparent;color:var(--text2);font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;}
+  .gen-btn-secondary:active{opacity:0.8}
+  .gen-status{display:none;font-size:12px;font-weight:500;padding:7px 12px;border-radius:10px}
+  .gen-status.ok{display:inline-flex;background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.3)}
+  .gen-status.err{display:inline-flex;background:rgba(248,113,113,.1);color:#f87171;border:1px solid rgba(248,113,113,.3)}
+  .gen-chip{display:none;font-size:12px;font-weight:500;padding:7px 12px;border-radius:10px;background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.3)}
+  .gen-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:.75rem}
+  .gen-stat{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:.85rem 1rem}
+  .gen-stat:first-child{border-color:rgba(96,165,250,.4);background:rgba(96,165,250,.06)}
+  .gen-stat-num{font-size:28px;font-weight:700;color:var(--text);letter-spacing:-.03em;line-height:1;margin-bottom:3px}
+  .gen-stat:first-child .gen-stat-num{color:var(--blue)}
+  .gen-stat-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)}
+  .gen-preview-bar{background:var(--bg3);border-bottom:1px solid var(--border);padding:8px 12px;display:flex;align-items:center;gap:8px}
+  .gen-dots{display:flex;gap:5px}
+  .gen-dot{width:10px;height:10px;border-radius:50%}
+  .gen-preview-body{padding:1rem;font-size:11px;font-family:monospace;color:#7ec8a0;max-height:180px;overflow-y:auto;white-space:pre;line-height:1.8;background:var(--bg)}
 </style>
 </head>
 <body>
@@ -239,117 +274,103 @@
 
 <!-- ÉCRAN GÉNÉRATEUR -->
 <div class="screen" id="s-gen">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
-    <p class="section-title" style="margin-bottom:0">Générateur de donnes</p>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+    <p class="section-title" style="margin-bottom:0">Générateur</p>
     <button class="back-btn" onclick="goBack()">← Retour</button>
   </div>
 
   <!-- Colonnes -->
-  <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:.75rem">
-    <div style="padding:.6rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
-      <span style="width:18px;height:18px;border-radius:50%;background:#1d4ed8;color:#bfdbfe;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</span>
-      <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text2)">Colonnes</span>
+  <div class="gen-block">
+    <div class="gen-block-header">
+      <span class="gen-step">1</span>
+      <span class="gen-block-title">Colonnes</span>
     </div>
-    <div style="padding:1rem;display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)">N° donne</span>
-        <select id="gen-col-num" onchange="genUpdatePreview()">
-          <option value="0">Col. A</option><option value="1">Col. B</option>
-          <option value="2">Col. C</option><option value="3">Col. D</option>
-        </select>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)">NS</span>
-        <select id="gen-col-ns" onchange="genUpdatePreview()">
-          <option value="0">A</option><option value="1" selected>B</option>
-          <option value="2">C</option><option value="3">D</option>
-        </select>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)">EO</span>
-        <select id="gen-col-eo" onchange="genUpdatePreview()">
-          <option value="0">A</option><option value="1">B</option>
-          <option value="2" selected>C</option><option value="3">D</option>
-        </select>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)">Note</span>
-        <select id="gen-col-note" onchange="genUpdatePreview()">
-          <option value="0">A</option><option value="1">B</option>
-          <option value="2">C</option><option value="3" selected>D</option>
-          <option value="-1">— aucune</option>
-        </select>
+    <div class="gen-block-body">
+      <div class="gen-grid">
+        <div class="gen-col"><label>N° donne</label>
+          <select id="gen-col-num" onchange="genUpdatePreview()">
+            <option value="0">Col. A</option><option value="1">Col. B</option>
+            <option value="2">Col. C</option><option value="3">Col. D</option>
+          </select>
+        </div>
+        <div class="gen-col"><label>NS</label>
+          <select id="gen-col-ns" onchange="genUpdatePreview()">
+            <option value="0">A</option><option value="1" selected>B</option>
+            <option value="2">C</option><option value="3">D</option>
+          </select>
+        </div>
+        <div class="gen-col"><label>EO</label>
+          <select id="gen-col-eo" onchange="genUpdatePreview()">
+            <option value="0">A</option><option value="1">B</option>
+            <option value="2" selected>C</option><option value="3">D</option>
+          </select>
+        </div>
+        <div class="gen-col"><label>Note</label>
+          <select id="gen-col-note" onchange="genUpdatePreview()">
+            <option value="0">A</option><option value="1">B</option>
+            <option value="2">C</option><option value="3" selected>D</option>
+            <option value="-1">— aucune</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Données Excel -->
-  <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:.75rem">
-    <div style="padding:.6rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
-      <span style="width:18px;height:18px;border-radius:50%;background:#1d4ed8;color:#bfdbfe;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</span>
-      <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text2)">Données Excel</span>
+  <div class="gen-block">
+    <div class="gen-block-header">
+      <span class="gen-step">2</span>
+      <span class="gen-block-title">Données Excel</span>
     </div>
-    <div style="padding:1rem">
-      <p style="font-size:12px;color:var(--text2);margin-bottom:8px">Copie-colle directement depuis Excel. Les lignes vides et en-têtes sont ignorés.</p>
-      <textarea id="gen-input" rows="6" placeholder="Colle ici tes données Excel…"
-        style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:12px;font-family:monospace;resize:vertical;line-height:1.7"
-        oninput="genUpdatePreview()"></textarea>
+    <div class="gen-block-body">
+      <p class="section-sub">Copie-colle directement depuis Excel. Les lignes vides et en-têtes sont ignorés.</p>
+      <textarea id="gen-input" class="gen-textarea" placeholder="Colle ici tes données Excel…" oninput="genUpdatePreview()"></textarea>
     </div>
   </div>
 
   <!-- Token GitHub -->
-  <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:.75rem">
-    <div style="padding:.6rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
-      <span style="width:18px;height:18px;border-radius:50%;background:#1d4ed8;color:#bfdbfe;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</span>
-      <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text2)">GitHub — upload automatique</span>
+  <div class="gen-block">
+    <div class="gen-block-header">
+      <span class="gen-step">3</span>
+      <span class="gen-block-title">GitHub — upload automatique</span>
     </div>
-    <div style="padding:1rem">
-      <p style="font-size:12px;color:var(--text2);margin-bottom:8px">Token pour publier directement sur <strong id="gen-repo-label">…</strong>. Stocké uniquement dans ce navigateur.</p>
+    <div class="gen-block-body">
+      <p class="section-sub">Token pour publier directement sur <strong id="gen-repo-label">…</strong>. Stocké uniquement dans ce navigateur.</p>
       <div style="display:flex;gap:8px;align-items:center">
-        <input id="gen-token-input" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
-          style="flex:1;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;font-family:monospace"
+        <input id="gen-token-input" type="password" class="gen-token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
           oninput="genOnTokenInput()"
           onfocus="if(/^•+/.test(this.value)){this.value='';}"/>
-        <button class="btn-go" style="background:var(--bg3);color:var(--text2);font-size:13px;padding:8px 14px;margin:0;width:auto" onclick="genClearToken()">Supprimer</button>
+        <button class="gen-btn-secondary" onclick="genClearToken()">Supprimer</button>
       </div>
       <div style="margin-top:8px" id="gen-token-status"></div>
     </div>
   </div>
 
   <!-- Actions -->
-  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:.75rem">
-    <button class="btn-go" style="margin:0;width:auto;padding:11px 20px" id="gen-btn-generate" onclick="genGenerate()">⬇ Générer et télécharger</button>
-    <button class="btn-go" style="margin:0;width:auto;padding:11px 16px;background:var(--bg3);color:var(--text2);font-size:13px" onclick="genReset()">Effacer</button>
-    <span id="gen-status" style="display:none;font-size:12px;font-weight:500;padding:7px 12px;border-radius:10px"></span>
-    <span id="gen-date-chip" style="display:none;font-size:12px;font-weight:500;padding:7px 12px;border-radius:10px;background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.3)"></span>
+  <div class="gen-actions">
+    <button class="gen-btn-primary" id="gen-btn-generate" onclick="genGenerate()">⬇ Générer</button>
+    <button class="gen-btn-secondary" onclick="genReset()">Effacer</button>
+    <span id="gen-status" class="gen-status"></span>
+    <span id="gen-date-chip" class="gen-chip"></span>
   </div>
 
   <!-- Aperçu -->
   <div id="gen-results" style="display:none;flex-direction:column;gap:.75rem">
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-      <div style="background:rgba(96,165,250,.06);border:1.5px solid rgba(96,165,250,.4);border-radius:12px;padding:1rem">
-        <div style="font-size:28px;font-weight:700;color:var(--blue);letter-spacing:-.03em;line-height:1;margin-bottom:4px" id="gen-s-total">0</div>
-        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)">Donnes</div>
-      </div>
-      <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:1rem">
-        <div style="font-size:28px;font-weight:700;color:var(--text);letter-spacing:-.03em;line-height:1;margin-bottom:4px" id="gen-s-scores">0</div>
-        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)">Avec score</div>
-      </div>
-      <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:1rem">
-        <div style="font-size:28px;font-weight:700;color:var(--text);letter-spacing:-.03em;line-height:1;margin-bottom:4px" id="gen-s-notes">0</div>
-        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)">Avec note</div>
-      </div>
+    <div class="gen-stats">
+      <div class="gen-stat"><div class="gen-stat-num" id="gen-s-total">0</div><div class="gen-stat-label">Donnes</div></div>
+      <div class="gen-stat"><div class="gen-stat-num" id="gen-s-scores">0</div><div class="gen-stat-label">Avec score</div></div>
+      <div class="gen-stat"><div class="gen-stat-num" id="gen-s-notes">0</div><div class="gen-stat-label">Avec note</div></div>
     </div>
-    <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;overflow:hidden">
-      <div style="background:var(--bg3);border-bottom:1px solid var(--border);padding:8px 12px;display:flex;align-items:center;gap:8px">
-        <div style="display:flex;gap:5px">
-          <div style="width:10px;height:10px;border-radius:50%;background:#fe5f57"></div>
-          <div style="width:10px;height:10px;border-radius:50%;background:#febc2e"></div>
-          <div style="width:10px;height:10px;border-radius:50%;background:#28c840"></div>
+    <div class="gen-block">
+      <div class="gen-preview-bar">
+        <div class="gen-dots">
+          <div class="gen-dot" style="background:#fe5f57"></div>
+          <div class="gen-dot" style="background:#febc2e"></div>
+          <div class="gen-dot" style="background:#28c840"></div>
         </div>
         <span id="gen-preview-fname" style="font-size:11px;font-family:monospace;color:var(--text2);margin-left:4px">donnes.json</span>
       </div>
-      <div id="gen-preview" style="padding:1rem;font-size:11px;font-family:monospace;color:#7ec8a0;max-height:200px;overflow-y:auto;white-space:pre;line-height:1.8;background:var(--bg)"></div>
+      <div id="gen-preview" class="gen-preview-body"></div>
     </div>
   </div>
 </div>
@@ -1228,7 +1249,7 @@ addNavListener('btn-next', 1);
     if(!inp||!st) return;
     if(t){
       inp.value='•'.repeat(12)+t.slice(-4);
-      st.innerHTML='<span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:7px 12px;border-radius:10px;background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.3)">✓ Token enregistré</span>';
+      st.innerHTML='<span class="gen-status ok">✓ Token enregistré</span>';
     } else {
       inp.value='';
       st.innerHTML='';
@@ -1324,9 +1345,7 @@ addNavListener('btn-next', 1);
   function showGenStatus(type,msg){
     const el=document.getElementById('gen-status');
     el.textContent=msg;
-    el.style.display='inline-flex';
-    if(type==='ok'){ el.style.background='rgba(74,222,128,.1)'; el.style.color='var(--green)'; el.style.border='1px solid rgba(74,222,128,.3)'; }
-    else { el.style.background='rgba(248,113,113,.1)'; el.style.color='var(--err)'; el.style.border='1px solid rgba(248,113,113,.3)'; }
+    el.className='gen-status '+type;
   }
 
   async function uploadToGitHub(fname,jsonStr){
