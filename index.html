@@ -15,7 +15,10 @@
   body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;padding-bottom:env(safe-area-inset-bottom);}
   .wrap{max-width:480px;margin:0 auto;padding:1.5rem 1rem}
   .screen{display:none}
-  .screen.active{display:block}
+  .screen.active{display:block;animation:screenIn 0.2s ease forwards}
+  #s-jeu.active{animation:screenInFixed 0.2s ease forwards}
+  @keyframes screenIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes screenInFixed{from{opacity:0}to{opacity:1}}
   #s-jeu{display:none;flex-direction:column}
   #s-jeu.active{display:flex;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;bottom:0;padding:1.5rem 1rem;overflow:hidden;overscroll-behavior:none;background:var(--bg);}
   .header{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem}
@@ -58,30 +61,57 @@
   .tour-detail{font-size:12px;color:var(--text2)}
 
   /* Jeu */
-  .prog{height:3px;background:var(--border);border-radius:2px;margin-bottom:.75rem;overflow:hidden}
-  .prog-fill{height:100%;background:var(--blue);border-radius:2px;transition:width 0.4s}
-  .big-card{background:var(--bg2);border-radius:14px;padding:.75rem 1rem;text-align:center;margin-bottom:.6rem;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:12px;}
-  .big-label{font-size:11px;color:var(--text2);letter-spacing:0.08em;text-transform:uppercase}
-  .big-num{font-size:42px;font-weight:700;color:var(--text);line-height:1}
-  .big-sub{font-size:13px;color:var(--text2)}
-  .badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;margin-top:4px}
-  .badge-saut{background:#fef3c7;color:#92400e}
-  .badge-guerid{background:#d1fae5;color:#065f46}
-  .meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:.6rem}
-  .meta-cell{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center}
-  .meta-label{font-size:10px;color:var(--text2);margin-bottom:3px}
-  .meta-val{font-size:14px;font-weight:600;color:var(--text)}
-  .boards-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:.85rem;margin-bottom:.75rem;min-height:200px;flex:1;overflow-y:auto}
-  .boards-label{font-size:10px;color:var(--text2);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
-  .chips{display:flex;flex-direction:column;gap:6px}
-  .chip{background:var(--chip-bg);color:var(--chip-text);border-radius:10px;padding:9px 14px;font-size:17px;font-weight:700;text-align:center}
-  .chip-rich{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:8px 12px;display:flex;gap:10px;align-items:center}
-  .chip-num{font-size:18px;font-weight:700;color:var(--chip-text);background:var(--chip-bg);border-radius:8px;padding:4px 10px;flex-shrink:0;min-width:44px;text-align:center;line-height:1.4}
-  .chip-info{flex:1;display:flex;flex-direction:column;gap:2px}
-  .chip-scores{display:flex;gap:12px}
-  .chip-score-item{font-size:13px;font-weight:600;color:var(--text)}
-  .chip-score-label{font-size:10px;color:var(--text2);margin-right:3px}
-  .chip-note{font-size:12px;color:var(--text2);font-style:italic;visibility:hidden}
+  .prog{height:2px;background:var(--border);margin-bottom:1rem;overflow:hidden}
+  .prog-fill{height:100%;background:var(--blue);transition:width 0.4s ease}
+
+  /* Carte tour */
+  .big-card{background:var(--bg2);border-radius:18px;padding:1rem 1.2rem;margin-bottom:.7rem;border:1px solid var(--border);display:flex;align-items:center;gap:1rem;}
+  .tour-circle{position:relative;flex-shrink:0;width:72px;height:72px}
+  .tour-circle svg{position:absolute;top:0;left:0;width:72px;height:72px;transform:rotate(-90deg)}
+  .tour-circle-bg{fill:none;stroke:var(--border);stroke-width:4}
+  .tour-circle-fill{fill:none;stroke:var(--blue);stroke-width:4;stroke-linecap:round;stroke-dasharray:188.5;stroke-dashoffset:188.5;transition:stroke-dashoffset 0.5s ease}
+  .tour-circle-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+  .big-num{font-size:28px;font-weight:800;color:var(--text);line-height:1;letter-spacing:-.03em}
+  .big-sub{font-size:10px;color:var(--text2);line-height:1;margin-top:1px}
+  .tour-right{flex:1;min-width:0}
+  .badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;gap:4px}
+  .badge-saut{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3)}
+  .badge-guerid{background:rgba(74,222,128,.12);color:#4ade80;border:1px solid rgba(74,222,128,.25)}
+  .badge-relais{background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.25)}
+  .badges-row{display:flex;gap:6px;flex-wrap:wrap;min-height:24px}
+  .meta-cell{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:10px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .meta-label{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+  .meta-val{font-size:14px;font-weight:700;color:var(--text);line-height:1}
+
+  /* Donnes */
+  .boards-card{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:1rem;margin-bottom:.7rem;flex:1;overflow-y:auto}
+  .boards-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem}
+  .boards-label{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:0.1em;text-transform:uppercase}
+  .boards-count{font-size:11px;color:var(--text2)}
+  .chips{display:flex;flex-direction:column;gap:7px}
+
+  /* Chip simple (sans info) */
+  .chip{border-radius:14px;padding:14px 16px;font-size:22px;font-weight:800;text-align:center;background:var(--bg3);color:var(--text);letter-spacing:-.02em}
+
+  /* Chip riche (avec scores) */
+  .chip-rich{background:var(--bg3);border-radius:14px;padding:12px 14px;display:flex;gap:12px;align-items:center;border:none}
+  .chip-num{font-size:20px;font-weight:800;background:var(--chip-bg);color:var(--chip-text);border-radius:10px;padding:6px 12px;flex-shrink:0;min-width:48px;text-align:center;line-height:1.3;letter-spacing:-.02em}
+  .chip-info{flex:1;display:flex;flex-direction:column;gap:4px}
+  .chip-scores{display:flex;gap:0;border-radius:8px;overflow:hidden;width:fit-content}
+  .chip-score-item{font-size:12px;font-weight:700;padding:3px 10px;display:flex;align-items:center;gap:4px}
+  .chip-score-ns{background:rgba(74,222,128,.15);color:#4ade80}
+  .chip-score-eo{background:rgba(96,165,250,.15);color:#60a5fa}
+  .chip-score-label{font-size:9px;font-weight:800;opacity:.7;letter-spacing:.05em}
+  .chip-note{font-size:11px;color:var(--text2);font-style:italic}
+  .chip-note-hidden{visibility:hidden;height:0;margin:0;padding:0}
+
+  /* Nav */
+  .nav{display:flex;gap:8px}
+  .nav-btn{flex:1;padding:14px;border:1.5px solid var(--border);border-radius:14px;background:transparent;color:var(--text2);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:all 0.15s;}
+  .nav-btn:active{transform:scale(0.97)}
+  .nav-btn:disabled{opacity:0.15;cursor:default}
+  .nav-btn.fwd{background:var(--text);color:var(--bg);border-color:transparent;font-weight:700}
+  .reset{display:block;width:100%;margin-top:.5rem;padding:6px;border:none;background:none;color:var(--text2);font-size:12px;cursor:pointer;text-decoration:underline;font-family:inherit;opacity:.6}
   /* Écran donnes */
   .donnes-textarea{width:100%;height:140px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg2);color:var(--text);font-size:13px;font-family:inherit;resize:none;line-height:1.4}
   .donnes-textarea:focus{outline:none;border-color:var(--blue)}
@@ -154,12 +184,13 @@
   <div class="options-list" id="tournoi-list"></div>
   <button class="btn-go" style="margin-top:.5rem;background:var(--bg3);color:var(--text2);font-size:13px" onclick="
     try{localStorage.removeItem('bridge_tournoi_list');}catch(e){}
+    try{localStorage.removeItem('bridge_update_check');}catch(e){}
     document.getElementById('tournoi-list').innerHTML='';
     document.getElementById('tournoi-sub').textContent='Chargement...';
     _initRunning=false;
     initTournoi();
   ">↺ Rafraîchir la liste</button>
-  <button class="btn-go" style="margin-top:.5rem;background:var(--bg3);color:var(--text2);font-size:14px" onclick="const b=document.getElementById('btn-charger-donnes');if(b)b.style.display='';goTo('s-paires')">Continuer sans donnes →</button>
+  <button style="display:block;width:100%;margin-top:.3rem;padding:8px;border:none;background:none;color:var(--text2);font-size:13px;cursor:pointer;font-family:inherit;opacity:.6;text-decoration:none" onclick="const b=document.getElementById('btn-charger-donnes');if(b)b.style.display='';goTo('s-paires')">Continuer sans donnes →</button>
 </div>
 
 <div class="screen" id="s-paires">
@@ -200,7 +231,7 @@
   <!-- Mitchell : table de départ -->
   <div class="field" id="field-table">
     <label>Votre table de départ</label>
-    <input type="number" id="f-table" min="1" value="1" step="1" inputmode="numeric" onfocus="this.select()"/>
+    <input type="number" id="f-table" min="1" value="1" step="1" inputmode="numeric" onfocus="this.select()" oninput="updateEvents()"/>
     <p class="err" id="e-table">Entre 1 et le nombre de tables</p>
   </div>
   <!-- Mitchell impair : ligne du relais -->
@@ -211,6 +242,10 @@
       <button class="seg-btn" id="btn-relais-eo" onclick="setRelais('EO')">Est / Ouest</button>
     </div>
     <p style="font-size:12px;color:var(--text2);margin-top:6px">La ligne qui a une paire de plus (celle qui sera en relais à tour de rôle)</p>
+  </div>
+  <!-- Info événements du tournoi -->
+  <div id="field-events" style="display:none;margin-bottom:1.1rem">
+    <div id="events-list" style="display:flex;flex-direction:column;gap:6px"></div>
   </div>
   <!-- Champs cachés conservés pour la logique existante -->
   <input type="number" id="f-tables" style="display:none" value="8"/>
@@ -244,23 +279,44 @@
 <!-- ÉCRAN 4 : JEU -->
 <div class="screen" id="s-jeu">
   <div class="prog"><div class="prog-fill" id="prog"></div></div>
-  <div class="big-card">
-    <p class="big-num" id="d-tour">1</p>
-    <div>
-      <p class="big-label">Tour</p>
-      <p class="big-sub" id="d-tour-sub">—</p>
-      <span class="badge badge-saut" id="d-saut" style="visibility:hidden">Tour du saut</span>
-      <span class="badge badge-guerid" id="d-guerid" style="visibility:hidden">Tables miroir</span>
-      <span class="badge" id="d-relais" style="visibility:hidden;background:#f3e8ff;color:#6b21a8">Relais — pas de jeu</span>
+  <div style="display:grid;grid-template-columns:80px 1fr 1fr 1fr;gap:8px;margin-bottom:.7rem">
+    <!-- Cadran tour -->
+    <div class="big-card" style="margin-bottom:0;padding:.5rem;flex-direction:column;align-items:center;justify-content:center;gap:3px">
+      <div class="tour-circle" style="width:52px;height:52px">
+        <svg viewBox="0 0 72 72" style="width:52px;height:52px"><circle class="tour-circle-bg" cx="36" cy="36" r="30"/><circle class="tour-circle-fill" id="prog-circle" cx="36" cy="36" r="30"/></svg>
+        <div class="tour-circle-inner">
+          <span class="big-num" id="d-tour" style="font-size:20px">1</span>
+          <span class="big-sub" id="d-tour-sub" style="font-size:9px">/ —</span>
+        </div>
+      </div>
+      <span style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)">Tour</span>
+    </div>
+    <!-- Mouvement -->
+    <div class="meta-cell">
+      <p class="meta-label">Mouvement</p>
+      <p class="meta-val" id="d-mode">—</p>
+    </div>
+    <!-- Table -->
+    <div class="meta-cell">
+      <p class="meta-label" id="d-label-table">Table</p>
+      <p class="meta-val" id="d-table">—</p>
+    </div>
+    <!-- Sens -->
+    <div class="meta-cell">
+      <p class="meta-label" id="d-label-sens">Sens</p>
+      <p class="meta-val" id="d-sens">—</p>
     </div>
   </div>
-  <div class="meta">
-    <div class="meta-cell"><p class="meta-label">Mouvement</p><p class="meta-val" id="d-mode">—</p></div>
-    <div class="meta-cell"><p class="meta-label" id="d-label-table">Table</p><p class="meta-val" id="d-table">—</p></div>
-    <div class="meta-cell"><p class="meta-label" id="d-label-sens">Sens</p><p class="meta-val" id="d-sens">—</p></div>
+  <div class="badges-row" style="margin-bottom:.5rem">
+    <span class="badge badge-saut" id="d-saut" style="visibility:hidden">⤵ Saut</span>
+    <span class="badge badge-guerid" id="d-guerid" style="visibility:hidden">⇄ Tables miroir</span>
+    <span class="badge badge-relais" id="d-relais" style="visibility:hidden">⏸ Relais</span>
   </div>
-  <div class="boards-card">
-    <p class="boards-label">Donnes à jouer</p>
+  <div class="boards-card" id="boards-card-inner">
+    <div class="boards-header">
+      <span class="boards-label">Donnes à jouer</span>
+      <span class="boards-count" id="d-donnes-count"></span>
+    </div>
     <div class="chips" id="d-donnes"></div>
   </div>
   <div class="nav">
@@ -800,19 +856,65 @@ function applyConfig(mv,tables,tours,dpt,nbPaires){
   if(impair){
     document.getElementById('label-relais').textContent='Ligne du relais (table '+tables+')';
     setRelais('EO');
+  } else {
+    relaisLigne='EO'; // reset si le champ est masqué
   }
   if(!isHowell){
-    applyStyle(document.getElementById('btn-ns'),sens==='NS'?GREEN:OFF);
-    applyStyle(document.getElementById('btn-eo'),sens==='EO'?GREEN:OFF);
+    sens='NS';
+    applyStyle(document.getElementById('btn-ns'),GREEN);
+    applyStyle(document.getElementById('btn-eo'),OFF);
   }
   window._nbPairesHowell = nbPaires || tables*2;
   window._nbPairesConfig = nbPaires;
   goTo('s-config');
+  updateEvents();
 }
 
-function setRelais(r){relaisLigne=r;applyStyle(document.getElementById('btn-relais-ns'),r==='NS'?GREEN:OFF);applyStyle(document.getElementById('btn-relais-eo'),r==='EO'?GREEN:OFF);}
+function setRelais(r){relaisLigne=r;applyStyle(document.getElementById('btn-relais-ns'),r==='NS'?GREEN:OFF);applyStyle(document.getElementById('btn-relais-eo'),r==='EO'?BLUE:OFF);updateEvents();}
 function setMode(m){mode=m;applyStyle(document.getElementById('btn-mitchell'),m==='mitchell'?BLUE:OFF);applyStyle(document.getElementById('btn-guerid'),m==='guerid'?BLUE:OFF);}
-function setSens(s){sens=s;applyStyle(document.getElementById('btn-ns'),s==='NS'?GREEN:OFF);applyStyle(document.getElementById('btn-eo'),s==='EO'?GREEN:OFF);}
+function setSens(s){sens=s;applyStyle(document.getElementById('btn-ns'),s==='NS'?GREEN:OFF);applyStyle(document.getElementById('btn-eo'),s==='EO'?BLUE:OFF);updateEvents();}
+
+function updateEvents(){
+  const N=int('f-tables'),R=int('f-tours'),D=int('f-dpt');
+  const T=int('f-table');
+  const el=document.getElementById('field-events');
+  const list=document.getElementById('events-list');
+  list.innerHTML='';
+  // Guéridon : pas d'info
+  if(mode==='guerid'||['classique','heredia'].includes(mode)){el.style.display='none';return;}
+  if(!T||T<1||T>N||!R){el.style.display='none';return;}
+  const simTmp=buildSim(T,N,R,mode,sens);
+  const nbPaires=window._nbPairesConfig||N*2;
+  const impair=nbPaires%2!==0;
+  const items=[];
+  simTmp.forEach((tour,i)=>{
+    // Relais : la ligne du relais arrive à la table N
+    if(impair && sens===relaisLigne && tour.tableAffichee===String(N)){
+      items.push({
+        type:'relais',
+        html:`<span style="font-size:12px;font-weight:600;color:#a78bfa">🔄 Relais tour ${i+1}</span><span style="font-size:11px;color:var(--text2);margin-left:6px">— vous serez à la table ${N}, sans adversaire</span>`
+      });
+    }
+    // Saut : détecté par estSaut (uniquement paires EO)
+    if(tour.estSaut){
+      // table sautée = tableAffichee du tour précédent + 1 (mod N)
+      const prevTable=simTmp[i-1]?parseInt(simTmp[i-1].tableAffichee):null;
+      const sauteeLabel=prevTable?` (saute la table ${prevTable===N?1:prevTable+1})`:'';
+      items.push({
+        type:'saut',
+        html:`<span style="font-size:12px;font-weight:600;color:#fbbf24">↪ Saut tour ${i+1}</span><span style="font-size:11px;color:var(--text2);margin-left:6px">${sauteeLabel}</span>`
+      });
+    }
+  });
+  if(!items.length){el.style.display='none';return;}
+  items.forEach(item=>{
+    const div=document.createElement('div');
+    div.style.cssText='padding:8px 12px;border-radius:10px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;flex-wrap:wrap;gap:4px';
+    div.innerHTML=item.html;
+    list.appendChild(div);
+  });
+  el.style.display='';
+}
 
 function int(id){return parseInt(document.getElementById(id).value)||0;}
 function err(id,v){document.getElementById(id).style.display=v?'block':'none';}
@@ -879,10 +981,13 @@ function render(){
   const isHowell=['classique','heredia'].includes(m);
 
   document.getElementById('d-tour').textContent=n;
-  document.getElementById('d-tour-sub').textContent='sur '+R;
+  document.getElementById('d-tour-sub').textContent='/ '+R;
   document.getElementById('d-saut').style.visibility='hidden';
   document.getElementById('d-guerid').style.visibility='hidden';
   document.getElementById('d-relais').style.visibility='hidden';
+  // Cercle de progression
+  const circ=document.getElementById('prog-circle');
+  if(circ){ const pct=n/R; circ.style.strokeDashoffset=188.5*(1-pct); }
 
   let donnes=[];
   if(isHowell){
@@ -915,28 +1020,38 @@ function render(){
   }
   const container=document.getElementById('d-donnes');
   container.innerHTML='';
+  const boardsCard=document.getElementById('boards-card-inner');
+
+  // Mode relais : fond violet + donnes en opacité réduite
+  const estRelaisRender=document.getElementById('d-relais').style.visibility==='visible';
+  if(boardsCard) boardsCard.style.background=estRelaisRender?'rgba(167,139,250,.07)':'';
+  const countEl=document.getElementById('d-donnes-count');
+  if(countEl) countEl.textContent=estRelaisRender?'Pas de jeu ce tour':donnes.length+' donne'+(donnes.length>1?'s':'');
+  if(estRelaisRender && countEl) countEl.style.color='#a78bfa';
+  const chipsOpacity=estRelaisRender?'0.35':'1';
   donnes.forEach(d=>{
     const info=donnesData[d];
     if(info){
       const div=document.createElement('div');
       div.className='chip-rich';
-      const nsVis=info.ns?'visible':'hidden';
-      const eoVis=info.eo?'visible':'hidden';
-      const noteVis=info.note?'visible':'hidden';
+      div.style.opacity=chipsOpacity;
+      const nsHtml=info.ns?`<span class="chip-score-item chip-score-ns"><span class="chip-score-label">NS</span>${info.ns}</span>`:'';
+      // EO décalé si pas de NS (placeholder invisible pour aligner)
+      const eoPlaceholder=(!info.ns && info.eo)?`<span class="chip-score-item chip-score-ns" style="visibility:hidden"><span class="chip-score-label">NS</span>—</span>`:'';
+      const eoHtml=info.eo?`<span class="chip-score-item chip-score-eo"><span class="chip-score-label">EO</span>${info.eo}</span>`:'';
+      const noteHtml=info.note?`<div class="chip-note">${info.note}</div>`:'';
       div.innerHTML=`
         <div class="chip-num">${d}</div>
         <div class="chip-info">
-          <div class="chip-scores">
-            <span class="chip-score-item" style="visibility:${nsVis}"><span class="chip-score-label">NS</span>${info.ns||'—'}</span>
-            <span class="chip-score-item" style="visibility:${eoVis}"><span class="chip-score-label">EO</span>${info.eo||'—'}</span>
-          </div>
-          <div class="chip-note" style="visibility:${noteVis}">${info.note||'—'}</div>
+          <div class="chip-scores">${nsHtml}${eoPlaceholder}${eoHtml}</div>
+          ${noteHtml}
         </div>`;
       container.appendChild(div);
     } else {
-      const c=document.createElement('span');
+      const c=document.createElement('div');
       c.className='chip';
-      c.textContent='N°'+d;
+      c.style.opacity=chipsOpacity;
+      c.textContent=d;
       container.appendChild(c);
     }
   });
@@ -1005,12 +1120,20 @@ function clearResume(){
   document.getElementById('s-tournoi-resume').style.display='none';
 }
 
-function resumeTournoi(){
+async function resumeTournoi(){
   const s=loadState();
   if(!s) return;
+  _initRunning=false; // stopper tout chargement en cours
   cfg=s.cfg; sim=s.sim; tourActuel=s.tourActuel; mode=s.mode; sens=s.sens||'NS'; relaisLigne=s.cfg.relaisLigne||'EO';
   navHistory=[];
   goTo('s-jeu');
+  // Recharger les donnes si un fichier était chargé
+  if(s.donnesFichier){
+    const hostname=window.location.hostname;
+    const onGithub=hostname.endsWith('github.io');
+    const base=onGithub?window.location.href.replace(/\/[^\/]*$/,'/'):'https://capgui13.github.io/MVT/';
+    await chargerTournoi(base+s.donnesFichier, s.donnesFichier, true);
+  }
   render();
 }
 
@@ -1050,6 +1173,8 @@ async function _initTournoiInner(){
   const list=document.getElementById('tournoi-list');
   const sub=document.getElementById('tournoi-sub');
 
+  const CACHE_KEY='bridge_tournoi_list';
+
   try{
     const parts=hostname.split('.');
     let user=null, repo=null;
@@ -1059,6 +1184,27 @@ async function _initTournoiInner(){
     }
     if(!user||!repo){ user='capgui13'; repo='MVT'; }
 
+    // 1 seule requête : dernier commit du repo
+    const commitRes=await fetch(`https://api.github.com/repos/${user}/${repo}/commits?per_page=1`,
+      {headers:{Accept:'application/vnd.github.v3+json'}});
+    if(!commitRes.ok){
+      if(commitRes.status===403) throw new Error('Limite API atteinte');
+      throw new Error();
+    }
+    const commitData=await commitRes.json();
+    const currentSha=commitData[0]?.sha||null;
+
+    // Vérifier le cache
+    let cached=null;
+    try{ cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'null'); }catch(e){}
+    if(cached && cached.sha && cached.sha===currentSha && cached.tous && cached.counts){
+      // Cache valide : affichage immediat, 0 requete supplementaire
+      renderTournoiList(list, sub, cached.tous, cached.counts, base, today=>today);
+checkForUpdate(currentSha);
+      return;
+    }
+
+    // Cache invalide ou absent → charger la liste complète
     const res=await fetch(`https://api.github.com/repos/${user}/${repo}/contents/`,
       {headers:{Accept:'application/vnd.github.v3+json'}});
     if(!res.ok){
@@ -1072,7 +1218,6 @@ async function _initTournoiInner(){
       .map(f=>f.name);
 
     if(!donneFichiers.length){ sub.textContent='Aucun fichier de donnes trouvé.'; return; }
-    sub.textContent=donneFichiers.length+' tournoi'+(donneFichiers.length>1?'s':'')+' disponible'+(donneFichiers.length>1?'s':'');
 
     const today=new Date(); today.setHours(0,0,0,0);
     const futurs=[], passes=[];
@@ -1080,49 +1225,75 @@ async function _initTournoiInner(){
       const match=fname.match(/(\d{4}-\d{2}-\d{2})/);
       const date=match?new Date(match[1]+'T12:00:00'):null;
       const passe=date&&date<today;
-      (passe?passes:futurs).push({fname,date});
+      (passe?passes:futurs).push({fname,date:date?date.toISOString():null});
     });
-    futurs.sort((a,b)=>(a.date||0)-(b.date||0));
-    passes.sort((a,b)=>(b.date||0)-(a.date||0));
+    futurs.sort((a,b)=>new Date(a.date||0)-new Date(b.date||0));
+    passes.sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
     const tous=[...futurs,...passes];
 
-    tous.forEach(({fname,date})=>{
-      const btn=document.createElement('button');
-      btn.className='option-btn';
-      const passe=date&&date<today;
-      const match=fname.match(/(\d{4}-\d{2}-\d{2})/);
-      let label='Tournoi';
-      if(match){
-        const d=new Date(match[1]+'T12:00:00');
-        label=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-        label=label.charAt(0).toUpperCase()+label.slice(1);
-      }
-      const safeId=fname.replace(/[^a-z0-9_-]/gi,'_');
-      const countSpan=`<span id="count-${safeId}" style="font-style:italic;font-size:12px;color:var(--text2);margin-left:8px">…</span>`;
-      if(passe) btn.style.opacity='0.4';
-      btn.innerHTML=`<div style="flex:1;display:flex;align-items:center"><div class="option-main">${label}</div>${countSpan}</div><span style="font-size:18px">→</span>`;
-      btn.onclick=()=>chargerTournoi(base+fname, fname);
-      list.appendChild(btn);
-    });
+    // Afficher la liste avec "…" en attendant les comptages
+    const counts={};
+    renderTournoiList(list, sub, tous, counts, base, ()=>today);
 
-    tous.forEach(({fname})=>{
-      const safeId=fname.replace(/[^a-z0-9_-]/gi,'_');
+    // Charger les comptages en parallèle
+    await Promise.all(tous.map(({fname})=>
       fetch(base+fname+'?t='+Date.now())
         .then(r=>r.ok?r.json():null)
         .then(data=>{
+          counts[fname]=data?Object.keys(data).length:null;
+          const safeId=fname.replace(/[^a-z0-9_-]/gi,'_');
           const span=document.getElementById('count-'+safeId);
-          if(span) span.textContent=data?Object.keys(data).length+' donnes':'';
+          if(span) span.textContent=counts[fname]!=null?counts[fname]+' donnes':'';
         })
-        .catch(()=>{ const span=document.getElementById('count-'+safeId); if(span) span.textContent=''; });
-    });
+        .catch(()=>{ counts[fname]=null; })
+    ));
+
+    // Sauvegarder en cache avec le SHA actuel
+    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({sha:currentSha, tous, counts})); }catch(e){}
+    checkForUpdate(currentSha);
 
   }catch(e){
+    // Essayer d'afficher le cache même périmé en cas d'erreur réseau
+    let cached=null;
+    try{ cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'null'); }catch(e2){}
+    if(cached && cached.tous){
+      renderTournoiList(list, sub, cached.tous, cached.counts||{}, base, ()=>new Date());
+      sub.textContent+=' (hors ligne)';
+      return;
+    }
     if(e.message==='Limite API atteinte'){
       sub.textContent='Limite API GitHub atteinte — réessaie dans une heure.';
     } else {
       sub.textContent='Impossible de charger la liste des tournois.';
     }
   }
+}
+
+function renderTournoiList(list, sub, tous, counts, base, getToday){
+  const today=new Date(); today.setHours(0,0,0,0);
+  list.innerHTML='';
+  sub.textContent=tous.length+' tournoi'+(tous.length>1?'s':'')+' disponible'+(tous.length>1?'s':'');
+  tous.forEach(({fname,date})=>{
+    const btn=document.createElement('button');
+    btn.className='option-btn';
+    const d=date?new Date(date):null;
+    const passe=d&&d<today;
+    const match=fname.match(/(\d{4}-\d{2}-\d{2})/);
+    let label='Tournoi';
+    if(match){
+      const dd=new Date(match[1]+'T12:00:00');
+      label=dd.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+      label=label.charAt(0).toUpperCase()+label.slice(1);
+    }
+    const safeId=fname.replace(/[^a-z0-9_-]/gi,'_');
+    const countVal=counts[fname];
+    const countText=countVal!=null?countVal+' donnes':'…';
+    const countSpan=`<span id="count-${safeId}" style="font-style:italic;font-size:12px;color:var(--text2);margin-left:8px">${countText}</span>`;
+    if(passe) btn.style.opacity='0.4';
+    btn.innerHTML=`<div style="flex:1;display:flex;align-items:center"><div class="option-main">${label}</div>${countSpan}</div><span style="font-size:18px">→</span>`;
+    btn.onclick=()=>chargerTournoi(base+fname, fname);
+    list.appendChild(btn);
+  });
 }
 
 async function chargerTournoi(url, fichier, silencieux=false){
@@ -1156,23 +1327,23 @@ if('serviceWorker' in navigator){
 }
 
 // Vérification de mise à jour via GitHub API
-async function checkForUpdate(){
+async function checkForUpdate(repoSha){
   try{
     const hostname=window.location.hostname;
     const parts=hostname.split('.');
     if(parts.length<3||parts[1]!=='github'||parts[2]!=='io') return;
     const user=parts[0];
     const repo=window.location.pathname.split('/').filter(Boolean)[0];
-    const file=window.location.pathname.split('/').pop()||'bridge-mitchell.html';
+    const file=window.location.pathname.split('/').pop()||'index.html';
     if(!user||!repo) return;
 
-    // Cache : ne vérifier qu'une fois par heure
     const CACHE_KEY='bridge_update_check';
     const CACHE_TTL=60*60*1000;
-    try{
-      const cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');
-      if(cached && Date.now()-cached.ts < CACHE_TTL) return;
-    }catch(e){}
+    let cached=null;
+    try{ cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'null'); }catch(e){}
+
+    // Si le SHA repo n'a pas change depuis le dernier check ET TTL non expire : rien a faire
+    if(cached && cached.repoSha===repoSha && Date.now()-cached.ts < CACHE_TTL) return;
 
     const res=await fetch(`https://api.github.com/repos/${user}/${repo}/commits?path=${file}&per_page=1`,
       {headers:{Accept:'application/vnd.github.v3+json'}});
@@ -1180,11 +1351,9 @@ async function checkForUpdate(){
     const data=await res.json();
     if(!data.length) return;
 
-    // Sauvegarder le timestamp de la vérification
-    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({ts:Date.now()})); }catch(e){}
-
     const lastCommit=data[0].sha;
     const storedCommit=localStorage.getItem('bridge_commit');
+    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({ts:Date.now(), repoSha})); }catch(e){}
 
     if(storedCommit && storedCommit!==lastCommit){
       localStorage.setItem('bridge_commit', lastCommit);
@@ -1208,7 +1377,6 @@ function showUpdateBanner(){
 
 setSens('NS');
 initTournoi();
-checkForUpdate();
 
 // touchend sur les boutons nav pour éviter le délai 300ms iOS
 function addNavListener(id, delta){
