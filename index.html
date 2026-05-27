@@ -216,8 +216,8 @@
   <!-- Howell : numéro de paire -->
   <div class="field" id="field-paire-howell" style="display:none">
     <label>Votre numéro de paire</label>
-    <input type="number" id="f-paire-howell" min="1" value="" step="1" inputmode="numeric" onfocus="this.select()"/>
-    <p class="err" id="e-paire-howell">Numéro invalide</p>
+    <input type="number" id="f-paire-howell" min="1" value="" step="1" inputmode="numeric" onfocus="this.select()" oninput="const v=int('f-paire-howell'),nbP=window._nbPairesHowell||0;if(v>=1&&v<=nbP)err('e-paire-howell',0);else if(v){document.getElementById('e-paire-howell').textContent='Choisir entre 1 et '+nbP;err('e-paire-howell',1);}"/>
+    <p class="err err-inline" id="e-paire-howell" style="min-height:16px;visibility:hidden;display:block">Numéro invalide</p>
   </div>
   <!-- Mitchell : sens -->
   <div class="field" id="field-sens">
@@ -230,8 +230,8 @@
   <!-- Mitchell : table de départ -->
   <div class="field" id="field-table">
     <label>Votre table de départ</label>
-    <input type="number" id="f-table" min="1" value="" step="1" inputmode="numeric" onfocus="this.select()" oninput="updateEvents()"/>
-    <p class="err" id="e-table">Entre 1 et le nombre de tables</p>
+    <input type="number" id="f-table" min="1" value="" step="1" inputmode="numeric" onfocus="this.select()" oninput="updateEvents();const v=int('f-table'),N=int('f-tables');if(v>=1&&v<=N)err('e-table',0);else if(v){document.getElementById('e-table').textContent='Choisir entre 1 et '+N;err('e-table',1);}"/>
+    <p class="err err-inline" id="e-table" style="min-height:16px;visibility:hidden;display:block">Entre 1 et le nombre de tables</p>
   </div>
   <!-- Mitchell impair : ligne du relais -->
   <div class="field" id="field-relais" style="display:none">
@@ -911,7 +911,7 @@ function updateEvents(){
 }
 
 function int(id){return parseInt(document.getElementById(id).value)||0;}
-function err(id,v){document.getElementById(id).style.display=v?'block':'none';}
+function err(id,v){const el=document.getElementById(id);if(!el)return;if(el.classList.contains('err-inline')){el.style.visibility=v?'visible':'hidden';}else{el.style.display=v?'block':'none';}}
 
 function tToSlot(t,N){if(t===1||t===N)return 0;if(t<=N/2)return t-1;return t;}
 
@@ -950,12 +950,12 @@ function start(){
   if(isHowell){
     const P=int('f-paire-howell');
     const nbP=window._nbPairesHowell||N*2;
-    if(P<1||P>nbP){err('e-paire-howell',1);return;}
+    if(P<1||P>nbP){document.getElementById('e-paire-howell').textContent='Choisir entre 1 et '+nbP;err('e-paire-howell',1);return;}
     err('e-paire-howell',0);
     cfg={N,R,D,mode,paireHowell:P,nbPaires:nbP};
   } else {
     const T=int('f-table');
-    if(T<1||T>N){err('e-table',1);return;}
+    if(T<1||T>N){document.getElementById('e-table').textContent='Choisir entre 1 et '+N;err('e-table',1);return;}
     err('e-table',0);
     const nbPaires=window._nbPairesConfig||N*2;
     const impair=nbPaires%2!==0;
