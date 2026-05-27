@@ -122,7 +122,6 @@
   .nav-btn{flex:1;padding:13px;border:1.5px solid var(--border);border-radius:12px;background:transparent;color:var(--text);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:all 0.15s;}
   .nav-btn:active{transform:scale(0.97)}
   .nav-btn:disabled{opacity:0.2;cursor:default}
-  .nav-btn.fwd{background:var(--text);color:var(--bg);border-color:transparent}
   .reset{display:block;width:100%;margin-top:.6rem;padding:6px;border:none;background:none;color:var(--text2);font-size:13px;cursor:pointer;text-decoration:underline;font-family:inherit;}
   /* Générateur */
   .gen-block{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:.75rem}
@@ -314,7 +313,7 @@
   </div>
   <div class="boards-card" id="boards-card-inner">
     <div class="boards-header">
-      <span class="boards-label">Donnes à jouer</span>
+      <span class="boards-label" id="boards-label-text">Donnes à jouer</span>
       <span class="boards-count" id="d-donnes-count"></span>
     </div>
     <div class="chips" id="d-donnes"></div>
@@ -436,35 +435,30 @@ let donnesData={}; // {numDonne: {ns, eo, note}}
 
 // DB Mitchell : [paires, tables, mouvement, positions_jouees, dpt, deficient]
 // donnes en circulation = tables × dpt
+// DB Mitchell : [paires, tables, mouvement, tours, dpt, impair, deficient]
 const DB=[
-  [11,6,'guerid',6,4,true],
-  [12,6,'guerid',6,4,false],
-  [13,7,'simple',7,4,false],
-  [14,7,'simple',6,4,false],
-  [15,8,'saut',7,4,false],[15,8,'guerid',8,3,true],
-  [16,8,'saut',6,4,false],[16,8,'saut',7,4,false],[16,8,'guerid',8,3,false],
-  [17,9,'simple',7,4,false],[17,9,'simple',9,3,true],  // 36 ou 27 en circ
-  [18,9,'simple',8,3,false],[18,9,'simple',7,4,false],  // 8x3 avant, 27 ou 36 en circ
-  [19,10,'saut',9,3,false],[19,10,'guerid',10,3,true],
-  [20,10,'saut',8,3,false],[20,10,'saut',9,3,false],[20,10,'guerid',10,3,true],  // guéridon déficient
-  [21,11,'simple',9,3,false],[21,11,'simple',10,3,false],
-  [22,11,'simple',8,3,false],[22,11,'simple',9,3,false],[22,11,'simple',10,3,false],
-  [23,12,'saut',9,3,false],[23,12,'saut',10,3,false],[23,12,'guerid',12,2,true],
-  [24,12,'saut',9,3,false],[24,12,'saut',10,3,false],[24,12,'saut',11,3,false],[24,12,'guerid',12,2,false],
-  [25,13,'simple',8,3,false],[25,13,'simple',9,3,false],   // 39 en circ, recommandé
-  [25,13,'simple',13,2,true],                               // 26 en circ, déficient
-  [26,13,'simple',12,2,false],[26,13,'simple',13,2,false],  // 26 en circ
-  [26,13,'simple',8,3,false],[26,13,'simple',9,3,false],    // 39 en circ
-  [27,14,'saut',13,2,false],[27,14,'guerid',14,2,true],
-  [28,14,'saut',12,2,false],[28,14,'saut',13,2,false],[28,14,'guerid',14,2,false],
-  [29,15,'simple',13,2,false],
-  [30,15,'simple',12,2,false],[30,15,'simple',13,2,false],
-  [31,16,'saut',12,2,false],[31,16,'saut',13,2,false],
-  [32,16,'saut',12,2,false],[32,16,'saut',13,2,false],
-  [33,17,'simple',13,2,false],
-  [34,17,'simple',12,2,false],[34,17,'simple',13,2,false],
-  [35,18,'saut',13,2,false],
-  [36,18,'saut',12,2,false],[36,18,'saut',13,2,false],
+  [12,6,'guerid',6,4,false,false],
+  [13,7,'simple',7,4,true,false],
+  [14,7,'simple',6,4,false,false],
+  [15,8,'saut',7,4,true,false],
+  [16,8,'saut',6,4,false,false],[16,8,'saut',7,4,false,false],[16,8,'guerid',8,3,false,false],
+  [17,9,'simple',9,3,true,false],
+  [18,9,'simple',8,3,false,false],
+  [19,10,'saut',9,3,true,false],[19,10,'guerid',10,3,true,false],
+  [20,10,'saut',8,3,false,false],[20,10,'saut',9,3,false,false],[20,10,'guerid',10,3,true,false],
+  [21,11,'simple',9,3,true,false],[21,11,'simple',10,3,true,false],
+  [22,11,'simple',8,3,false,false],[22,11,'simple',9,3,false,false],[22,11,'simple',10,3,false,false],
+  [23,12,'saut',9,3,true,false],[23,12,'saut',10,3,true,false],
+  [24,12,'saut',9,3,false,false],[24,12,'saut',10,3,false,false],[24,12,'saut',11,3,false,false],[24,12,'guerid',12,2,false,false],
+  [25,13,'simple',13,2,true,false],
+  [26,13,'simple',12,2,false,false],[26,13,'simple',13,2,false,false],
+  [27,14,'saut',13,2,true,false],[27,14,'guerid',14,2,true,false],
+  [28,14,'saut',12,2,false,false],[28,14,'saut',13,2,false,false],[28,14,'guerid',14,2,false,false],
+  [29,15,'simple',13,2,true,false],[30,15,'simple',12,2,false,false],[30,15,'simple',13,2,false,false],
+  [31,16,'saut',13,2,true,false],
+  [32,16,'saut',12,2,false,false],[32,16,'saut',13,2,false,false],
+  [33,17,'simple',13,2,true,false],[34,17,'simple',12,2,false,false],[34,17,'simple',13,2,false,false],
+  [35,18,'saut',13,2,true,false],[36,18,'saut',12,2,false,false],[36,18,'saut',13,2,false,false],
 ];
 
 // DB Howell : [paires, tables, mouvement, positions_jouees, dpt, donnesCirc, deficient]
@@ -757,7 +751,7 @@ function getGrouped(p, dbSource){
   const groups={};
   rows.forEach(row=>{
     const isHowell=dbSource===DB_HOWELL;
-    const [,t,m,r,d,dc,def]=isHowell?row:[...row.slice(0,5),row[1]*row[4],row[5]];
+    const [,t,m,r,d,dc,def]=isHowell?row:[...row.slice(0,5),row[1]*row[4],row[6]];
     const key=m+'_'+d; // grouper par mouvement ET dpt
     if(!groups[key]) groups[key]={mouvement:m,tables:t,options:[],deficient:true};
     groups[key].options.push({tours:r,dpt:d,donnesCirc:dc,deficient:def});
@@ -1026,9 +1020,10 @@ function render(){
   const estRelaisRender=document.getElementById('d-relais').style.visibility==='visible';
   if(boardsCard) boardsCard.style.background=estRelaisRender?'rgba(167,139,250,.07)':'';
   const countEl=document.getElementById('d-donnes-count');
-  if(countEl) countEl.textContent=estRelaisRender?'Pas de jeu ce tour':donnes.length+' donne'+(donnes.length>1?'s':'');
-  if(estRelaisRender && countEl) countEl.style.color='#a78bfa';
-  const chipsOpacity=estRelaisRender?'0.35':'1';
+  if(countEl){ countEl.textContent=donnes.length+' donne'+(donnes.length>1?'s':''); countEl.style.color=''; }
+  const boardsLabel=document.getElementById('boards-label-text');
+  if(boardsLabel){ boardsLabel.textContent=estRelaisRender?'Pas de jeu à ce tour':'Donnes à jouer'; boardsLabel.style.color=estRelaisRender?'#a78bfa':''; }
+  const chipsOpacity=estRelaisRender?'0.5':'1';
   donnes.forEach(d=>{
     const info=donnesData[d];
     if(info){
@@ -1219,17 +1214,11 @@ checkForUpdate(currentSha);
 
     if(!donneFichiers.length){ sub.textContent='Aucun fichier de donnes trouvé.'; return; }
 
-    const today=new Date(); today.setHours(0,0,0,0);
-    const futurs=[], passes=[];
-    donneFichiers.forEach(fname=>{
+    const tous=donneFichiers.map(fname=>{
       const match=fname.match(/(\d{4}-\d{2}-\d{2})/);
       const date=match?new Date(match[1]+'T12:00:00'):null;
-      const passe=date&&date<today;
-      (passe?passes:futurs).push({fname,date:date?date.toISOString():null});
+      return {fname, date:date?date.toISOString():null};
     });
-    futurs.sort((a,b)=>new Date(a.date||0)-new Date(b.date||0));
-    passes.sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
-    const tous=[...futurs,...passes];
 
     // Afficher la liste avec "…" en attendant les comptages
     const counts={};
@@ -1271,9 +1260,13 @@ checkForUpdate(currentSha);
 
 function renderTournoiList(list, sub, tous, counts, base, getToday){
   const today=new Date(); today.setHours(0,0,0,0);
+  // Retrier à l'affichage pour que futur/passé soit toujours correct
+  const futurs=tous.filter(x=>!x.date||new Date(x.date)>=today).sort((a,b)=>new Date(a.date||0)-new Date(b.date||0));
+  const passes=tous.filter(x=>x.date&&new Date(x.date)<today).sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+  const tries=[...futurs,...passes];
   list.innerHTML='';
   sub.textContent=tous.length+' tournoi'+(tous.length>1?'s':'')+' disponible'+(tous.length>1?'s':'');
-  tous.forEach(({fname,date})=>{
+  tries.forEach(({fname,date})=>{
     const btn=document.createElement('button');
     btn.className='option-btn';
     const d=date?new Date(date):null;
