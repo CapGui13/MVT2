@@ -211,8 +211,7 @@ tbody td input.note-input:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5
 
 
 /* ── Visualiseur de donnes (s-visu) ── */
-#s-visu{--felt:#1a4d2e;--felt-dk:#0f2d1a;--felt-md:#206038;--felt-lt:#2e7d4f;--gold:#c8973a;--cream:#1a1a1a;--card-bg:#1e1e1e;--card-bd:#333;--suit-s:#6b9fd4;--suit-h:#d4706a;--suit-d:#c8924a;--suit-c:#6aaa78;--txt:#f0ebe0;--txt2:#8aaa88;--txt3:#4a6048;--sh-sm:0 2px 8px rgba(0,0,0,.4);--sh-lg:0 6px 24px rgba(0,0,0,.5);}
-#s-visu{padding-bottom:env(safe-area-inset-bottom, 20px);}
+
 #s-visu .visu-nav{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;margin-bottom:.75rem;border-bottom:1px solid var(--border);}
 #s-visu .visu-ctr{font-size:13px;color:var(--text2);}
 #s-visu .visu-arr{display:flex;gap:6px;}
@@ -533,9 +532,9 @@ tbody td input.note-input:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5
 
 
 <!-- ÉCRAN : VISUALISEUR DE DONNES -->
-<div class="screen" id="s-visu" style="overflow:hidden;height:100dvh;flex-direction:column;">
+<div class="screen" id="s-visu">
   <div class="visu-nav">
-    <button class="back-btn" onclick="document.querySelector('.wrap').style.overflow='';document.querySelector('.wrap').style.height='';goBack()">← Retour</button>
+    <button class="back-btn" onclick="document.documentElement.style.overflow='';document.documentElement.style.height='';document.body.style.overflow='';document.body.style.height='';goBack()">← Retour</button>
     <span class="visu-ctr" id="visu-ctr"></span>
     <div class="visu-arr">
       <button class="visu-btn" id="visu-prev" onclick="visuNav(-1)">‹</button>
@@ -2394,8 +2393,10 @@ async function openVisu(boardNum) {
   const pbnUrl = base + pbnFname;
 
   goTo('s-visu');
-  document.querySelector('.wrap').style.overflow='hidden';
-  document.querySelector('.wrap').style.height='100dvh';
+  document.documentElement.style.overflow='hidden';
+  document.documentElement.style.height='100%';
+  document.body.style.overflow='hidden';
+  document.body.style.height='100%';
   document.getElementById('visu-content').innerHTML = '<div style="color:var(--text2);text-align:center;padding:2rem;">Chargement…</div>';
 
   try {
