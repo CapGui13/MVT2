@@ -284,7 +284,7 @@ tbody td input.note-input:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5
   ">↺ Rafraîchir la liste</button>
   <button style="display:block;width:100%;margin-top:.3rem;padding:8px;border:none;background:none;color:var(--text2);font-size:13px;cursor:pointer;font-family:inherit;opacity:.6;text-decoration:none" onclick="const b=document.getElementById('btn-charger-donnes');if(b)b.style.display='';goTo('s-paires')">Continuer sans donnes →</button>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;border-top:1px solid var(--border);padding-top:.75rem;">
-    <button onclick="openTokenModal();" style="font-size:12px;padding:5px 11px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);color:var(--text2);font-family:inherit;display:inline-flex;align-items:center;gap:5px;cursor:pointer;">⚙ Paramètres</button>
+    <button onclick="openTokenModal();" id="btn-params" style="font-size:12px;padding:5px 11px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);color:var(--text2);font-family:inherit;display:inline-flex;align-items:center;gap:5px;cursor:pointer;">⚙ Paramètres</button>
     <button onclick="goTo('s-delete');setTimeout(loadDeleteList,50);" style="font-size:12px;padding:5px 11px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);color:#f87171;font-family:inherit;cursor:pointer;">🗑 Gérer les fichiers</button>
   </div>
   <div style="margin-top:.6rem;">
@@ -1933,6 +1933,7 @@ function importPBN(input) {
     const dateMatch = file.name.match(/(\d{4})(\d{2})(\d{2})/);
     if (dateMatch) setGameDate(`${dateMatch[1]}-${dateMatch[2]}-${dateMatch[3]}`);
     buildTable();
+updateTokenIndicator();
     toast('✓ ' + filled + ' par(s) importé(s) depuis ' + file.name);
     input.value = '';
   };
@@ -2310,6 +2311,13 @@ function openTokenModal(){
 function closeTokenModal(){
   document.getElementById('token-modal').style.display='none';
   if(document._tokenEsc) document.removeEventListener('keydown', document._tokenEsc);
+  updateTokenIndicator();
+}
+function updateTokenIndicator(){
+  const btn = document.getElementById('btn-params');
+  if(!btn) return;
+  const hasToken = !!localStorage.getItem('gh_token');
+  btn.innerHTML = hasToken ? '⚙ Paramètres <span style="width:7px;height:7px;border-radius:50%;background:#4ade80;display:inline-block;margin-left:2px;"></span>' : '⚙ Paramètres';
 }
 function saveModalToken(){
   const inp = document.getElementById('modal-token-input');
@@ -2381,8 +2389,9 @@ const vEsc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/
 
 let visuDeals = [], visuIdx = 0;
 
+let _visuCache = {};
+
 async function openVisu(boardNum) {
-  // Get PBN url from donnesFichier (stored when tournament was loaded)
   const fname = window._donnesFichier;
   if(!fname){ alert('Fichier PBN introuvable.'); return; }
   const pbnFname = fname.replace('.json', '.pbn');
@@ -2394,14 +2403,20 @@ async function openVisu(boardNum) {
   const pbnUrl = base + pbnFname;
 
   goTo('s-visu');
-  document.getElementById('visu-content').innerHTML = '<div style="color:var(--text2);text-align:center;padding:2rem;">Chargement…</div>';
 
   try {
-    const buf = await (await fetch(pbnUrl)).arrayBuffer();
-    const bytes = new Uint8Array(buf);
-    let text = new TextDecoder('utf-8').decode(bytes);
-    if(text.includes('\uFFFD')) text = new TextDecoder('iso-8859-1').decode(bytes);
-    visuDeals = visuParsePBN(text);
+    // Use cache if available
+    if(_visuCache[pbnUrl]) {
+      visuDeals = _visuCache[pbnUrl];
+    } else {
+      document.getElementById('visu-content').innerHTML = '<div style="color:var(--text2);text-align:center;padding:2rem;">Chargement…</div>';
+      const buf = await (await fetch(pbnUrl)).arrayBuffer();
+      const bytes = new Uint8Array(buf);
+      let text = new TextDecoder('utf-8').decode(bytes);
+      if(text.includes('\uFFFD')) text = new TextDecoder('iso-8859-1').decode(bytes);
+      visuDeals = visuParsePBN(text);
+      _visuCache[pbnUrl] = visuDeals;
+    }
     if(!visuDeals.length){ document.getElementById('visu-content').innerHTML = '<div style="color:#f87171;text-align:center;padding:2rem;">Aucune donne trouvée dans le PBN.</div>'; return; }
     // Find the board
     visuIdx = visuDeals.findIndex(d => parseInt(d.Board) === parseInt(boardNum));
