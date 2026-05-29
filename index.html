@@ -10,8 +10,8 @@
 <title>Mvt App</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  :root{--bg:#111;--bg2:#1a1a1a;--bg3:#222;--text:#f5f5f5;--text2:#999;--border:#333;--blue:#60a5fa;--green:#4ade80;--chip-bg:#1d4ed8;--chip-text:#bfdbfe;}
-  @media(prefers-color-scheme:light){:root{--bg:#f8f8f7;--bg2:#fff;--bg3:#efefed;--text:#111;--text2:#666;--border:#ddd;--chip-bg:#dbeafe;--chip-text:#1e3a8a;}}
+  :root{--bg:#111;--bg2:#1a1a1a;--bg3:#222;--bg4:#2a2a2a;--text:#f5f5f5;--text2:#999;--text3:#555;--border:#333;--border2:#444;--blue:#60a5fa;--green:#4ade80;--chip-bg:#1d4ed8;--chip-text:#bfdbfe;--accent:#e8ff47;--r:10px;--r2:14px;--r3:18px;--ns:#4ade80;--eo:#60a5fa;}
+  @media(prefers-color-scheme:light){:root{--bg:#f8f8f7;--bg2:#fff;--bg3:#efefed;--bg4:#e0ded8;--text:#111;--text2:#666;--text3:#aaa;--border:#ddd;--border2:#ccc;--chip-bg:#dbeafe;--chip-text:#1e3a8a;--accent:#5c6f00;--ns:#166534;--eo:#1d4ed8;}}
   body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;padding-bottom:env(safe-area-inset-bottom);}
   .wrap{max-width:480px;margin:0 auto;padding:1.5rem 1rem}
   .screen{display:none}
@@ -162,21 +162,7 @@
 /* ── PAR des donnes (s-gen2) ── */
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{
-  --bg:#0a0a0a;--bg2:#141414;--bg3:#1e1e1e;--bg4:#282828;
-  --text:#f0f0f0;--text2:#888;--text3:#555;
-  --border:#2a2a2a;--border2:#383838;
-  --accent:#e8ff47;
-  --r:10px;--r2:14px;--r3:18px;
-  --ns:#4ade80;--eo:#60a5fa;
-}
-@media(prefers-color-scheme:light){:root{
-  --bg:#f5f4f0;--bg2:#fff;--bg3:#eceae4;--bg4:#e0ded8;
-  --text:#111;--text2:#666;--text3:#aaa;
-  --border:#ddd;--border2:#ccc;
-  --accent:#5c6f00;
-  --ns:#166534;--eo:#1d4ed8;
-}}
+
 #s-gen2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',Helvetica,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overscroll-behavior:none;}
 
 #s-gen2 .par-app{display:flex;flex-direction:column;min-height:100dvh;max-width:520px;margin:0 auto;}
@@ -2114,6 +2100,9 @@ async function ghUpload(fname, fileContent, isBinary=false){
 }
 
 async function publish(){
+  console.log('publish() called');
+  console.log('donnes count:', Object.keys(donnes).length);
+  console.log('token:', getToken() ? 'present' : 'missing');
   if(Object.keys(donnes).length===0){ toast('Aucune donne saisie'); return; }
   if(!getToken()){ toast('Token GitHub manquant — saisissez-le en bas'); return; }
 
