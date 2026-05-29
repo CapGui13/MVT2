@@ -1,0 +1,203 @@
+{
+  "1": {
+    "ns": "5P",
+    "eo": "",
+    "note": "impasse T OK ; impasse C vers X"
+  },
+  "2": {
+    "ns": "",
+    "eo": "2SA ; 2P",
+    "note": ""
+  },
+  "3": {
+    "ns": "5C",
+    "eo": "",
+    "note": "elim remise en main pour les K"
+  },
+  "4": {
+    "ns": "",
+    "eo": "3C",
+    "note": "entame singleton K, coupe puis AP"
+  },
+  "5": {
+    "ns": "",
+    "eo": "6T ; 6K",
+    "note": ""
+  },
+  "6": {
+    "ns": "4P+2",
+    "eo": "",
+    "note": "elim puis AT petit T"
+  },
+  "7": {
+    "ns": "",
+    "eo": "2P",
+    "note": "flanc atout"
+  },
+  "8": {
+    "ns": "4SA ; 4P",
+    "eo": "",
+    "note": "3 tours de K pour promo"
+  },
+  "9": {
+    "ns": "4K",
+    "eo": "",
+    "note": "petit vers 9T"
+  },
+  "10": {
+    "ns": "",
+    "eo": "4SA",
+    "note": ""
+  },
+  "11": {
+    "ns": "3SA ; 5T",
+    "eo": "",
+    "note": "expasse P"
+  },
+  "12": {
+    "ns": "",
+    "eo": "6C",
+    "note": "elim et petit vers XT"
+  },
+  "13": {
+    "ns": "",
+    "eo": "3SA",
+    "note": "affr C"
+  },
+  "14": {
+    "ns": "2C",
+    "eo": "2SAx-1",
+    "note": ""
+  },
+  "15": {
+    "ns": "",
+    "eo": "5P",
+    "note": ""
+  },
+  "16": {
+    "ns": "7SA ; 7P",
+    "eo": "",
+    "note": "appeler 6SA et faire +1 (T 33)"
+  },
+  "17": {
+    "ns": "5SA",
+    "eo": "",
+    "note": "impasse T, sqz/remise pour K"
+  },
+  "18": {
+    "ns": "",
+    "eo": "5SA",
+    "note": ""
+  },
+  "19": {
+    "ns": "2C ; 2T",
+    "eo": "",
+    "note": "enchérir low"
+  },
+  "20": {
+    "ns": "",
+    "eo": "4T",
+    "note": ""
+  },
+  "21": {
+    "ns": "",
+    "eo": "2SA : 2P : 3T",
+    "note": "punir NS si N parle, tous les T à faire"
+  },
+  "22": {
+    "ns": "6SA : 6K",
+    "eo": "",
+    "note": ""
+  },
+  "23": {
+    "ns": "5Tx-1",
+    "eo": "4C",
+    "note": "O ouvrir 2P"
+  },
+  "24": {
+    "ns": "",
+    "eo": "5SA",
+    "note": "entame K file ; ARt en Sud"
+  },
+  "25": {
+    "ns": "4Kx-1",
+    "eo": "3C ; 3T",
+    "note": ""
+  },
+  "26": {
+    "ns": "",
+    "eo": "5C",
+    "note": ""
+  },
+  "27": {
+    "ns": "3K",
+    "eo": "2T",
+    "note": ""
+  },
+  "28": {
+    "ns": "3T",
+    "eo": "4K",
+    "note": ""
+  },
+  "29": {
+    "ns": "",
+    "eo": "4K",
+    "note": ""
+  },
+  "30": {
+    "ns": "5P",
+    "eo": "",
+    "note": ""
+  },
+  "31": {
+    "ns": "",
+    "eo": "4P",
+    "note": ""
+  },
+  "32": {
+    "ns": "4P+2",
+    "eo": "",
+    "note": ""
+  },
+  "33": {
+    "ns": "5P",
+    "eo": "",
+    "note": ""
+  },
+  "34": {
+    "ns": "",
+    "eo": "4P",
+    "note": "jouer les T au plus vite"
+  },
+  "35": {
+    "ns": "5K",
+    "eo": "",
+    "note": ""
+  },
+  "36": {
+    "ns": "",
+    "eo": "5P",
+    "note": "expasse T"
+  },
+  "37": {
+    "ns": "4C",
+    "eo": "4Px-1",
+    "note": ""
+  },
+  "38": {
+    "ns": "3C",
+    "eo": "",
+    "note": ""
+  },
+  "39": {
+    "ns": "3P",
+    "eo": "",
+    "note": ""
+  },
+  "40": {
+    "ns": "",
+    "eo": "3P",
+    "note": ""
+  },
+  "date": "2026-06-01"
+}
