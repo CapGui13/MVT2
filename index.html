@@ -2112,11 +2112,14 @@ async function publish(){
   const dateStr=gameDate||`${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}-${String(new Date().getDate()).padStart(2,'0')}`;
   const jsonFname = `donnes${dateStr}.json`;
   const jsonStr = JSON.stringify(sorted,null,2);
+  console.log('fname:', jsonFname);
+  console.log('GH_OWNER:', GH_OWNER, 'GH_REPO:', GH_REPO);
 
   toast('⏳ Publication en cours…');
 
   // Upload JSON
   const jsonResult = await ghUpload(jsonFname, jsonStr);
+  console.log('ghUpload result:', JSON.stringify(jsonResult));
   if(!jsonResult.ok){ toast('✕ JSON : '+jsonResult.msg); return; }
 
   // Upload PBN if available (same base name as JSON, .pbn extension)
