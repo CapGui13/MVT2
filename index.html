@@ -13,7 +13,7 @@
   :root{--bg:#111;--bg2:#1a1a1a;--bg3:#222;--bg4:#2a2a2a;--text:#f5f5f5;--text2:#999;--text3:#555;--border:#333;--border2:#444;--blue:#60a5fa;--green:#4ade80;--chip-bg:#1d4ed8;--chip-text:#bfdbfe;--accent:#e8ff47;--r:10px;--r2:14px;--r3:18px;--ns:#4ade80;--eo:#60a5fa;}
   @media(prefers-color-scheme:light){:root{--bg:#f8f8f7;--bg2:#fff;--bg3:#efefed;--bg4:#e0ded8;--text:#111;--text2:#666;--text3:#aaa;--border:#ddd;--border2:#ccc;--chip-bg:#dbeafe;--chip-text:#1e3a8a;--accent:#5c6f00;--ns:#166534;--eo:#1d4ed8;}}
   body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;padding-bottom:env(safe-area-inset-bottom);touch-action:manipulation;-webkit-user-select:none;user-select:none;}
-  .wrap{max-width:480px;margin:0 auto;padding:1.5rem 1rem}
+  .wrap{max-width:480px;margin:0 auto;padding:1.5rem 1rem;position:relative;}
   .screen{display:none}
   .screen.active{display:block;animation:screenIn 0.2s ease forwards}
   #s-jeu.active{animation:screenInFixed 0.2s ease forwards}
@@ -212,7 +212,7 @@ tbody td input.note-input:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5
 
 /* ── Visualiseur de donnes (s-visu) ── */
 #s-visu{--felt:#1a4d2e;--felt-dk:#0f2d1a;--felt-md:#206038;--felt-lt:#2e7d4f;--gold:#c8973a;--cream:#1a1a1a;--card-bg:#1e1e1e;--card-bd:#333;--suit-s:#6b9fd4;--suit-h:#d4706a;--suit-d:#c8924a;--suit-c:#6aaa78;--txt:#f0ebe0;--txt2:#8aaa88;--txt3:#4a6048;--sh-sm:0 2px 8px rgba(0,0,0,.4);--sh-lg:0 6px 24px rgba(0,0,0,.5);}
-#s-visu{overscroll-behavior:none;overflow-y:auto;position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);width:480px;max-width:100%;z-index:10;display:none;padding:1.5rem 1rem;background:var(--bg);}
+#s-visu{overscroll-behavior:none;overflow-y:auto;position:absolute;top:0;left:0;right:0;min-height:100dvh;z-index:10;display:none;padding:1.5rem 1rem;background:var(--bg);}
 #s-visu.active{display:block;}
 #s-visu .visu-nav{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;margin-bottom:.75rem;border-bottom:1px solid var(--border);}
 #s-visu .visu-ctr{font-size:13px;color:var(--text2);}
