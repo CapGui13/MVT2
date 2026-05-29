@@ -241,8 +241,8 @@ tbody td input.note-input:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5
     initTournoi();
   ">↺ Rafraîchir la liste</button>
   <button style="display:block;width:100%;margin-top:.3rem;padding:8px;border:none;background:none;color:var(--text2);font-size:13px;cursor:pointer;font-family:inherit;opacity:.6;text-decoration:none" onclick="const b=document.getElementById('btn-charger-donnes');if(b)b.style.display='';goTo('s-paires')">Continuer sans donnes →</button>
-  <div style="display:flex;align-items:center;justify-content:flex-end;margin-top:1rem;border-top:1px solid var(--border);padding-top:.75rem;">
-    <button onclick="goTo('s-delete');loadDeleteList();" style="font-size:12px;padding:5px 11px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);color:#f87171;font-family:inherit;white-space:nowrap;line-height:1;display:inline-flex;align-items:center;cursor:pointer">🗑 Gérer les fichiers</button>
+  <div style="display:flex;justify-content:flex-end;margin-top:1rem;">
+    <button onclick="goTo('s-delete');setTimeout(loadDeleteList,50);" style="font-size:12px;padding:5px 11px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);color:#f87171;font-family:inherit;cursor:pointer;">🗑 Gérer les fichiers</button>
   </div>
 </div>
 
@@ -483,6 +483,15 @@ tbody td input.note-input:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5
 </div>
 
 
+<div class="screen" id="s-delete" style="background:var(--bg);min-height:100dvh;padding:1.5rem 1rem;max-width:480px;margin:0 auto;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+    <p class="section-title" style="margin-bottom:0;">Gérer les fichiers</p>
+    <button class="back-btn" onclick="goBack()">← Retour</button>
+  </div>
+  <p class="section-sub" id="delete-sub">Chargement...</p>
+  <div class="options-list" id="delete-list"></div>
+</div>
+
 <!-- ÉCRAN GEN2 : PAR DES DONNES -->
 <div class="screen" id="s-gen2" style="padding-bottom:80px;">
   <button class="back-btn" onclick="goBack()">← Retour</button>
@@ -538,16 +547,7 @@ tbody td input.note-input:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5
 </div>
 
     
-<div class="par-toast" id="par-toast"></div>
-
-<!-- ÉCRAN DELETE : GESTION DES FICHIERS -->
-<div class="screen" id="s-delete" style="background:var(--bg);color:var(--text);padding:1.5rem 1rem;position:relative;z-index:1;">
-  <button class="back-btn" onclick="goBack()">← Retour</button>
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem">
-    <p class="section-title" style="margin-bottom:0">Gérer les fichiers</p>
-  </div>
-  <p class="section-sub" id="delete-sub">Chargement...</p>
-  <div class="options-list" id="delete-list"></div>
+<div class="par-toast" id="toast">
 </div>
 
 </div>
@@ -837,7 +837,7 @@ function showScreen(to, from){
 }
 
 function goTo(to){
-  const screens=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-gen2','s-delete'];
+  const screens=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2'];
   const current=screens.find(s=>document.getElementById(s).classList.contains('active'));
   if(current){ navHistory.push(current); document.getElementById(current).classList.remove('active'); }
   document.getElementById(to).classList.add('active');
@@ -845,7 +845,7 @@ function goTo(to){
 
 function goBack(){
   if(!navHistory.length) return;
-  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-gen2','s-delete'].find(s=>document.getElementById(s).classList.contains('active'));
+  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2'].find(s=>document.getElementById(s).classList.contains('active'));
   if(current) document.getElementById(current).classList.remove('active');
   const prev=navHistory.pop();
   document.getElementById(prev).classList.add('active');
@@ -1201,7 +1201,7 @@ function reset(){
   if(btn) btn.style.display='';
   document.getElementById('tournoi-sub').textContent='Chargement...';
   document.getElementById('tournoi-list').innerHTML='';
-  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-gen2','s-delete'].find(s=>document.getElementById(s).classList.contains('active'));
+  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2'].find(s=>document.getElementById(s).classList.contains('active'));
   if(current) document.getElementById(current).classList.remove('active');
   document.getElementById('s-tournoi').classList.add('active');
   initTournoi();
@@ -1248,7 +1248,7 @@ async function resumeTournoi(){
   if(s.donnesFichier){
     const hostname=window.location.hostname;
     const onGithub=hostname.endsWith('github.io');
-    const base=onGithub?window.location.href.replace(/\/[^\/]*$/,'/'):'https://capgui13.github.io/MVT/';
+    const base=onGithub?window.location.href.replace(/\/[^\/]*$/,'/'):'https://capgui13.github.io/MVT2/';
     await chargerTournoi(base+s.donnesFichier, s.donnesFichier, true);
   }
   render();
@@ -1286,7 +1286,7 @@ async function _initTournoiInner(){
   const onGithub=hostname.endsWith('github.io');
   const base=onGithub
     ? window.location.href.replace(/\/[^/]*$/,'/')
-    : 'https://capgui13.github.io/MVT/';
+    : 'https://capgui13.github.io/MVT2/';
   const list=document.getElementById('tournoi-list');
   const sub=document.getElementById('tournoi-sub');
 
@@ -1299,7 +1299,7 @@ async function _initTournoiInner(){
       user=parts[0];
       repo=window.location.pathname.split('/').filter(Boolean)[0]||null;
     }
-    if(!user||!repo){ user='capgui13'; repo='MVT'; }
+    if(!user||!repo){ user='capgui13'; repo='MVT2'; }
 
     // 1 seule requête : dernier commit du repo
     const commitRes=await fetch(`https://api.github.com/repos/${user}/${repo}/commits?per_page=1`,
@@ -1351,7 +1351,7 @@ checkForUpdate(currentSha);
       fetch(base+fname+'?t='+Date.now())
         .then(r=>r.ok?r.json():null)
         .then(data=>{
-          counts[fname]=data?Object.keys(data).filter(k=>!isNaN(parseInt(k))).length:null;
+          counts[fname]=data?Object.keys(data).length:null;
           const safeId=fname.replace(/[^a-z0-9_-]/gi,'_');
           const span=document.getElementById('count-'+safeId);
           if(span) span.textContent=counts[fname]!=null?counts[fname]+' donnes':'';
@@ -1510,7 +1510,7 @@ addNavListener('btn-next', 1);
   const GH_OWNER_GEN = window.location.hostname.endsWith('github.io')
     ? window.location.hostname.split('.')[0] : 'capgui13';
   const GH_REPO_GEN = window.location.hostname.endsWith('github.io')
-    ? (window.location.pathname.split('/').filter(Boolean)[0]||'MVT') : 'MVT';
+    ? (window.location.pathname.split('/').filter(Boolean)[0]||'MVT2') : 'MVT2';
   const GH_BRANCH_GEN = 'main';
 
   // Afficher le repo cible
@@ -2137,16 +2137,11 @@ async function publish(){
   // Upload PBN if available (same base name as JSON, .pbn extension)
   console.log('pbnFile:', pbnFile ? 'present' : 'null');
   if(pbnFile){
-    try {
-      const pbnFname2 = jsonFname.replace('.json','.pbn');
-      const pbnResult = await ghUpload(pbnFname2, pbnFile, true);
-      console.log('pbn result:', JSON.stringify(pbnResult));
-      if(!pbnResult.ok){ toast(`✓ JSON publié, ✕ PBN : ${pbnResult.msg}`); return; }
-      toast(`✓ ${jsonFname} + ${jsonFname.replace('.json','.pbn')} publiés`);
-    } catch(e) {
-      console.error('PBN upload error:', e);
-      toast(`✓ ${jsonFname} publié (PBN erreur: ${e.message})`);
-    }
+    const pbnFname2 = jsonFname.replace('.json','.pbn');
+    const pbnResult = await ghUpload(pbnFname2, pbnFile, true);
+    console.log('pbn result:', JSON.stringify(pbnResult));
+    if(!pbnResult.ok){ toast(`✓ JSON publié, ✕ PBN : ${pbnResult.msg}`); return; }
+    toast(`✓ ${jsonFname} + ${jsonFname.replace('.json','.pbn')} publiés`);
   } else {
     toast(`✓ ${jsonFname} publié sur ${GH_OWNER}/${GH_REPO}`);
   }
@@ -2161,94 +2156,83 @@ buildTable();
   if(inp) inp.value = t ? '•'.repeat(12)+t.slice(-4) : '';
 })();
 
-// ── Gestion des fichiers (s-delete) ──
+// ── Gestion des fichiers ──
 async function loadDeleteList(){
-  console.log("loadDeleteList called");
-  const list = document.getElementById('delete-list');
-  const sub = document.getElementById('delete-sub');
-  console.log("list el:", list, "sub el:", sub);
-  list.innerHTML = '';
-  sub.textContent = 'Chargement...';
-
-  const hostname = window.location.hostname;
-  const onGithub = hostname.endsWith('github.io');
-  const user = onGithub ? hostname.split('.')[0] : 'capgui13';
-  const repo = onGithub ? (window.location.pathname.split('/').filter(Boolean)[0]||'MVT2') : 'MVT2';
-  const token = typeof getToken === 'function' ? getToken() : localStorage.getItem('gh_token')||'';
-
-  try {
-    const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/`,
-      {headers:{Accept:'application/vnd.github.v3+json', ...(token?{Authorization:`token ${token}`}:{})}});
+  const list=document.getElementById('delete-list');
+  const sub=document.getElementById('delete-sub');
+  list.innerHTML='';
+  const hostname=window.location.hostname;
+  const onGithub=hostname.endsWith('github.io');
+  const user=onGithub?hostname.split('.')[0]:'capgui13';
+  const repo=onGithub?(window.location.pathname.split('/').filter(Boolean)[0]||'MVT2'):'MVT2';
+  const token=localStorage.getItem('gh_token')||'';
+  sub.textContent='Chargement…';
+  try{
+    const res=await fetch(`https://api.github.com/repos/${user}/${repo}/contents/`,
+      {headers:{Accept:'application/vnd.github.v3+json',...(token?{Authorization:`token ${token}`}:{})}});
     if(!res.ok) throw new Error(`Erreur ${res.status}`);
-    const files = await res.json();
-    const donneFiles = files
-      .filter(f => f.type==='file' && /^donnes[-_]?\d{4}.*\.(json|pbn)$/i.test(f.name))
-      .sort((a,b) => b.name.localeCompare(a.name));
-
-    if(!donneFiles.length){ sub.textContent = 'Aucun fichier trouvé.'; return; }
-    sub.textContent = donneFiles.length + ' fichier(s) sur ' + user + '/' + repo;
-
-    // Group by base name (without extension)
-    const groups = {};
-    donneFiles.forEach(f => {
-      const base = f.name.replace(/\.(json|pbn)$/i, '');
-      if(!groups[base]) groups[base] = [];
+    const files=await res.json();
+    const donneFiles=files
+      .filter(f=>f.type==='file'&&/^donnes[-_]?\d{4}.*\.(json|pbn)$/i.test(f.name))
+      .sort((a,b)=>b.name.localeCompare(a.name));
+    if(!donneFiles.length){sub.textContent='Aucun fichier trouvé.';return;}
+    sub.textContent=donneFiles.length+' fichier(s) sur '+user+'/'+repo;
+    const groups={};
+    donneFiles.forEach(f=>{
+      const base=f.name.replace(/\.(json|pbn)$/i,'');
+      if(!groups[base])groups[base]=[];
       groups[base].push(f);
     });
-
-    Object.entries(groups).sort((a,b)=>b[0].localeCompare(a[0])).forEach(([base, files]) => {
-      const div = document.createElement('div');
-      div.style.cssText = 'background:#1a1a1a;border:1.5px solid #333;border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:8px;';
-
-      const info = document.createElement('div');
-      info.style.cssText = 'flex:1;min-width:0;';
-      // Parse date from base name
-      const dateMatch = base.match(/(\d{4})-(\d{2})-(\d{2})/);
-      let label = base;
-      if(dateMatch) {
-        const d = new Date(dateMatch[1]+'-'+dateMatch[2]+'-'+dateMatch[3]+'T12:00:00');
-        label = d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-        label = label.charAt(0).toUpperCase()+label.slice(1);
+    window._delMap={};
+    let html='';
+    Object.entries(groups).sort((a,b)=>b[0].localeCompare(a[0])).forEach(([base,gfiles],i)=>{
+      const dm=base.match(/(\d{4})-(\d{2})-(\d{2})/);
+      let label=base;
+      if(dm){
+        const d=new Date(dm[1]+'-'+dm[2]+'-'+dm[3]+'T12:00:00');
+        label=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+        label=label.charAt(0).toUpperCase()+label.slice(1);
       }
-      info.innerHTML = `<div style="font-size:14px;font-weight:600;color:var(--text)">${label}</div>
-        <div style="font-size:11px;color:var(--text2);margin-top:2px">${files.map(f=>f.name).join(' · ')}</div>`;
-
-      const btn = document.createElement('button');
-      btn.textContent = '🗑';
-      btn.title = 'Supprimer';
-      btn.style.cssText = 'padding:8px 12px;border-radius:10px;border:1.5px solid #7f1d1d;background:#2d0a0a;color:#f87171;font-size:16px;cursor:pointer;flex-shrink:0;';
-      btn.onclick = () => deleteFiles(files, div, token, user, repo);
-
-      div.appendChild(info);
-      div.appendChild(btn);
-      list.appendChild(div);
+      window._delMap['g'+i]={files:gfiles,token,user,repo};
+      html+=`<div id="dg${i}" class="option-btn" style="justify-content:space-between;min-height:auto;">
+        <div>
+          <div class="option-main">${label}</div>
+          <div class="option-detail">${gfiles.map(f=>f.name).join(' · ')}</div>
+        </div>
+        <button onclick="event.stopPropagation();delGroup('g${i}')" style="padding:8px 12px;border-radius:10px;border:1.5px solid #7f1d1d;background:#2d0a0a;color:#f87171;font-size:16px;cursor:pointer;margin-left:8px;">🗑</button>
+      </div>`;
     });
-  } catch(e) {
-    sub.textContent = 'Erreur : ' + e.message;
+    list.innerHTML=html;
+  }catch(e){
+    sub.textContent='Erreur : '+e.message;
   }
 }
 
-async function deleteFiles(files, divEl, token, user, repo){
-  if(!token){ alert('Token GitHub requis pour supprimer des fichiers.'); return; }
-  if(!confirm('Supprimer ' + files.map(f=>f.name).join(' et ') + ' ?')) return;
-
-  divEl.style.opacity = '0.4';
-  let allOk = true;
-  for(const file of files){
-    try {
-      const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${file.name}`,{
+async function delGroup(id){
+  const g=window._delMap&&window._delMap[id];
+  if(!g)return;
+  const{files,token,user,repo}=g;
+  if(!token){alert('Token GitHub requis.');return;}
+  if(!confirm('Supprimer '+files.map(f=>f.name).join(' et ')+' ?'))return;
+  const el=document.getElementById('dg'+id.slice(1));
+  if(el)el.style.opacity='0.4';
+  let ok=true;
+  for(const f of files){
+    try{
+      const r=await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${f.name}`,{
         method:'DELETE',
         headers:{Authorization:`token ${token}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},
-        body:JSON.stringify({message:`Suppression ${file.name}`,sha:file.sha,branch:'main'})
+        body:JSON.stringify({message:`Suppression ${f.name}`,sha:f.sha,branch:'main'})
       });
-      if(!res.ok){ allOk = false; console.error('Delete failed:', file.name, res.status); }
-    } catch(e){ allOk = false; }
+      if(!r.ok)ok=false;
+    }catch(e){ok=false;}
   }
-  if(allOk){
-    divEl.remove();
-    try{ localStorage.removeItem('bridge_tournoi_list'); }catch(e){}
-  } else {
-    divEl.style.opacity = '1';
+  if(ok){
+    document.getElementById('dg'+id.slice(1))?.remove();
+    delete window._delMap[id];
+    try{localStorage.removeItem('bridge_tournoi_list');}catch(e){}
+  }else{
+    if(el)el.style.opacity='1';
     alert('Erreur lors de la suppression.');
   }
 }
