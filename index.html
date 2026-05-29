@@ -2163,8 +2163,10 @@ buildTable();
 
 // ── Gestion des fichiers (s-delete) ──
 async function loadDeleteList(){
+  console.log("loadDeleteList called");
   const list = document.getElementById('delete-list');
   const sub = document.getElementById('delete-sub');
+  console.log("list el:", list, "sub el:", sub);
   list.innerHTML = '';
   sub.textContent = 'Chargement...';
 
