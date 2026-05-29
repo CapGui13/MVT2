@@ -206,9 +206,50 @@ tbody td input.note-input:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5
 #s-gen2 .stat-num{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.03em;line-height:1;}
 #s-gen2 .stat-label{font-size:10px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:3px;}
 
-#s-gen2 .par-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:999px;padding:8px 16px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;}
+#s-gen2 .par-toast{position:fixed;top:1.5rem;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:999px;padding:8px 16px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;}
 #s-gen2 .par-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
+
+/* ── Visualiseur de donnes (s-visu) ── */
+#s-visu{--felt:#1a4d2e;--felt-dk:#0f2d1a;--felt-md:#206038;--felt-lt:#2e7d4f;--gold:#c8973a;--cream:#1a1a1a;--card-bg:#1e1e1e;--card-bd:#333;--suit-s:#6b9fd4;--suit-h:#d4706a;--suit-d:#c8924a;--suit-c:#6aaa78;--txt:#f0ebe0;--txt2:#8aaa88;--txt3:#4a6048;--sh-sm:0 2px 8px rgba(0,0,0,.4);--sh-lg:0 6px 24px rgba(0,0,0,.5);}
+#s-visu .visu-nav{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;margin-bottom:.75rem;border-bottom:1px solid var(--border);}
+#s-visu .visu-ctr{font-size:13px;color:var(--text2);}
+#s-visu .visu-arr{display:flex;gap:6px;}
+#s-visu .visu-btn{width:34px;height:34px;border-radius:8px;border:none;background:#1a4d2e;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+#s-visu .visu-btn:disabled{background:var(--bg3);color:var(--text3);cursor:not-allowed;}
+#s-visu .board-hdr{background:linear-gradient(135deg,#0f2d1a 0%,#206038 100%);border-radius:12px;padding:11px 14px;display:flex;flex-direction:row;justify-content:space-between;align-items:center;box-shadow:var(--sh-lg);border:1px solid rgba(200,151,58,.2);gap:10px;margin-bottom:10px;}
+#s-visu .board-num{color:#fff;font-size:13px;font-weight:700;flex:1;}
+#s-visu .board-badges{display:flex;gap:5px;flex-shrink:0;}
+#s-visu .vbadge{padding:4px 7px;border-radius:6px;font-size:10px;font-weight:600;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);white-space:nowrap;}
+#s-visu .vbadge-vul{background:rgba(185,28,28,.33);color:#fca5a5;}
+#s-visu .vbadge-nov{background:rgba(34,197,94,.18);color:#86efac;}
+#s-visu .diag-card{background:linear-gradient(155deg,#206038 0%,#1a4d2e 50%,#0f2d1a 100%);border-radius:12px;box-shadow:var(--sh-lg);border:1px solid rgba(200,151,58,.1);padding:10px;}
+#s-visu .diag-grid{display:flex;flex-direction:column;gap:5px;}
+#s-visu .diag-row{display:flex;flex-direction:row;gap:5px;align-items:stretch;justify-content:center;}
+#s-visu .diag-row-ns{display:flex;flex-direction:column;align-items:center;}
+#s-visu .hand{flex:1 1 0;background:#1e1e1e;border:1px solid #333;border-radius:9px;padding:22px 11px 24px;box-shadow:var(--sh-sm);position:relative;min-width:0;}
+#s-visu .hand-ns{flex:none;width:calc((100% - 54px) / 2);margin:0 auto;}
+#s-visu .hand-lbl{position:absolute;top:6px;left:0;right:0;font-size:8px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:4px;}
+#s-visu .lbl-vul{color:#e05555;}
+#s-visu .lbl-nov{color:#5aaa6a;}
+#s-visu .dealer-badge{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;border:1.5px solid #fff;color:#fff;font-size:7px;font-weight:900;flex-shrink:0;}
+#s-visu .dealer-spacer{width:13px;flex-shrink:0;visibility:hidden;}
+#s-visu .hcp-badge{position:absolute;bottom:7px;right:9px;background:rgba(200,151,58,.18);color:#c8973a;font-size:10px;font-weight:700;padding:2px 6px;border-radius:5px;border:1px solid rgba(200,151,58,.25);}
+#s-visu .diag-col{display:flex;flex-direction:column;flex:1 1 0;min-width:0;}
+#s-visu .sr{display:flex;align-items:baseline;gap:5px;line-height:1.72;min-height:22px;}
+#s-visu .sym{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
+#s-visu .cds{font-size:13px;font-weight:700;word-spacing:2px;white-space:nowrap;color:#f0ebe0;}
+#s-visu .vd{font-size:11px;color:#4a6048;font-weight:400;}
+#s-visu .compass-cell{flex:0 0 44px;display:flex;align-items:center;justify-content:center;}
+#s-visu .compass{width:38px;height:38px;position:relative;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.07),rgba(0,0,0,.4));border-radius:50%;border:1px solid rgba(200,151,58,.33);box-shadow:inset 0 2px 6px rgba(0,0,0,.3);}
+#s-visu .compass::before{content:'';position:absolute;top:50%;left:6px;right:6px;height:1px;background:rgba(200,151,58,.28);transform:translateY(-50%);}
+#s-visu .compass::after{content:'';position:absolute;left:50%;top:6px;bottom:6px;width:1px;background:rgba(200,151,58,.28);transform:translateX(-50%);}
+#s-visu .cpt{position:absolute;color:rgba(255,255,255,.85);font-size:8px;font-weight:800;}
+#s-visu .cpt-n{top:2px;left:50%;transform:translateX(-50%);}
+#s-visu .cpt-s{bottom:2px;left:50%;transform:translateX(-50%);}
+#s-visu .cpt-o{left:3px;top:50%;transform:translateY(-50%);}
+#s-visu .cpt-e{right:3px;top:50%;transform:translateY(-50%);}
+#s-visu .vcs{color:#6b9fd4;}#s-visu .vch{color:#d4706a;}#s-visu .vcd{color:#c8924a;}#s-visu .vcc{color:#6aaa78;}
 </style>
 </head>
 <body>
@@ -489,6 +530,19 @@ tbody td input.note-input:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5
   </div>
 </div>
 
+
+<!-- ÉCRAN : VISUALISEUR DE DONNES -->
+<div class="screen" id="s-visu">
+  <div class="visu-nav">
+    <button class="back-btn" onclick="goBack()">← Retour</button>
+    <span class="visu-ctr" id="visu-ctr"></span>
+    <div class="visu-arr">
+      <button class="visu-btn" id="visu-prev" onclick="visuNav(-1)">‹</button>
+      <button class="visu-btn" id="visu-next" onclick="visuNav(1)">›</button>
+    </div>
+  </div>
+  <div id="visu-content"><div style="color:var(--text2);text-align:center;padding:2rem;">Chargement…</div></div>
+</div>
 
 <div class="screen" id="s-delete" style="background:var(--bg);min-height:100dvh;padding:1.5rem 1rem;max-width:480px;margin:0 auto;">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
@@ -841,7 +895,7 @@ function showScreen(to, from){
 }
 
 function goTo(to){
-  const screens=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2'];
+  const screens=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2','s-visu'];
   const current=screens.find(s=>document.getElementById(s).classList.contains('active'));
   if(current){ navHistory.push(current); document.getElementById(current).classList.remove('active'); }
   document.getElementById(to).classList.add('active');
@@ -849,7 +903,7 @@ function goTo(to){
 
 function goBack(){
   if(!navHistory.length) return;
-  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2'].find(s=>document.getElementById(s).classList.contains('active'));
+  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2','s-visu'].find(s=>document.getElementById(s).classList.contains('active'));
   if(current) document.getElementById(current).classList.remove('active');
   const prev=navHistory.pop();
   document.getElementById(prev).classList.add('active');
@@ -1156,6 +1210,8 @@ function render(){
       const div=document.createElement('div');
       div.className='chip-rich';
       div.style.opacity=chipsOpacity;
+      div.style.cursor='pointer';
+      div.onclick=()=>openVisu(d);
       const nsHtml=info.ns?`<span class="chip-score-item chip-score-ns"><span class="chip-score-label">NS</span>${info.ns}</span>`:'';
       // EO décalé si pas de NS (placeholder invisible pour aligner)
       const eoPlaceholder=(!info.ns && info.eo)?`<span class="chip-score-item chip-score-ns" style="visibility:hidden"><span class="chip-score-label">NS</span>—</span>`:'';
@@ -1173,6 +1229,8 @@ function render(){
       c.className='chip';
       c.style.opacity=chipsOpacity;
       c.textContent=d;
+      c.style.cursor='pointer';
+      c.onclick=()=>openVisu(d);
       container.appendChild(c);
     }
   });
@@ -1205,7 +1263,7 @@ function reset(){
   if(btn) btn.style.display='';
   document.getElementById('tournoi-sub').textContent='Chargement...';
   document.getElementById('tournoi-list').innerHTML='';
-  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2'].find(s=>document.getElementById(s).classList.contains('active'));
+  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2','s-visu'].find(s=>document.getElementById(s).classList.contains('active'));
   if(current) document.getElementById(current).classList.remove('active');
   document.getElementById('s-tournoi').classList.add('active');
   initTournoi();
@@ -2312,6 +2370,183 @@ async function uploadSelf(){
   }catch(e){
     alert('Erreur : '+e.message);
   }
+}
+
+// ── Visualiseur de donnes ──────────────────────────────────────────────
+const VISU_SUITS = ['S','H','D','C'];
+const VISU_SYM   = {S:'♠',H:'♥',D:'♦',C:'♣'};
+const VISU_SCLS  = {S:'vcs',H:'vch',D:'vcd',C:'vcc'};
+const VISU_CW    = ['N','E','S','W'];
+const VISU_FR    = {N:'Nord',S:'Sud',E:'Est',W:'Ouest'};
+const vEsc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+let visuDeals = [], visuIdx = 0;
+
+async function openVisu(boardNum) {
+  // Get PBN url from donnesFichier (stored when tournament was loaded)
+  const fname = window._donnesFichier;
+  if(!fname){ alert('Fichier PBN introuvable.'); return; }
+  const pbnFname = fname.replace('.json', '.pbn');
+  const hostname = window.location.hostname;
+  const onGithub = hostname.endsWith('github.io');
+  const user = onGithub ? hostname.split('.')[0] : 'capgui13';
+  const repo = onGithub ? (window.location.pathname.split('/').filter(Boolean)[0]||'MVT2') : 'MVT2';
+  const base = onGithub ? `https://${hostname}/${repo}/` : `https://capgui13.github.io/MVT2/`;
+  const pbnUrl = base + pbnFname;
+
+  goTo('s-visu');
+  document.getElementById('visu-content').innerHTML = '<div style="color:var(--text2);text-align:center;padding:2rem;">Chargement…</div>';
+
+  try {
+    const buf = await (await fetch(pbnUrl)).arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    let text = new TextDecoder('utf-8').decode(bytes);
+    if(text.includes('\uFFFD')) text = new TextDecoder('iso-8859-1').decode(bytes);
+    visuDeals = visuParsePBN(text);
+    if(!visuDeals.length){ document.getElementById('visu-content').innerHTML = '<div style="color:#f87171;text-align:center;padding:2rem;">Aucune donne trouvée dans le PBN.</div>'; return; }
+    // Find the board
+    visuIdx = visuDeals.findIndex(d => parseInt(d.Board) === parseInt(boardNum));
+    if(visuIdx < 0) visuIdx = 0;
+    visuRender(visuIdx);
+  } catch(e) {
+    document.getElementById('visu-content').innerHTML = `<div style="color:#f87171;text-align:center;padding:2rem;">Erreur : ${vEsc(e.message)}</div>`;
+  }
+}
+
+function visuNav(dir) {
+  const n = visuIdx + dir;
+  if(n >= 0 && n < visuDeals.length){ visuIdx = n; visuRender(n); window.scrollTo(0,0); }
+}
+
+function visuRender(i) {
+  const d = visuDeals[i];
+  visuIdx = i;
+  const prev = document.getElementById('visu-prev');
+  const next = document.getElementById('visu-next');
+  const ctr  = document.getElementById('visu-ctr');
+  if(prev) prev.disabled = i === 0;
+  if(next) next.disabled = i === visuDeals.length - 1;
+  if(ctr)  ctr.textContent = `Donne ${i+1} / ${visuDeals.length}`;
+
+  const hands = visuParseDeal(d.Deal || '');
+  const dealer = d.Dealer || '?';
+  const vul    = d.Vulnerable || 'None';
+  const board  = d.Board || String(i+1);
+  const vulLabel = {None:'Vul. Pers.', NS:'Vul. N-S', EW:'Vul. E-O', All:'Vul. Tous'}[vul] || vul;
+  const vulCls   = vul === 'None' ? 'vbadge-nov' : 'vbadge-vul';
+
+  const html = `
+    <div class="board-hdr">
+      <div class="board-num">Donne ${vEsc(board)}</div>
+      <div class="board-badges">
+        <span class="vbadge">Donneur : ${vEsc(VISU_FR[dealer]||dealer)}</span>
+        <span class="vbadge ${vulCls}">${vEsc(vulLabel)}</span>
+      </div>
+    </div>
+    <div class="diag-card">${visuRenderDiag(hands, dealer, vul)}</div>`;
+
+  document.getElementById('visu-content').innerHTML = html;
+}
+
+function visuParsePBN(text) {
+  const out = [];
+  const lines = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
+  let cur = null;
+  for(const raw of lines) {
+    const line = raw.trim();
+    if(!line){ if(cur && cur.Deal) out.push({...cur}); cur = null; continue; }
+    const tm = line.match(/^\[(\w+)\s+"(.*)"\]$/);
+    if(tm){
+      if(!cur) cur = {};
+      cur[tm[1]] = tm[2];
+    }
+  }
+  if(cur && cur.Deal) out.push({...cur});
+  return out;
+}
+
+function visuParseDeal(str) {
+  if(!str) return null;
+  const m = str.match(/^([NSEWnsew]):(.+)$/);
+  if(!m) return null;
+  const first = m[1].toUpperCase();
+  const si = VISU_CW.indexOf(first);
+  if(si < 0) return null;
+  const dirs = [0,1,2,3].map(i => VISU_CW[(si+i)%4]);
+  const res = {};
+  m[2].trim().split(/\s+/).forEach((h,i) => {
+    if(i > 3) return;
+    const p = h.split('.');
+    while(p.length < 4) p.push('');
+    res[dirs[i]] = {S:p[0]==='-'?'':p[0], H:p[1]==='-'?'':p[1], D:p[2]==='-'?'':p[2], C:p[3]==='-'?'':p[3]};
+  });
+  return res;
+}
+
+function visuCalcHCP(hand) {
+  if(!hand) return 0;
+  let pts = 0;
+  for(const s of VISU_SUITS){
+    const h = (hand[s]||'').toUpperCase();
+    for(const c of h){ if(c==='A') pts+=4; else if(c==='K') pts+=3; else if(c==='Q') pts+=2; else if(c==='J') pts+=1; }
+  }
+  return pts;
+}
+
+function visuRenderHand(hand) {
+  if(!hand) return {suits:'<div class="vd">—</div>', hcp:0};
+  const hcp = visuCalcHCP(hand);
+  const suits = VISU_SUITS.map(s => {
+    const raw = hand[s] || '';
+    const k = VISU_SCLS[s];
+    if(!raw || raw==='-') return `<div class="sr"><span class="sym ${k}">${VISU_SYM[s]}</span><span class="vd">—</span></div>`;
+    const tokens = [];
+    for(let i=0;i<raw.length;i++){
+      const c=raw[i];
+      let fr;
+      if(c==='A') fr='A'; else if(c==='K') fr='R'; else if(c==='Q') fr='D';
+      else if(c==='J') fr='V'; else if(c==='T') fr='10';
+      else if(c==='1'&&raw[i+1]==='0'){fr='10';i++;} else fr=c;
+      tokens.push(fr);
+    }
+    return `<div class="sr"><span class="sym ${k}">${VISU_SYM[s]}</span><span class="cds">${tokens.join(' ')}</span></div>`;
+  }).join('');
+  return {suits, hcp};
+}
+
+function visuRenderDiag(hands, dealer, vul) {
+  const h = hands || {};
+  const vulDirs = {None:[],NS:['N','S'],EW:['E','W'],All:['N','S','E','W']}[vul]||[];
+  const lblCls = dir => vulDirs.includes(dir) ? 'lbl-vul' : 'lbl-nov';
+  const lbl = {N:'NORD',S:'SUD',E:'EST',W:'OUEST'};
+
+  const handLbl = dir => {
+    const isDealer = dealer && dir === dealer.toUpperCase();
+    return `<div class="hand-lbl ${lblCls(dir)}">
+      <span class="dealer-spacer"></span>
+      ${lbl[dir]}
+      ${isDealer ? '<span class="dealer-badge">D</span>' : '<span class="dealer-spacer"></span>'}
+    </div>`;
+  };
+
+  const handBox = (dir, ns) => {
+    const {suits, hcp} = visuRenderHand(h[dir]);
+    const cls = ns ? 'hand hand-ns' : 'hand';
+    return `<div class="${cls}">${handLbl(dir)}${suits}<div class="hcp-badge">${hcp} H</div></div>`;
+  };
+
+  return `<div class="diag-grid">
+    <div class="diag-row diag-row-ns">${handBox('N', true)}</div>
+    <div class="diag-row">
+      <div class="diag-col">${handBox('W', false)}</div>
+      <div class="compass-cell"><div class="compass">
+        <span class="cpt cpt-n">N</span><span class="cpt cpt-s">S</span>
+        <span class="cpt cpt-o">O</span><span class="cpt cpt-e">E</span>
+      </div></div>
+      <div class="diag-col">${handBox('E', false)}</div>
+    </div>
+    <div class="diag-row diag-row-ns">${handBox('S', true)}</div>
+  </div>`;
 }
 </script>
 
