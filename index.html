@@ -158,6 +158,71 @@
   .gen-dots{display:flex;gap:5px}
   .gen-dot{width:10px;height:10px;border-radius:50%}
   .gen-preview-body{padding:1rem;font-size:11px;font-family:monospace;color:#7ec8a0;max-height:180px;overflow-y:auto;white-space:pre;line-height:1.8;background:var(--bg)}
+
+/* ── PAR des donnes (s-gen2) ── */
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0a0a0a;--bg2:#141414;--bg3:#1e1e1e;--bg4:#282828;
+  --text:#f0f0f0;--text2:#888;--text3:#555;
+  --border:#2a2a2a;--border2:#383838;
+  --accent:#e8ff47;
+  --r:10px;--r2:14px;--r3:18px;
+  --ns:#4ade80;--eo:#60a5fa;
+}
+@media(prefers-color-scheme:light){:root{
+  --bg:#f5f4f0;--bg2:#fff;--bg3:#eceae4;--bg4:#e0ded8;
+  --text:#111;--text2:#666;--text3:#aaa;
+  --border:#ddd;--border2:#ccc;
+  --accent:#5c6f00;
+  --ns:#166534;--eo:#1d4ed8;
+}}
+#s-gen2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',Helvetica,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overscroll-behavior:none;}
+
+#s-gen2 .par-app{display:flex;flex-direction:column;min-height:100dvh;max-width:520px;margin:0 auto;}
+#s-gen2 .par-topbar{padding:1rem 1.25rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;background:var(--bg);}
+#s-gen2 .par-topbar-title{font-size:15px;font-weight:600;letter-spacing:-.01em}
+#s-gen2 .par-content{flex:1;overflow-y:auto;padding:1rem 1.25rem 6rem;}
+
+#s-gen2 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r2);border:1px solid var(--border);}
+#s-gen2 table{width:100%;border-collapse:collapse;font-size:13px;}
+#s-gen2 thead th{background:var(--bg3);padding:8px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);}
+thead th:first-child{border-radius:var(--r2) 0 0 0}
+thead th:last-child{border-radius:0 var(--r2) 0 0}
+#s-gen2 tbody tr{border-top:1px solid var(--border);}
+#s-gen2 tbody tr.sep-thick{border-top:4px solid var(--border2);}
+#s-gen2 tbody tr:hover{background:var(--bg3);}
+#s-gen2 tbody td{padding:0;}
+#s-gen2 tbody td.num-cell{padding:9px 10px;color:var(--text2);font-size:12px;font-weight:600;min-width:36px;text-align:center;}
+
+/* contenteditable cells */
+.ce{width:100%;padding:9px 10px;background:transparent;border:none;outline:none;min-width:60px;font-size:13px;font-family:inherit;font-weight:400;color:var(--text3);cursor:text;white-space:nowrap;overflow:hidden;}
+.ce:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5px var(--accent);color:var(--text);}
+.ce.col-ns{color:var(--text3);}
+.ce.col-eo{color:var(--text3);}
+/* rendered contract spans */
+.ce span.c{font-weight:400;}
+.ce span.c-ns{color:var(--ns);}
+.ce span.c-eo{color:var(--eo);}
+.ce span.w-manche{font-weight:700;font-size:14px;}
+.ce span.w-chelem{font-weight:900;font-size:14.5px;letter-spacing:.02em;}
+/* note input stays as input */
+tbody td input.note-input{width:100%;padding:9px 10px;background:transparent;border:none;color:var(--text);font-size:13px;font-family:inherit;font-weight:400;outline:none;}
+tbody td input.note-input:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5px var(--accent);}
+
+#s-gen2 .par-bottom-bar-css{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;background:var(--bg);border-top:1px solid var(--border);padding:.75rem 1.25rem calc(.75rem + env(safe-area-inset-bottom));display:flex;gap:8px;z-index:20;}
+#s-gen2 .par-btn{flex:1;padding:12px;border-radius:var(--r2);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:all .15s;}
+#s-gen2 .par-btn:active{transform:scale(.97);}
+#s-gen2 .par-btn-primary{background:var(--accent);color:#111;}
+
+#s-gen2 .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem;}
+#s-gen2 .stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem;text-align:center;}
+#s-gen2 .stat-num{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.03em;line-height:1;}
+#s-gen2 .stat-label{font-size:10px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:3px;}
+
+#s-gen2 .par-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:999px;padding:8px 16px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;}
+#s-gen2 .par-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
 </style>
 </head>
 <body>
@@ -177,7 +242,7 @@
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem">
     <p class="section-title" style="margin-bottom:0">Choisir un tournoi</p>
-    <button onclick="goTo('s-gen');genRenderTokenStatus();" style="font-size:12px;padding:5px 11px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);color:var(--green);font-family:inherit;white-space:nowrap;line-height:1;display:inline-flex;align-items:center;cursor:pointer">🗂 Générateur</button>
+    <button onclick="goTo('s-gen2');" style="font-size:12px;padding:5px 11px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);color:var(--green);font-family:inherit;white-space:nowrap;line-height:1;display:inline-flex;align-items:center;cursor:pointer">🗂 Générateur</button>
   </div>
   <p class="section-sub" id="tournoi-sub">Chargement...</p>
   <div class="options-list" id="tournoi-list"></div>
@@ -426,6 +491,65 @@
       <div id="gen-preview" class="gen-preview-body"></div>
     </div>
   </div>
+</div>
+
+
+<!-- ÉCRAN GEN2 : PAR DES DONNES -->
+<div class="screen" id="s-gen2" style="padding-bottom:80px;">
+  <button class="back-btn" onclick="goBack()">← Retour</button>
+
+  <div style="padding:.75rem 0 .5rem;display:flex;align-items:center;justify-content:space-between;">
+    <div style="font-size:15px;font-weight:600;">PAR des donnes</div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <div id="day-of-week" style="font-size:12px;font-weight:700;color:var(--text2);background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);padding:6px 9px;letter-spacing:.02em;white-space:nowrap;">—</div>
+      <input type="text" id="day-input" maxlength="2" placeholder="JJ"
+        onblur="onDayInput()" onkeydown="if(event.key==='Enter')this.blur()"
+        style="width:40px;text-align:center;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);padding:6px 6px;color:var(--text);font-size:15px;font-weight:600;font-family:inherit;outline:none;"
+        onfocus="this.select()"/>
+      <div id="month-display" style="font-size:12px;font-weight:700;color:var(--text2);background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);padding:6px 9px;letter-spacing:.02em;white-space:nowrap;">—</div>
+      <div style="display:flex;flex-direction:column;gap:3px;">
+        <button onclick="shiftDate(1)" style="width:24px;height:22px;border-radius:5px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:11px;cursor:pointer;line-height:1;">▲</button>
+        <button onclick="shiftDate(-1)" style="width:24px;height:22px;border-radius:5px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:11px;cursor:pointer;line-height:1;">▼</button>
+      </div>
+    </div>
+  </div>
+  <div style="flex:1;padding:.5rem 0 5rem;">
+    <div class="stats-row">
+      <div class="stat" onclick="document.getElementById('pbn-input').click()" style="cursor:pointer;border-color:#166534;background:#052e16;">
+        <div class="stat-num" style="font-size:16px;color:#4ade80;">↑</div>
+        <div class="stat-label" style="color:#4ade80;">Import PBN</div>
+      </div>
+      <div class="stat" onclick="goTo('s-gen');genRenderTokenStatus();" style="cursor:pointer;">
+        <div class="stat-num" style="font-size:14px;">🗂</div>
+        <div class="stat-label">Ancien gén.</div>
+      </div>
+      <div class="stat" onclick="clearAll()" style="cursor:pointer;border-color:#7f1d1d;background:#2d0a0a;">
+        <div class="stat-num" style="font-size:16px;color:#f87171;">✕</div>
+        <div class="stat-label" style="color:#f87171;">Effacer</div>
+      </div>
+    </div>
+    <input type="file" id="pbn-input" accept=".pbn,.PBN" style="display:none" onchange="importPBN(this)"/>
+    <div class="table-wrap">
+      <table id="main-table">
+        <thead><tr>
+          <th style="width:36px;text-align:center">#</th>
+          <th>NS</th>
+          <th>EO</th>
+          <th>Note</th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+<div class="par-bottom-bar" style="position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--border2);padding:.75rem 0;display:flex;gap:8px;margin-top:1rem;">
+  <input type="password" id="token-input" placeholder="Token GitHub"
+    oninput="onTokenInput(this.value)"
+    style="flex:1;padding:12px 14px;border-radius:var(--r2);border:1.5px solid var(--border);background:var(--bg3);color:var(--text);font-size:13px;font-family:monospace;outline:none;min-width:0;"/>
+  <button class="par-btn par-btn-primary" style="background:#166534;color:#4ade80;flex:.5;white-space:nowrap;" onclick="publish()">↑ Publier</button>
+</div>
+
+    
+<div class="par-toast" id="toast">
 </div>
 
 </div>
@@ -715,7 +839,7 @@ function showScreen(to, from){
 }
 
 function goTo(to){
-  const screens=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen'];
+  const screens=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-gen2'];
   const current=screens.find(s=>document.getElementById(s).classList.contains('active'));
   if(current){ navHistory.push(current); document.getElementById(current).classList.remove('active'); }
   document.getElementById(to).classList.add('active');
@@ -723,7 +847,7 @@ function goTo(to){
 
 function goBack(){
   if(!navHistory.length) return;
-  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen'].find(s=>document.getElementById(s).classList.contains('active'));
+  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-gen2'].find(s=>document.getElementById(s).classList.contains('active'));
   if(current) document.getElementById(current).classList.remove('active');
   const prev=navHistory.pop();
   document.getElementById(prev).classList.add('active');
@@ -1079,7 +1203,7 @@ function reset(){
   if(btn) btn.style.display='';
   document.getElementById('tournoi-sub').textContent='Chargement...';
   document.getElementById('tournoi-list').innerHTML='';
-  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen'].find(s=>document.getElementById(s).classList.contains('active'));
+  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-gen2'].find(s=>document.getElementById(s).classList.contains('active'));
   if(current) document.getElementById(current).classList.remove('active');
   document.getElementById('s-tournoi').classList.add('active');
   initTournoi();
@@ -1561,6 +1685,467 @@ addNavListener('btn-next', 1);
 
   // Init token au chargement
   genRenderTokenStatus();
+})();
+
+
+// ── PAR des donnes (s-gen2) ──
+let donnes = {};
+let gameDate = '';
+let pbnFile = null; // raw PBN text
+const DAYS = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+const MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+// ─── Date ─────────────────────────────────────────────────────
+function setGameDate(isoDate) {
+  gameDate = isoDate;
+  const [y,m,d] = isoDate.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m-1, d));
+  document.getElementById('day-of-week').textContent = DAYS[dt.getUTCDay()];
+  document.getElementById('day-input').value = String(d).padStart(2,'0');
+  document.getElementById('month-display').textContent = MONTHS[m-1];
+}
+
+function shiftDate(delta) {
+  if (!gameDate) return;
+  const [y,m,d] = gameDate.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m-1, d));
+  dt.setUTCDate(dt.getUTCDate() + delta);
+  setGameDate(`${dt.getUTCFullYear()}-${String(dt.getUTCMonth()+1).padStart(2,'0')}-${String(dt.getUTCDate()).padStart(2,'0')}`);
+}
+
+function onDayInput() {
+  const day = parseInt(document.getElementById('day-input').value);
+  if (isNaN(day) || day < 1 || day > 31) {
+    document.getElementById('day-of-week').textContent = '—';
+    document.getElementById('month-display').textContent = '—';
+    gameDate = ''; return;
+  }
+  const today = new Date();
+  let y = today.getFullYear(), m = today.getMonth();
+  let candidate = new Date(Date.UTC(y, m, day));
+  const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+  if (candidate < todayUTC) { m++; if(m>11){m=0;y++;} candidate = new Date(Date.UTC(y,m,day)); }
+  setGameDate(`${candidate.getUTCFullYear()}-${String(candidate.getUTCMonth()+1).padStart(2,'0')}-${String(candidate.getUTCDate()).padStart(2,'0')}`);
+}
+
+// ─── Data ─────────────────────────────────────────────────────
+function getDonne(n){ return donnes[n] || {ns:'',eo:'',note:''}; }
+function setDonne(n, field, val){
+  if(!donnes[n]) donnes[n]={ns:'',eo:'',note:''};
+  donnes[n][field]=val.trim();
+  if(!donnes[n].ns && !donnes[n].eo && !donnes[n].note) delete donnes[n];
+}
+
+// ─── Contract rendering ───────────────────────────────────────
+function contractWeight(part) {
+  const m = part.trim().match(/^(\d)([A-Z]+)/);
+  if (!m) return '';
+  const lv = parseInt(m[1]), suit = m[2];
+  if (lv >= 6) return 'w-chelem';
+  const isGame = (suit==='SA'&&lv>=3)||((['P','C'].includes(suit))&&lv>=4)||((['T','K'].includes(suit))&&lv>=5);
+  return isGame ? 'w-manche' : '';
+}
+
+function renderContract(val, col) {
+  // val: "3SA ; 2P" or "4C+1" etc.
+  // col: 'ns' or 'eo'
+  if (!val || !val.trim()) return '';
+  const colorClass = col === 'ns' ? 'c-ns' : 'c-eo';
+  const parts = val.split(';').map(p => p.trim());
+  return parts.map((p, idx) => {
+    const wClass = contractWeight(p); // weight applied to each part
+    const cls = ['c', colorClass, wClass].filter(Boolean).join(' ');
+    const sep = idx > 0 ? '<span style="color:var(--text3);font-weight:400;font-size:12px;"> ; </span>' : '';
+    return sep + `<span class="${cls}">${p}</span>`;
+  }).join('');
+}
+
+// ─── ContentEditable helpers ──────────────────────────────────
+function getCEText(el) {
+  // Get plain text from contenteditable, stripping HTML
+  return el.innerText.replace(/\n/g, '').trim();
+}
+
+function setCEValue(el, val, col) {
+  if (document.activeElement === el) return; // don't overwrite while editing
+  if (!val) {
+    el.innerHTML = '';
+  } else {
+    el.innerHTML = renderContract(val, col);
+  }
+}
+
+function onCEInput(el, n, field) {
+  const val = getCEText(el);
+  setDonne(n, field, val);
+  // While typing, just show plain text (don't re-render with spans mid-edit)
+}
+
+function onCEBlur(el, n, field, col) {
+  const val = getCEText(el);
+  setDonne(n, field, val);
+  // Re-render with styled spans
+  if (val) {
+    el.innerHTML = renderContract(val, col);
+  } else {
+    el.innerHTML = '';
+  }
+}
+
+function onCEFocus(el) {
+  // Replace spans with plain text for editing
+  const text = getCEText(el);
+  el.textContent = text;
+  // Select all so typing replaces existing content
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.selectNodeContents(el);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+function onCEKeydown(el, e) {
+  // Prevent newlines
+  if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+}
+
+// ─── Table ────────────────────────────────────────────────────
+function buildTable() {
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+  for (let i = 1; i <= 36; i++) {
+    const d = getDonne(i);
+    const tr = document.createElement('tr');
+    tr.id = 'tr-' + i;
+    if (i % 2 === 1 && i > 1) tr.classList.add('sep-thick');
+
+    const nsHtml = d.ns ? renderContract(d.ns, 'ns') : '';
+    const eoHtml = d.eo ? renderContract(d.eo, 'eo') : '';
+
+    tr.innerHTML = `
+      <td class="num-cell">${i}</td>
+      <td><div class="ce col-ns" contenteditable="true" spellcheck="false"
+        data-n="${i}" data-field="ns" data-col="ns"
+        >${nsHtml}</div></td>
+      <td><div class="ce col-eo" contenteditable="true" spellcheck="false"
+        data-n="${i}" data-field="eo" data-col="eo"
+        >${eoHtml}</div></td>
+      <td><input type="text" class="note-input" value="${d.note}" placeholder=""
+        autocomplete="off" autocorrect="off"
+        oninput="setDonne(${i},'note',this.value)"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}"
+        onfocus="this.select()"/></td>`;
+    tbody.appendChild(tr);
+  }
+  // Attach events to CE divs
+  tbody.querySelectorAll('.ce').forEach(el => {
+    const n = parseInt(el.dataset.n);
+    const field = el.dataset.field;
+    const col = el.dataset.col;
+    el.addEventListener('focus', () => onCEFocus(el));
+    el.addEventListener('blur', () => onCEBlur(el, n, field, col));
+    el.addEventListener('input', () => onCEInput(el, n, field));
+    el.addEventListener('keydown', (e) => onCEKeydown(el, e));
+  });
+}
+
+// ─── Import PBN ───────────────────────────────────────────────
+function importPBN(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const text = e.target.result;
+    pbnFile = text;
+    const imported = parsePBN(text);
+    if (imported.count === 0) { toast('Aucun par trouvé dans ce fichier'); return; }
+    let filled = 0;
+    for (const [num, d] of Object.entries(imported.data)) {
+      const n = parseInt(num);
+      if (!donnes[n]) donnes[n] = {ns:'', eo:'', note:''};
+      let changed = false;
+      if (d.ns && !donnes[n].ns) { donnes[n].ns = d.ns; changed = true; }
+      if (d.eo && !donnes[n].eo) { donnes[n].eo = d.eo; changed = true; }
+      if (changed) filled++;
+      if (!donnes[n].ns && !donnes[n].eo && !donnes[n].note) delete donnes[n];
+    }
+    const dateMatch = file.name.match(/(\d{4})(\d{2})(\d{2})/);
+    if (dateMatch) setGameDate(`${dateMatch[1]}-${dateMatch[2]}-${dateMatch[3]}`);
+    buildTable();
+    toast('✓ ' + filled + ' par(s) importé(s) depuis ' + file.name);
+    input.value = '';
+  };
+  reader.readAsText(file, 'latin-1');
+}
+
+// ─── Clear ────────────────────────────────────────────────────
+function clearAll() {
+  if (!confirm('Effacer toutes les donnes ?')) return;
+  donnes = {};
+  buildTable();
+  toast('Données effacées');
+}
+
+// ─── Toast ────────────────────────────────────────────────────
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('par-toast');
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ─── PBN parsing ──────────────────────────────────────────────
+function normalizeContract(c) {
+  // Convert "1SA+1" → "2SA" (express as max level without overtrick notation)
+  // Keep sacrifices (X-n) and plain contracts unchanged
+  const m = c.match(/^(\d)([A-Z]+)(\+\d+)$/);
+  if (!m) return c; // no +n modifier, or sacrifice: keep as-is
+  const lv = parseInt(m[1]);
+  const dn = m[2];
+  const ot = parseInt(m[3]); // e.g. +1 → 1
+  const newLv = Math.min(lv + ot, 7);
+  return `${newLv}${dn}`;
+}
+
+function normalizeStr(s) {
+  // Apply normalizeContract to each part, and lowercase X (contrat contré)
+  return s.split(' ; ').map(p => normalizeContract(p.trim()).replace('X', 'x')).join(' ; ');
+}
+
+function stripEq(s) {
+  return s.split(' ; ').map(p => p.endsWith('=') ? p.slice(0,-1) : p).join(' ; ');
+}
+
+function translatePart(c) {
+  let out='', i=0;
+  while(i<c.length){
+    const ch=c[i];
+    if(ch==='N'){ if(i+1<c.length&&c[i+1]==='T'){out+='SA';i+=2;}else{out+='SA';i++;} }
+    else if(ch==='S'){out+='P';i++;}
+    else if(ch==='H'){out+='C';i++;}
+    else if(ch==='D'){out+='K';i++;}
+    else if(ch==='C'){out+='T';i++;}
+    else{out+=ch;i++;}
+  }
+  return out;
+}
+
+function contractScore(lv, dn) {
+  const pts = dn==='NT' ? 40+Math.max(0,lv-1)*30 : ['S','H'].includes(dn) ? lv*30 : lv*20;
+  const isGame = (['S','H'].includes(dn)&&lv>=4)||((['D','C'].includes(dn))&&lv>=5)||(dn==='NT'&&lv>=3);
+  const bonus = lv===7?1500:lv===6?1000:isGame?300:50;
+  return pts+bonus;
+}
+
+function bestMakeable(tricks) {
+  let best=null, bs=-1;
+  for(const [d,t] of Object.entries(tricks)){
+    if(t<7)continue;
+    const lv=Math.min(t-6,7), sc=contractScore(lv,d);
+    if(sc>bs){bs=sc;best=[lv,d,sc];}
+  }
+  return best;
+}
+
+function suitCount(hands, side, suit) {
+  if(side==='NS') return (hands.N[suit]?.length||0)+(hands.S[suit]?.length||0);
+  return (hands.E[suit]?.length||0)+(hands.W[suit]?.length||0);
+}
+
+function fitAlternatives(parLv, parDn, parMod, tricks, hands, side, skipDenoms) {
+  // Add overtrick points to par score for accurate comparison
+  let parScore = contractScore(parLv, parDn);
+  const overtrickMatch = (parMod||'').match(/^\+(\d+)$/);
+  if (overtrickMatch) {
+    const ot = parseInt(overtrickMatch[1]);
+    const otPts = parDn==='NT' ? 30 : ['S','H'].includes(parDn) ? 30 : 20;
+    parScore += ot * otPts;
+  }
+  const alts = [];
+  if(parDn==='NT'){
+    for(const major of ['S','H']){
+      if(skipDenoms.has(major))continue;
+      if(suitCount(hands,side,major)>=8){
+        const t=tricks[major]||0;
+        if(t>=7){
+          const altLv=Math.min(t-6,7);
+          const altScore=contractScore(altLv,major);
+          if(altScore<parScore)
+            alts.push([altLv,major,translatePart(`${altLv}${major}`)+'=']);
+        }
+      }
+    }
+  } else {
+    if(suitCount(hands,side,parDn)<8){
+      let bestAlt=null, bestAltSc=-1;
+      for(const suit of ['S','H','D','C']){
+        if(suit===parDn||skipDenoms.has(suit))continue;
+        if(suitCount(hands,side,suit)>=8){
+          const t=tricks[suit]||0;
+          if(t>=7){
+            const altLv=Math.min(t-6,7), altSc=contractScore(altLv,suit);
+            if(altSc<parScore&&altSc>bestAltSc){bestAltSc=altSc;bestAlt=[altLv,suit];}
+          }
+        }
+      }
+      if(bestAlt) alts.push([bestAlt[0],bestAlt[1],translatePart(`${bestAlt[0]}${bestAlt[1]}`)+'=']);
+    }
+  }
+  return alts;
+}
+
+function parseContract(s) {
+  const m=s.match(/^(\d)(NT|[SHDCN])(.*)/);
+  if(!m)return null;
+  let dn=m[2]; if(dn==='N')dn='NT';
+  return [parseInt(m[1]),dn,m[3]];
+}
+
+function processParParts(parts, tricks, hands, side) {
+  const outParts=[], shownDenoms=new Set();
+  for(const p of parts){
+    const sp=p.indexOf(' ');
+    const cs=sp===-1?p:p.slice(sp+1);
+    const parsed=parseContract(cs);
+    if(!parsed){outParts.push(translatePart(cs));continue;}
+    const[lv,dn,mod]=parsed;
+    shownDenoms.add(dn);
+    const tStr=translatePart(`${lv}${dn}`)+mod;
+    const skip=new Set(shownDenoms);
+    const alts=fitAlternatives(lv,dn,mod,tricks,hands,side,skip);
+    alts.forEach(([,altDn])=>shownDenoms.add(altDn));
+    outParts.push(tStr+(alts.length?' ; '+alts.map(a=>a[2]).join(' ; '):''));
+  }
+  return normalizeStr(stripEq(outParts.join(' ; ')));
+}
+
+function parseDeal(dealStr) {
+  const [firstDir,rest]=dealStr.split(':');
+  const dirs=['N','E','S','W'], start=dirs.indexOf(firstDir);
+  const handStrs=rest.trim().split(' '), hands={};
+  handStrs.forEach((hs,i)=>{
+    const d=dirs[(start+i)%4], [s,h,di,c]=hs.split('.');
+    hands[d]={S:s||'',H:h||'',D:di||'',C:c||''};
+  });
+  return hands;
+}
+
+function parsePBN(text) {
+  const result={};
+  const boardRegex=/\[Board\s+"(\d+)"\]([\s\S]*?)(?=\[Board\s+"|$)/g;
+  let m;
+  while((m=boardRegex.exec(text))!==null){
+    const num=parseInt(m[1]), block=m[2];
+    const tableMatch=block.match(/\[OptimumResultTable[^\]]*\]\s*([\s\S]*?)(?=\[|$)/);
+    const nsTricks={}, ewTricks={};
+    if(tableMatch){
+      for(const line of tableMatch[1].trim().split('\n')){
+        const p=line.trim().split(/\s+/);
+        if(p.length<3)continue;
+        const[decl,denom,tricks]=[p[0],p[1],parseInt(p[2])];
+        if('NS'.includes(decl)&&decl.length===1) nsTricks[denom]=Math.max(nsTricks[denom]||0,tricks);
+        if('EW'.includes(decl)&&decl.length===1) ewTricks[denom]=Math.max(ewTricks[denom]||0,tricks);
+      }
+    }
+    const dealMatch=block.match(/\[Deal\s+"([^"]+)"\]/);
+    if(!dealMatch)continue;
+    const hands=parseDeal(dealMatch[1]);
+    const parMatch=block.match(/\[ParContract\s+"([^"]+)"\]/);
+    const parRaw=parMatch?parMatch[1].trim():'';
+    const parParts=parRaw.split(';').map(p=>p.trim()).filter(Boolean);
+    const nsParts=parParts.filter(p=>/^(NS|N|S)\s/.test(p));
+    const ewParts=parParts.filter(p=>/^(EW|E|W)\s/.test(p));
+    const isSac=/X-\d/.test(parRaw);
+    let ns='', eo='';
+    if(isSac){
+      if(nsParts.length>0){
+        ns=normalizeStr(translatePart(nsParts[0].split(' ').slice(1).join(' ')));
+        const bm=bestMakeable(ewTricks);
+        if(bm){const[lv,dn]=bm;const base=translatePart(`${lv}${dn}`)+'=';const alts=fitAlternatives(lv,dn,'=',ewTricks,hands,'EW',new Set([dn]));eo=normalizeStr(stripEq(base+(alts.length?' ; '+alts.map(a=>a[2]).join(' ; '):'')));}
+      } else {
+        const bm=bestMakeable(nsTricks);
+        if(bm){const[lv,dn]=bm;const base=translatePart(`${lv}${dn}`)+'=';const alts=fitAlternatives(lv,dn,'=',nsTricks,hands,'NS',new Set([dn]));ns=normalizeStr(stripEq(base+(alts.length?' ; '+alts.map(a=>a[2]).join(' ; '):'')));}
+        eo=ewParts.length>0?normalizeStr(translatePart(ewParts[0].split(' ').slice(1).join(' '))):'';
+      }
+    } else {
+      if(nsParts.length>0) ns=processParParts(nsParts,nsTricks,hands,'NS');
+      else if(ewParts.length>0) eo=processParParts(ewParts,ewTricks,hands,'EW');
+    }
+    result[num]={ns,eo,note:''};
+  }
+  return {data:result,count:Object.keys(result).length};
+}
+
+// ─── GitHub ───────────────────────────────────────────────────
+const GH_OWNER = window.location.hostname.endsWith('github.io')
+  ? window.location.hostname.split('.')[0] : 'capgui13';
+const GH_REPO = window.location.hostname.endsWith('github.io')
+  ? (window.location.pathname.split('/').filter(Boolean)[0]||'MVT2') : 'MVT2';
+const GH_BRANCH = 'main';
+
+function getToken(){ return localStorage.getItem('gh_token')||''; }
+function saveToken(t){ localStorage.setItem('gh_token', t.trim()); }
+
+function onTokenInput(v){
+  if(!v || /^•+/.test(v)) return;
+  saveToken(v); renderTokenStatus();
+}
+
+async function ghUpload(fname, fileContent, isBinary=false){
+  const token = getToken();
+  if(!token) return {ok:false, msg:'Token manquant'};
+  const apiUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${fname}`;
+  let sha;
+  try{
+    const check = await fetch(apiUrl,{headers:{Authorization:`token ${token}`,Accept:'application/vnd.github.v3+json'}});
+    if(check.ok){ const data=await check.json(); sha=data.sha; }
+  }catch(e){}
+  const encoded = isBinary ? btoa(Array.from(fileContent).map(c=>c.charCodeAt(0)&0xff).map(b=>String.fromCharCode(b)).join('')) : btoa(unescape(encodeURIComponent(fileContent)));
+  const body = {message:`Ajout ${fname}`, content:encoded, branch:GH_BRANCH};
+  if(sha) body.sha = sha;
+  const res = await fetch(apiUrl,{method:'PUT',headers:{Authorization:`token ${token}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(res.ok) return {ok:true};
+  const err = await res.json().catch(()=>({}));
+  return {ok:false, msg:err.message||`Erreur ${res.status}`};
+}
+
+async function publish(){
+  if(Object.keys(donnes).length===0){ toast('Aucune donne saisie'); return; }
+  if(!getToken()){ toast('Token GitHub manquant — saisissez-le en bas'); return; }
+
+  const sorted={};
+  if(gameDate) sorted['date']=gameDate;
+  Object.keys(donnes).map(Number).sort((a,b)=>a-b).forEach(k=>{ sorted[k]=donnes[k]; });
+  const dateStr=gameDate||`${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}-${String(new Date().getDate()).padStart(2,'0')}`;
+  const jsonFname = `donnes${dateStr}.json`;
+  const jsonStr = JSON.stringify(sorted,null,2);
+
+  toast('⏳ Publication en cours…');
+
+  // Upload JSON
+  const jsonResult = await ghUpload(jsonFname, jsonStr);
+  if(!jsonResult.ok){ toast('✕ JSON : '+jsonResult.msg); return; }
+
+  // Upload PBN if available (same base name as JSON, .pbn extension)
+  if(pbnFile){
+    const pbnFname2 = jsonFname.replace('.json','.pbn');
+    const pbnResult = await ghUpload(pbnFname2, pbnFile, true);
+    if(!pbnResult.ok){ toast(`✓ JSON publié, ✕ PBN : ${pbnResult.msg}`); return; }
+    toast(`✓ ${jsonFname} + ${jsonFname.replace('.json','.pbn')} publiés`);
+  } else {
+    toast(`✓ ${jsonFname} publié sur ${GH_OWNER}/${GH_REPO}`);
+  }
+  try{ localStorage.removeItem('bridge_tournoi_list'); }catch(e){}
+}
+
+buildTable();
+(function(){
+  const t = getToken();
+  const inp = document.getElementById('token-input');
+  if(inp) inp.value = t ? '•'.repeat(12)+t.slice(-4) : '';
 })();
 </script>
 </body>
