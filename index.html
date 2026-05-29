@@ -212,6 +212,8 @@ tbody td input.note-input:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5
 
 /* ── Visualiseur de donnes (s-visu) ── */
 #s-visu{--felt:#1a4d2e;--felt-dk:#0f2d1a;--felt-md:#206038;--felt-lt:#2e7d4f;--gold:#c8973a;--cream:#1a1a1a;--card-bg:#1e1e1e;--card-bd:#333;--suit-s:#6b9fd4;--suit-h:#d4706a;--suit-d:#c8924a;--suit-c:#6aaa78;--txt:#f0ebe0;--txt2:#8aaa88;--txt3:#4a6048;--sh-sm:0 2px 8px rgba(0,0,0,.4);--sh-lg:0 6px 24px rgba(0,0,0,.5);}
+#s-visu{overscroll-behavior:none;overflow:hidden;position:fixed;top:0;left:0;right:0;bottom:0;z-index:10;display:none;}
+#s-visu.active{display:block;}
 #s-visu .visu-nav{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;margin-bottom:.75rem;border-bottom:1px solid var(--border);}
 #s-visu .visu-ctr{font-size:13px;color:var(--text2);}
 #s-visu .visu-arr{display:flex;gap:6px;}
