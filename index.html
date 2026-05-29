@@ -1479,6 +1479,24 @@ async function chargerTournoi(url, fichier, silencieux=false){
     if(!res.ok) throw new Error();
     donnesData=await res.json();
     window._donnesFichier=fichier;
+    // Préchargement du PBN en arrière-plan
+    (async ()=>{
+      try{
+        const hostname=window.location.hostname;
+        const onGithub=hostname.endsWith('github.io');
+        const user=onGithub?hostname.split('.')[0]:'capgui13';
+        const repo=onGithub?(window.location.pathname.split('/').filter(Boolean)[0]||'MVT2'):'MVT2';
+        const base=onGithub?`https://${hostname}/${repo}/`:'https://capgui13.github.io/MVT2/';
+        const pbnUrl=base+fichier.replace('.json','.pbn');
+        if(!_visuCache[pbnUrl]){
+          const buf=await (await fetch(pbnUrl)).arrayBuffer();
+          const bytes=new Uint8Array(buf);
+          let text=new TextDecoder('utf-8').decode(bytes);
+          if(text.includes('\uFFFD')) text=new TextDecoder('iso-8859-1').decode(bytes);
+          _visuCache[pbnUrl]=visuParsePBN(text);
+        }
+      }catch(e){}
+    })();
     if(!silencieux){
       const sub=document.getElementById('tournoi-sub');
       sub.textContent='✓ '+Object.keys(donnesData).length+' donnes chargées';
