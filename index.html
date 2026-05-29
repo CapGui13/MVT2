@@ -2123,14 +2123,17 @@ async function publish(){
   if(!jsonResult.ok){ toast('✕ JSON : '+jsonResult.msg); return; }
 
   // Upload PBN if available (same base name as JSON, .pbn extension)
+  console.log('pbnFile:', pbnFile ? 'present' : 'null');
   if(pbnFile){
     const pbnFname2 = jsonFname.replace('.json','.pbn');
     const pbnResult = await ghUpload(pbnFname2, pbnFile, true);
+    console.log('pbn result:', JSON.stringify(pbnResult));
     if(!pbnResult.ok){ toast(`✓ JSON publié, ✕ PBN : ${pbnResult.msg}`); return; }
     toast(`✓ ${jsonFname} + ${jsonFname.replace('.json','.pbn')} publiés`);
   } else {
     toast(`✓ ${jsonFname} publié sur ${GH_OWNER}/${GH_REPO}`);
   }
+  console.log('toast called');
   try{ localStorage.removeItem('bridge_tournoi_list'); }catch(e){}
 }
 
