@@ -1864,6 +1864,7 @@ function importPBN(input) {
       const n = parseInt(num);
       if (!donnes[n]) donnes[n] = {ns:'', eo:'', note:''};
       let changed = false;
+      if (n > 36) continue;
       if (d.ns && !donnes[n].ns) { donnes[n].ns = d.ns; changed = true; }
       if (d.eo && !donnes[n].eo) { donnes[n].eo = d.eo; changed = true; }
       if (changed) filled++;
