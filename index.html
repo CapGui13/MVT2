@@ -2337,6 +2337,7 @@ function updateTokenIndicator(){
   const hasToken = !!localStorage.getItem('gh_token');
   btn.innerHTML = hasToken ? '⚙ Paramètres <span style="width:7px;height:7px;border-radius:50%;background:#4ade80;display:inline-block;margin-left:2px;"></span>' : '⚙ Paramètres';
 }
+updateTokenIndicator();
 function saveModalToken(){
   const inp = document.getElementById('modal-token-input');
   const v = inp.value.trim();
