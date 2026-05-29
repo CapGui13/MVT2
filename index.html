@@ -2092,7 +2092,7 @@ function saveToken(t){ localStorage.setItem('gh_token', t.trim()); }
 
 function onTokenInput(v){
   if(!v || /^•+/.test(v)) return;
-  saveToken(v); renderTokenStatus();
+  saveToken(v);
 }
 
 async function ghUpload(fname, fileContent, isBinary=false){
