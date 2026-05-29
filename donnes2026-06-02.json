@@ -6,8 +6,8 @@
   },
   "2": {
     "ns": "",
-    "eo": "3SA+3",
-    "note": "DT 2nde"
+    "eo": "6SA",
+    "note": ""
   },
   "3": {
     "ns": "3C",
@@ -25,9 +25,9 @@
     "note": ""
   },
   "6": {
-    "ns": "3SA-1",
+    "ns": "2SA",
     "eo": "",
-    "note": "entame P, switch C"
+    "note": ""
   },
   "7": {
     "ns": "5C",
@@ -65,9 +65,9 @@
     "note": ""
   },
   "14": {
-    "ns": "7T-4",
-    "eo": "4C-1 : 6K",
-    "note": "4C chute sur entame sg K"
+    "ns": "6SAx-4",
+    "eo": "6K",
+    "note": ""
   },
   "15": {
     "ns": "",
@@ -105,9 +105,9 @@
     "note": ""
   },
   "22": {
-    "ns": "3SA-1",
+    "ns": "2SA",
     "eo": "",
-    "note": "Entame XC ; ne pas plonger du RK"
+    "note": ""
   },
   "23": {
     "ns": "",
