@@ -2043,13 +2043,23 @@ function fitAlternatives(parLv, parDn, parMod, tricks, hands, side, skipDenoms) 
         if(t>=7){
           const altLv=Math.min(t-6,7);
           const altScore=contractScore(altLv,major);
-          if(altScore<parScore)
+          if(altScore<=parScore)
             alts.push([altLv,major,translatePart(`${altLv}${major}`)+'=']);
         }
       }
     }
   } else {
-    if(suitCount(hands,side,parDn)<8){
+    // Tester SA : si NT fait assez de levées et rapporte autant ou moins que le par
+    if(!skipDenoms.has('NT')){
+      const tNT=tricks['NT']||0;
+      if(tNT>=7){
+        const altLv=Math.min(tNT-6,7), altSc=contractScore(altLv,'NT');
+        if(altSc<=parScore)
+          alts.push([altLv,'NT',translatePart(`${altLv}NT`)+'=']);
+      }
+    }
+    // Tester les autres couleurs avec fit suffisant et score équivalent
+    {
       let bestAlt=null, bestAltSc=-1;
       for(const suit of ['S','H','D','C']){
         if(suit===parDn||skipDenoms.has(suit))continue;
@@ -2057,7 +2067,7 @@ function fitAlternatives(parLv, parDn, parMod, tricks, hands, side, skipDenoms) 
           const t=tricks[suit]||0;
           if(t>=7){
             const altLv=Math.min(t-6,7), altSc=contractScore(altLv,suit);
-            if(altSc<parScore&&altSc>bestAltSc){bestAltSc=altSc;bestAlt=[altLv,suit];}
+            if(altSc<=parScore&&altSc>bestAltSc){bestAltSc=altSc;bestAlt=[altLv,suit];}
           }
         }
       }
