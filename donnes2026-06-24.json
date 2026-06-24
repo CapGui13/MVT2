@@ -1,202 +1,172 @@
 {
   "1": {
-    "ns": "3SA",
-    "eo": "",
+    "ns": "3C",
+    "eo": "4P",
     "note": ""
   },
   "2": {
-    "ns": "",
-    "eo": "2C ; 1SA",
+    "ns": "3K+1",
+    "eo": "",
     "note": ""
   },
   "3": {
-    "ns": "",
-    "eo": "6C ; 5SA ; 6T ; 6P",
+    "ns": "5K",
+    "eo": "",
     "note": ""
   },
   "4": {
-    "ns": "4P ; 4C",
-    "eo": "5Kx-2",
+    "ns": "",
+    "eo": "6P",
     "note": ""
   },
   "5": {
-    "ns": "",
-    "eo": "5C ; 1SA ; 5T",
+    "ns": "4P",
+    "eo": "",
     "note": ""
   },
   "6": {
-    "ns": "2P ; 1SA ; 3K",
+    "ns": "1SA",
     "eo": "",
-    "note": ""
+    "note": "déf switch P"
   },
   "7": {
-    "ns": "6P ; 5SA",
-    "eo": "",
+    "ns": "5K-1",
+    "eo": "5T",
     "note": ""
   },
   "8": {
-    "ns": "",
-    "eo": "6SA ; 6P",
+    "ns": "4P",
+    "eo": "",
     "note": ""
   },
   "9": {
-    "ns": "5Px-1",
-    "eo": "5C ; 4T",
-    "note": ""
+    "ns": "",
+    "eo": "3Cx-2",
+    "note": "donner coupe à T"
   },
   "10": {
-    "ns": "3SA",
-    "eo": "",
+    "ns": "",
+    "eo": "4M",
     "note": ""
   },
   "11": {
-    "ns": "2SA",
+    "ns": "3SA+4",
     "eo": "",
-    "note": ""
+    "note": "P 3/3"
   },
   "12": {
     "ns": "",
-    "eo": "3P ; 1SA",
+    "eo": "4C",
     "note": ""
   },
   "13": {
-    "ns": "",
-    "eo": "3T ; 2C ; 2C",
+    "ns": "2P+2",
+    "eo": "",
     "note": ""
   },
   "14": {
-    "ns": "6P ; 5SA",
+    "ns": "2P-2",
     "eo": "",
-    "note": ""
+    "note": "entamer atout ou DK"
   },
   "15": {
-    "ns": "",
-    "eo": "3SA",
-    "note": ""
+    "ns": "3T",
+    "eo": "3C-1",
+    "note": "N singleton P et AVx à C ; expasser XP"
   },
   "16": {
-    "ns": "",
-    "eo": "4T ; 1SA",
+    "ns": "1SA+1",
+    "eo": "",
     "note": ""
   },
   "17": {
-    "ns": "",
-    "eo": "4C ; 2SA",
+    "ns": "3T+2",
+    "eo": "",
     "note": ""
   },
   "18": {
-    "ns": "3SA ; 3C",
-    "eo": "4Tx-3",
-    "note": ""
+    "ns": "",
+    "eo": "4C-1",
+    "note": "passer en O ; S doit plonger AK"
   },
   "19": {
-    "ns": "5Cx-2",
-    "eo": "4SA",
-    "note": ""
+    "ns": "3SA+2",
+    "eo": "",
+    "note": "annoncer SA en N / Jouer K 3/3"
   },
   "20": {
-    "ns": "2P ; 1SA ; 3K ; 3K",
-    "eo": "",
-    "note": ""
+    "ns": "2K",
+    "eo": "1SA",
+    "note": "NS : RK puis impasse T et petit K des deux mains / EO doit jouer les T"
   },
   "21": {
     "ns": "",
-    "eo": "3P ; 2SA",
-    "note": ""
+    "eo": "1SA-2",
+    "note": "flanc T puis P"
   },
   "22": {
-    "ns": "2P ; 1SA",
-    "eo": "",
+    "ns": "",
+    "eo": "1SA",
     "note": ""
   },
   "23": {
-    "ns": "3C ; 1SA ; 3K ; 3P",
-    "eo": "",
+    "ns": "",
+    "eo": "2P+1",
     "note": ""
   },
   "24": {
     "ns": "",
-    "eo": "3C ; 2SA ; 3T",
-    "note": ""
+    "eo": "3SA",
+    "note": "prendre entame AT, AK et impasse K"
   },
   "25": {
-    "ns": "3SA ; 3P",
-    "eo": "",
-    "note": ""
+    "ns": "",
+    "eo": "3SA-1",
+    "note": "entame T ; intercaler à P en S"
   },
   "26": {
-    "ns": "4P ; 2SA ; 4K",
-    "eo": "",
-    "note": ""
+    "ns": "",
+    "eo": "6M+1",
+    "note": "ouvrir 1SA"
   },
   "27": {
-    "ns": "3P ; 1SA",
-    "eo": "",
-    "note": ""
+    "ns": "",
+    "eo": "3K",
+    "note": "tirer tête à C"
   },
   "28": {
-    "ns": "7C ; 6SA",
-    "eo": "",
+    "ns": "",
+    "eo": "1SA+1",
     "note": ""
   },
   "29": {
-    "ns": "",
-    "eo": "4C ; 3K",
+    "ns": "2P",
+    "eo": "",
     "note": ""
   },
   "30": {
     "ns": "",
-    "eo": "3SA ; 5T",
+    "eo": "2P",
     "note": ""
   },
   "31": {
-    "ns": "3C",
-    "eo": "",
+    "ns": "",
+    "eo": "1SA",
     "note": ""
   },
   "32": {
-    "ns": "2SA",
-    "eo": "",
-    "note": ""
+    "ns": "",
+    "eo": "4C",
+    "note": "ne pas ouvrir SA"
   },
   "33": {
     "ns": "",
-    "eo": "6T ; 5SA",
-    "note": ""
-  },
-  "34": {
-    "ns": "",
-    "eo": "4C ; 2SA ; 4P ; 4P",
+    "eo": "1SA/2P",
     "note": ""
   },
   "35": {
-    "ns": "",
-    "eo": "2SA",
-    "note": ""
-  },
-  "36": {
-    "ns": "5SA",
-    "eo": "",
-    "note": ""
-  },
-  "37": {
-    "ns": "",
-    "eo": "",
-    "note": ""
-  },
-  "38": {
-    "ns": "",
-    "eo": "",
-    "note": ""
-  },
-  "39": {
-    "ns": "",
-    "eo": "",
-    "note": ""
-  },
-  "40": {
-    "ns": "",
-    "eo": "",
+    "ns": "x",
+    "eo": "x",
     "note": ""
   },
   "date": "2026-06-24"
