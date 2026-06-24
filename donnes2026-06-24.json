@@ -156,13 +156,18 @@
   },
   "32": {
     "ns": "",
-    "eo": "4C",
-    "note": "ne pas ouvrir SA"
+    "eo": "4C/3SA",
+    "note": ""
   },
   "33": {
     "ns": "",
     "eo": "1SA/2P",
-    "note": ""
+    "note": "itv 1P ?"
+  },
+  "34": {
+    "ns": "",
+    "eo": "",
+    "note": "N joue C"
   },
   "35": {
     "ns": "x",
