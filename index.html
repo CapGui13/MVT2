@@ -174,6 +174,13 @@ thead th:last-child{border-radius:0 var(--r2) 0 0}
 #s-gen2 tbody td{padding:0;}
 #s-gen2 tbody td.num-cell{padding:9px 10px;color:var(--text2);font-size:12px;font-weight:600;min-width:36px;text-align:center;}
 
+/* Affichage du commentaire en ligne dédiée sur mobile */
+#s-gen2 tr.note-display-row{display:none;}
+@media (max-width:600px){
+  #s-gen2 tr.note-display-row.has-note{display:table-row;}
+}
+#s-gen2 tr.note-display-row td{padding:2px 10px 9px;font-size:12px;color:var(--text2);font-style:italic;line-height:1.3;word-break:break-word;}
+
 /* contenteditable cells */
 .ce{width:100%;padding:9px 10px;background:transparent;border:none;outline:none;min-width:60px;font-size:13px;font-family:inherit;font-weight:400;color:var(--text3);cursor:text;white-space:nowrap;overflow:hidden;}
 .ce:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5px var(--accent);color:var(--text);}
@@ -263,7 +270,7 @@ tbody td input.note-input:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem">
     <p class="section-title" style="margin-bottom:0">Choisir un tournoi</p>
-    <button onclick="goTo('s-gen2');" style="font-size:12px;padding:5px 11px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);color:var(--green);font-family:inherit;white-space:nowrap;line-height:1;display:inline-flex;align-items:center;cursor:pointer">🗂 Générateur</button>
+    <button onclick="openGen2Fresh();" style="font-size:12px;padding:5px 11px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);color:var(--green);font-family:inherit;white-space:nowrap;line-height:1;display:inline-flex;align-items:center;cursor:pointer">🗂 Générateur</button>
   </div>
   <p class="section-sub" id="tournoi-sub">Chargement...</p>
   <div class="options-list" id="tournoi-list"></div>
@@ -608,6 +615,7 @@ let donnesData={}; // {numDonne: {ns, eo, note}}
 // donnes en circulation = tables × dpt
 // DB Mitchell : [paires, tables, mouvement, tours, dpt, impair, deficient]
 const DB=[
+  [10,5,'simple',5,5,false,false],
   [12,6,'guerid',6,4,false,false],
   [13,7,'simple',7,4,true,false],
   [14,7,'simple',6,4,false,false],
@@ -1877,6 +1885,18 @@ function onCEKeydown(el, e) {
   if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
 }
 
+// ─── Note (affichage mobile) ──────────────────────────────────
+function escapeHtml(s){
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function syncNoteRow(n, val){
+  const row = document.getElementById('noterow-'+n);
+  if(!row) return;
+  val = (val||'').trim();
+  row.classList.toggle('has-note', !!val);
+  row.querySelector('td:last-child').innerHTML = val ? '💬 ' + escapeHtml(val) : '';
+}
+
 // ─── Table ────────────────────────────────────────────────────
 function buildTable() {
   const tbody = document.getElementById('tbody');
@@ -1900,10 +1920,15 @@ function buildTable() {
         >${eoHtml}</div></td>
       <td><input type="text" class="note-input" value="${d.note}" placeholder=""
         autocomplete="off" autocorrect="off"
-        oninput="setDonne(${i},'note',this.value)"
+        oninput="setDonne(${i},'note',this.value);syncNoteRow(${i},this.value)"
         onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}"
         onfocus="this.select()"/></td>`;
     tbody.appendChild(tr);
+    const noteTr = document.createElement('tr');
+    noteTr.className = 'note-display-row' + (d.note ? ' has-note' : '');
+    noteTr.id = 'noterow-' + i;
+    noteTr.innerHTML = `<td></td><td colspan="3">💬 ${escapeHtml(d.note)}</td>`;
+    tbody.appendChild(noteTr);
   }
   // Attach events to CE divs
   tbody.querySelectorAll('.ce').forEach(el => {
@@ -2251,19 +2276,27 @@ async function loadDeleteList(){
       groups[base].push(f);
     });
     window._delMap={};
-    let html='';
-    Object.entries(groups).sort((a,b)=>b[0].localeCompare(a[0])).forEach(([base,gfiles],i)=>{
+    const today=new Date(); today.setHours(0,0,0,0);
+    const entries=Object.entries(groups).map(([base,gfiles])=>{
       const dm=base.match(/(\d{4})-(\d{2})-(\d{2})/);
+      const date=dm?new Date(dm[1]+'-'+dm[2]+'-'+dm[3]+'T12:00:00'):null;
+      return {base,gfiles,date};
+    });
+    const futurs=entries.filter(x=>!x.date||x.date>=today).sort((a,b)=>(a.date||0)-(b.date||0));
+    const passes=entries.filter(x=>x.date&&x.date<today).sort((a,b)=>(b.date||0)-(a.date||0));
+    const tries=[...futurs,...passes];
+    let html='';
+    tries.forEach(({base,gfiles,date},i)=>{
       let label=base;
-      if(dm){
-        const d=new Date(dm[1]+'-'+dm[2]+'-'+dm[3]+'T12:00:00');
-        label=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+      if(date){
+        label=date.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
         label=label.charAt(0).toUpperCase()+label.slice(1);
       }
+      const passe=date&&date<today;
       const jsonFile = gfiles.find(f => /\.json$/i.test(f.name));
       const fname = jsonFile ? jsonFile.name : null;
       window._delMap['g'+i]={files:gfiles,token,user,repo,fname};
-      html+=`<div id="dg${i}" class="option-btn" style="justify-content:space-between;min-height:auto;cursor:pointer;" onclick="openGen2FromFile('g${i}')">
+      html+=`<div id="dg${i}" class="option-btn" style="justify-content:space-between;min-height:auto;cursor:pointer;${passe?'opacity:0.4;':''}" onclick="openGen2FromFile('g${i}')">
         <div>
           <div class="option-main">${label}</div>
           <div class="option-detail">${gfiles.map(f=>f.name).join(' · ')}</div>
@@ -2304,6 +2337,18 @@ async function delGroup(id){
     if(el)el.style.opacity='1';
     alert('Erreur lors de la suppression.');
   }
+}
+
+function openGen2Fresh(){
+  donnes={};
+  pbnFile=null;
+  gameDate='';
+  document.getElementById('day-of-week').textContent='—';
+  document.getElementById('day-input').value='';
+  document.getElementById('month-display').textContent='—';
+  buildTable();
+  updateTokenIndicator();
+  goTo('s-gen2');
 }
 
 async function openGen2FromFile(id){
