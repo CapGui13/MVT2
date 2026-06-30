@@ -176,12 +176,13 @@ thead th:last-child{border-radius:0 var(--r2) 0 0}
 
 /* Affichage du commentaire en ligne dédiée sur mobile */
 /* Affichage du commentaire en ligne dédiée sur mobile (uniquement écran "Gérer les fichiers") */
-#s-gen2.compact-notes tr.note-display-row{display:none;}
+#s-gen2 tr.note-display-row{display:none;}
 @media (max-width:600px){
   #s-gen2.compact-notes tr.note-display-row.has-note{display:table-row;}
-  #s-gen2.compact-notes tbody tr.has-note td.note-input-cell{display:none;}
+  #s-gen2.compact-notes #th-note,
+  #s-gen2.compact-notes tbody td.note-input-cell{display:none;}
 }
-#s-gen2.compact-notes tr.note-display-row td{padding:2px 10px 9px;font-size:12px;color:var(--text2);font-style:italic;line-height:1.3;word-break:break-word;}
+#s-gen2 tr.note-display-row td{padding:2px 10px 9px;font-size:12px;color:var(--text2);font-style:italic;line-height:1.3;word-break:break-word;}
 
 /* contenteditable cells */
 .ce{width:100%;padding:9px 10px;background:transparent;border:none;outline:none;min-width:60px;font-size:13px;font-family:inherit;font-weight:400;color:var(--text3);cursor:text;white-space:nowrap;overflow:hidden;}
