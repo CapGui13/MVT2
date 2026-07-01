@@ -285,7 +285,7 @@ tbody td input.note-input:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5
     _initRunning=false;
     initTournoi();
   ">↺ Rafraîchir la liste</button>
-  <button style="display:block;width:100%;margin-top:.3rem;padding:8px;border:none;background:none;color:var(--text2);font-size:13px;cursor:pointer;font-family:inherit;opacity:.6;text-decoration:none" onclick="const b=document.getElementById('btn-charger-donnes');if(b)b.style.display='';goTo('s-paires')">Continuer sans donnes →</button>
+  <button style="display:block;width:100%;margin-top:.3rem;padding:8px;border:none;background:none;color:var(--text2);font-size:13px;cursor:pointer;font-family:inherit;opacity:.6;text-decoration:none" onclick="const b=document.getElementById('btn-charger-donnes');if(b)b.style.display='';updateListeDonnesBtn();goTo('s-paires')">Continuer sans donnes →</button>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;border-top:1px solid var(--border);padding-top:.75rem;">
     <button onclick="openTokenModal();" id="btn-params" style="font-size:12px;padding:5px 11px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);color:var(--text2);font-family:inherit;display:inline-flex;align-items:center;gap:5px;cursor:pointer;">⚙ Paramètres</button>
     <button onclick="goTo('s-delete');setTimeout(loadDeleteList,50);" style="font-size:12px;padding:5px 11px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);color:#f87171;font-family:inherit;cursor:pointer;">🗑 Gérer les fichiers</button>
@@ -305,7 +305,21 @@ tbody td input.note-input:focus{background:var(--bg4);box-shadow:inset 0 0 0 1.5
     <input type="number" id="f-paires" min="6" max="36" value="" step="1" inputmode="numeric" oninput="updateOptions()" onfocus="this.select()"/>
     <p class="err" id="e-paires">Entre 6 et 36 paires</p>
   </div>
+  <button class="btn-go" id="btn-liste-donnes" style="margin-bottom:1.1rem;background:var(--bg3);color:var(--text2);font-size:14px;display:none" onclick="renderListeDonnes();goTo('s-liste-donnes')">📋 Liste des donnes</button>
   <div class="options-list" id="options-list"></div>
+</div>
+
+<!-- ÉCRAN LISTE DES DONNES -->
+<div class="screen" id="s-liste-donnes">
+  <button class="back-btn" onclick="goBack()">← Retour</button>
+  <p class="section-title" style="margin-bottom:.3rem">Toutes les donnes</p>
+  <div class="boards-card" style="flex:none;">
+    <div class="boards-header">
+      <span class="boards-label">Donnes du tournoi</span>
+      <span class="boards-count" id="liste-donnes-count"></span>
+    </div>
+    <div class="chips" id="liste-donnes-chips"></div>
+  </div>
 </div>
 
 <!-- ÉCRAN 2 : CHOIX DU NOMBRE DE TOURS -->
@@ -621,7 +635,7 @@ const DB=[
   [10,5,'simple',5,5,false,false],
   [12,6,'guerid',6,4,false,false],
   [13,7,'simple',7,4,true,false],
-  [14,7,'simple',6,4,false,false],
+  [14,7,'simple',6,4,false,false],[14,7,'simple',7,4,false,false],
   [15,8,'saut',7,4,true,false],
   [16,8,'saut',6,4,false,false],[16,8,'saut',7,4,false,false],[16,8,'guerid',8,3,false,false],
   [17,9,'simple',9,3,true,false],
@@ -891,13 +905,51 @@ function parseDonnes(){
 }
 let navHistory=[];
 
+function updateListeDonnesBtn(){
+  const b=document.getElementById('btn-liste-donnes');
+  if(b) b.style.display=Object.keys(donnesData).length?'':'none';
+}
+
+function renderListeDonnes(){
+  const container=document.getElementById('liste-donnes-chips');
+  container.innerHTML='';
+  const nums=Object.keys(donnesData).map(Number).filter(n=>!isNaN(n)).sort((a,b)=>a-b);
+  const countEl=document.getElementById('liste-donnes-count');
+  if(countEl) countEl.textContent=nums.length+' donne'+(nums.length>1?'s':'');
+  nums.forEach(d=>{
+    const info=donnesData[d];
+    if(info){
+      const div=document.createElement('div');
+      div.className='chip-rich';
+      const nsHtml=info.ns?`<span class="chip-score-item chip-score-ns"><span class="chip-score-label">NS</span>${info.ns}</span>`:'';
+      const eoPlaceholder=(!info.ns && info.eo)?`<span class="chip-score-item chip-score-ns" style="visibility:hidden"><span class="chip-score-label">NS</span>—</span>`:'';
+      const eoHtml=info.eo?`<span class="chip-score-item chip-score-eo"><span class="chip-score-label">EO</span>${info.eo}</span>`:'';
+      const noteHtml=info.note?`<div class="chip-note">${info.note}</div>`:'';
+      div.innerHTML=`
+        <div class="chip-num" onclick="openVisu(${d})" style="cursor:pointer;">${d}</div>
+        <div class="chip-info">
+          <div class="chip-scores">${nsHtml}${eoPlaceholder}${eoHtml}</div>
+          ${noteHtml}
+        </div>`;
+      container.appendChild(div);
+    } else {
+      const c=document.createElement('div');
+      c.className='chip';
+      c.textContent=d;
+      c.style.cursor='pointer';
+      c.onclick=()=>openVisu(d);
+      container.appendChild(c);
+    }
+  });
+}
+
 function showScreen(to, from){
   if(from) document.getElementById(from).classList.remove('active');
   document.getElementById(to).classList.add('active');
 }
 
 function goTo(to){
-  const screens=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2','s-visu'];
+  const screens=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2','s-visu','s-liste-donnes'];
   const current=screens.find(s=>document.getElementById(s).classList.contains('active'));
   if(current){ navHistory.push(current); document.getElementById(current).classList.remove('active'); }
   document.getElementById(to).classList.add('active');
@@ -905,7 +957,7 @@ function goTo(to){
 
 function goBack(){
   if(!navHistory.length) return;
-  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2','s-visu'].find(s=>document.getElementById(s).classList.contains('active'));
+  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2','s-visu','s-liste-donnes'].find(s=>document.getElementById(s).classList.contains('active'));
   if(current) document.getElementById(current).classList.remove('active');
   const prev=navHistory.pop();
   document.getElementById(prev).classList.add('active');
@@ -916,6 +968,7 @@ function goBack(){
     window._nbPairesHowell=null;
     const btn=document.getElementById('btn-charger-donnes');
     if(btn) btn.style.display='';
+    updateListeDonnesBtn();
     document.getElementById('tournoi-sub').textContent='Chargement...';
     document.getElementById('tournoi-list').innerHTML='';
     initTournoi();
@@ -1263,7 +1316,7 @@ function reset(){
   if(btn) btn.style.display='';
   document.getElementById('tournoi-sub').textContent='Chargement...';
   document.getElementById('tournoi-list').innerHTML='';
-  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2','s-visu'].find(s=>document.getElementById(s).classList.contains('active'));
+  const current=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2','s-visu','s-liste-donnes'].find(s=>document.getElementById(s).classList.contains('active'));
   if(current) document.getElementById(current).classList.remove('active');
   document.getElementById('s-tournoi').classList.add('active');
   initTournoi();
@@ -1510,6 +1563,7 @@ async function chargerTournoi(url, fichier, silencieux=false){
     // Masquer le bouton "charger les donnes" puisqu'elles sont déjà chargées
     const btn=document.getElementById('btn-charger-donnes');
     if(btn) btn.style.display='none';
+    updateListeDonnesBtn();
     goTo('s-paires');
   }
 }
