@@ -21,27 +21,27 @@
   },
   "5": {
     "ns": "",
-    "eo": "3P ; 2SA",
-    "note": ""
+    "eo": "4P-1",
+    "note": "3 tours de K"
   },
   "6": {
     "ns": "4SA",
     "eo": "",
-    "note": ""
+    "note": "VK en O"
   },
   "7": {
     "ns": "",
     "eo": "5SA",
-    "note": ""
+    "note": "DVt secs en N"
   },
   "8": {
     "ns": "",
     "eo": "5SA",
-    "note": ""
+    "note": "dire 3SA en E"
   },
   "9": {
-    "ns": "5Tx-3",
-    "eo": "4C ; 1SA",
+    "ns": "3T-1",
+    "eo": "2C+2",
     "note": ""
   },
   "10": {
@@ -50,7 +50,7 @@
     "note": ""
   },
   "11": {
-    "ns": "6SA ; 6P",
+    "ns": "3SA+3 / 4P+2",
     "eo": "",
     "note": ""
   },
