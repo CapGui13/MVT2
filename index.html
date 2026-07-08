@@ -639,7 +639,7 @@ const DB=[
   [15,8,'saut',7,4,true,false],
   [16,8,'saut',6,4,false,false],[16,8,'saut',7,4,false,false],[16,8,'guerid',8,3,false,false],
   [17,9,'simple',9,3,true,false],
-  [18,9,'simple',8,3,false,false],
+  [18,9,'simple',8,3,false,false],[18,9,'simple',9,3,false,false],
   [19,10,'saut',9,3,true,false],[19,10,'guerid',10,3,true,false],
   [20,10,'saut',8,3,false,false],[20,10,'saut',9,3,false,false],[20,10,'guerid',10,3,true,false],
   [21,11,'simple',9,3,true,false],[21,11,'simple',10,3,true,false],
@@ -2110,56 +2110,58 @@ function suitCount(hands, side, suit) {
   return (hands.E[suit]?.length||0)+(hands.W[suit]?.length||0);
 }
 
-function fitAlternatives(parLv, parDn, parMod, tricks, hands, side, skipDenoms) {
-  // Add overtrick points to par score for accurate comparison
-  let parScore = contractScore(parLv, parDn);
-  const overtrickMatch = (parMod||'').match(/^\+(\d+)$/);
-  if (overtrickMatch) {
-    const ot = parseInt(overtrickMatch[1]);
-    const otPts = parDn==='NT' ? 30 : ['S','H'].includes(parDn) ? 30 : 20;
-    parScore += ot * otPts;
+function computeParDisplay(tricks, hands, side) {
+  const denoms = ['NT','S','H','D','C'];
+  const info = {};
+  for (const dn of denoms) {
+    const t = tricks[dn] || 0;
+    if (t < 7) continue;
+    const level = Math.min(t - 6, 7);
+    const score = contractScore(level, dn);
+    const isFit = (dn === 'NT') ? false : suitCount(hands, side, dn) >= 8;
+    info[dn] = { level, score, isFit };
   }
-  const alts = [];
-  if(parDn==='NT'){
-    for(const major of ['S','H']){
-      if(skipDenoms.has(major))continue;
-      if(suitCount(hands,side,major)>=8){
-        const t=tricks[major]||0;
-        if(t>=7){
-          const altLv=Math.min(t-6,7);
-          const altScore=contractScore(altLv,major);
-          if(altScore<=parScore)
-            alts.push([altLv,major,translatePart(`${altLv}${major}`)+'=']);
-        }
+  if (Object.keys(info).length === 0) return '';
+
+  const maxScore = Math.max(...Object.values(info).map(v => v.score));
+  const selected = new Set();
+  for (const [dn, v] of Object.entries(info)) {
+    if (v.score === maxScore) selected.add(dn);
+  }
+
+  // Règle : un vrai fit majeur (8+ cartes) est toujours affiché, quel que soit son palier
+  const majorFits = ['S','H'].filter(dn => info[dn] && info[dn].isFit);
+  for (const dn of majorFits) selected.add(dn);
+
+  // Règle : un vrai fit mineur (8+ cartes) n'est affiché que s'il atteint sa propre manche (palier 5+)
+  const minorFits = ['D','C'].filter(dn => info[dn] && info[dn].isFit);
+  for (const dn of minorFits) {
+    if (info[dn].level >= 5) selected.add(dn);
+  }
+
+  // Règle de secours : si le contrat le plus fort est une seule couleur SANS vrai fit
+  // (résultat "fragile"), on montre une alternative : le vrai fit mineur s'il existe
+  // (même sous la manche), sinon SA (s'il se réalise)
+  if (selected.size === 1) {
+    const only = [...selected][0];
+    if (only !== 'NT' && !info[only].isFit) {
+      if (minorFits.length > 0) {
+        for (const dn of minorFits) selected.add(dn);
+      } else if (majorFits.length === 0 && info['NT']) {
+        selected.add('NT');
       }
-    }
-  } else {
-    // Tester SA : si NT fait assez de levées et rapporte autant ou moins que le par
-    if(!skipDenoms.has('NT')){
-      const tNT=tricks['NT']||0;
-      if(tNT>=7){
-        const altLv=Math.min(tNT-6,7), altSc=contractScore(altLv,'NT');
-        if(altSc<=parScore)
-          alts.push([altLv,'NT',translatePart(`${altLv}NT`)+'=']);
-      }
-    }
-    // Tester les autres couleurs avec fit suffisant et score équivalent
-    {
-      let bestAlt=null, bestAltSc=-1;
-      for(const suit of ['S','H','D','C']){
-        if(suit===parDn||skipDenoms.has(suit))continue;
-        if(suitCount(hands,side,suit)>=8){
-          const t=tricks[suit]||0;
-          if(t>=7){
-            const altLv=Math.min(t-6,7), altSc=contractScore(altLv,suit);
-            if(altSc<=parScore&&altSc>bestAltSc){bestAltSc=altSc;bestAlt=[altLv,suit];}
-          }
-        }
-      }
-      if(bestAlt) alts.push([bestAlt[0],bestAlt[1],translatePart(`${bestAlt[0]}${bestAlt[1]}`)+'=']);
     }
   }
-  return alts;
+
+  // Règle : SA affiché en complément si un vrai fit mineur est montré et qu'aucun fit majeur n'existe
+  const hasGenuineMinorShown = minorFits.some(dn => selected.has(dn));
+  if (!selected.has('NT') && majorFits.length === 0 && hasGenuineMinorShown && info['NT'] && info['NT'].level >= 3) {
+    selected.add('NT');
+  }
+
+  const list = [...selected].map(dn => ({ score: info[dn].score, label: translatePart(`${info[dn].level}${dn}`) }));
+  list.sort((a,b) => b.score - a.score);
+  return list.map(c => c.label).join(' ; ');
 }
 
 function parseContract(s) {
@@ -2167,24 +2169,6 @@ function parseContract(s) {
   if(!m)return null;
   let dn=m[2]; if(dn==='N')dn='NT';
   return [parseInt(m[1]),dn,m[3]];
-}
-
-function processParParts(parts, tricks, hands, side) {
-  const outParts=[], shownDenoms=new Set();
-  for(const p of parts){
-    const sp=p.indexOf(' ');
-    const cs=sp===-1?p:p.slice(sp+1);
-    const parsed=parseContract(cs);
-    if(!parsed){outParts.push(translatePart(cs));continue;}
-    const[lv,dn,mod]=parsed;
-    shownDenoms.add(dn);
-    const tStr=translatePart(`${lv}${dn}`)+mod;
-    const skip=new Set(shownDenoms);
-    const alts=fitAlternatives(lv,dn,mod,tricks,hands,side,skip);
-    alts.forEach(([,altDn])=>shownDenoms.add(altDn));
-    outParts.push(tStr+(alts.length?' ; '+alts.map(a=>a[2]).join(' ; '):''));
-  }
-  return normalizeStr(stripEq(outParts.join(' ; ')));
 }
 
 function parseDeal(dealStr) {
@@ -2228,16 +2212,14 @@ function parsePBN(text) {
     if(isSac){
       if(nsParts.length>0){
         ns=normalizeStr(translatePart(nsParts[0].split(' ').slice(1).join(' ')));
-        const bm=bestMakeable(ewTricks);
-        if(bm){const[lv,dn]=bm;const base=translatePart(`${lv}${dn}`)+'=';const alts=fitAlternatives(lv,dn,'=',ewTricks,hands,'EW',new Set([dn]));eo=normalizeStr(stripEq(base+(alts.length?' ; '+alts.map(a=>a[2]).join(' ; '):'')));}
+        eo=computeParDisplay(ewTricks,hands,'EW');
       } else {
-        const bm=bestMakeable(nsTricks);
-        if(bm){const[lv,dn]=bm;const base=translatePart(`${lv}${dn}`)+'=';const alts=fitAlternatives(lv,dn,'=',nsTricks,hands,'NS',new Set([dn]));ns=normalizeStr(stripEq(base+(alts.length?' ; '+alts.map(a=>a[2]).join(' ; '):'')));}
+        ns=computeParDisplay(nsTricks,hands,'NS');
         eo=ewParts.length>0?normalizeStr(translatePart(ewParts[0].split(' ').slice(1).join(' '))):'';
       }
     } else {
-      if(nsParts.length>0) ns=processParParts(nsParts,nsTricks,hands,'NS');
-      else if(ewParts.length>0) eo=processParParts(ewParts,ewTricks,hands,'EW');
+      if(nsParts.length>0) ns=computeParDisplay(nsTricks,hands,'NS');
+      else if(ewParts.length>0) eo=computeParDisplay(ewTricks,hands,'EW');
     }
     result[num]={ns,eo,note:''};
   }
