@@ -52,6 +52,7 @@
   .badge-howell{background:#f3e8ff;color:#6b21a8}
   .section-sep{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;padding:4px 2px 2px}
   .no-options{font-size:13px;color:var(--text2);padding:12px;background:var(--bg3);border-radius:10px;text-align:center}
+  .saut-note{font-size:12px;font-weight:600;color:#fbbf24;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.25);border-radius:10px;padding:8px 10px;margin-top:10px;display:none;}
 
   /* Sélection tours */
   .tours-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
@@ -749,6 +750,15 @@ const HOWELL_MOVES = {
       5:[{e:[9,12]},{e:[21,24]},{relais:true},{e:[25,28]},{e:[5,8]},{e:[1,4]},{e:[13,16]}],
       6:[{e:[13,16]},{relais:true},{e:[17,20]},{e:[25,28]},{e:[9,12]},{e:[5,8]},{e:[1,4]}],
       7:[{relais:true},{e:[21,24]},{e:[5,8]},{e:[17,20]},{e:[13,16]},{e:[9,12]},{e:[1,4]}],
+    },
+    sens:{
+      1:['EO','EO','NS','EO','NS','NS',null],
+      2:['EO','EO','NS','NS','EO',null,'NS'],
+      3:['EO','NS','EO','NS',null,'EO','NS'],
+      4:['NS','NS','EO',null,'NS','EO','EO'],
+      5:['NS','NS',null,'EO','EO','NS','EO'],
+      6:['NS',null,'EO','NS','EO','NS','EO'],
+      7:[null,'EO','NS','EO','NS','EO','NS'],
     }
   },
   // --- HÉRÉDIA 8 paires, 4 donnes/tour, 6 tours ---
@@ -763,6 +773,16 @@ const HOWELL_MOVES = {
       6:[{e:[25,28]},{e:[1,4]},{e:[29,32]},{e:[9,12]},{e:[5,8]},{e:[13,16]}],
       7:[{e:[13,16]},{e:[17,20]},{e:[1,4]},{e:[21,24]},{e:[5,8]},{e:[9,12]}],
       8:[{e:[21,24]},{e:[9,12]},{e:[5,8]},{e:[17,20]},{e:[1,4]},{e:[13,16]}],
+    },
+    sens:{
+      1:['EO','NS','NS','EO','NS','EO'],
+      2:['EO','NS','NS','EO','NS','EO'],
+      3:['NS','EO','EO','NS','EO','NS'],
+      4:['NS','EO','EO','NS','EO','NS'],
+      5:['EO','NS','EO','NS','EO','NS'],
+      6:['EO','NS','EO','NS','EO','NS'],
+      7:['NS','EO','NS','EO','NS','EO'],
+      8:['NS','EO','NS','EO','NS','EO'],
     }
   },
   // --- HÉRÉDIA 9 paires, 3 donnes/tour, 8 jouées + 1 relais ---
@@ -778,6 +798,17 @@ const HOWELL_MOVES = {
       7:[{e:[13,15]},{e:[16,18]},{relais:true},{e:[10,12]},{e:[4,6]},{e:[22,24]},{e:[7,9]},{e:[25,27]},{e:[1,3]}],
       8:[{e:[13,15]},{relais:true},{e:[19,21]},{e:[1,3]},{e:[7,9]},{e:[4,6]},{e:[25,27]},{e:[16,18]},{e:[10,12]}],
       9:[{relais:true},{e:[19,21]},{e:[13,15]},{e:[10,12]},{e:[22,24]},{e:[1,3]},{e:[4,6]},{e:[16,18]},{e:[7,9]}],
+    },
+    sens:{
+      1:['NS','NS','EO','EO','EO','NS','NS','EO',null],
+      2:['EO','NS','NS','EO','NS','EO','EO',null,'NS'],
+      3:['NS','EO','NS','EO','NS','EO',null,'EO','NS'],
+      4:['NS','EO','NS','NS','EO',null,'EO','NS','EO'],
+      5:['EO','NS','EO','NS',null,'EO','NS','NS','EO'],
+      6:['EO','EO','NS',null,'EO','NS','NS','NS','EO'],
+      7:['EO','NS',null,'NS','EO','EO','NS','EO','NS'],
+      8:['NS',null,'EO','NS','NS','NS','EO','EO','EO'],
+      9:[null,'EO','EO','EO','NS','NS','EO','NS','NS'],
     }
   },
   // --- HÉRÉDIA 10 paires, 3 donnes/tour, 8 tours ---
@@ -794,6 +825,18 @@ const HOWELL_MOVES = {
       8: [{e:[10,12]},{e:[13,15]},{e:[1,3]},{e:[16,18]},{e:[28,30]},{e:[4,6]},{e:[7,9]},{e:[19,21]}],
       9: [{e:[10,12]},{e:[16,18]},{e:[7,9]},{e:[13,15]},{e:[19,21]},{e:[28,30]},{e:[1,3]},{e:[22,24]}],
       10:[{e:[13,15]},{e:[10,12]},{e:[16,18]},{e:[1,3]},{e:[25,27]},{e:[22,24]},{e:[4,6]},{e:[19,21]}],
+    },
+    sens:{
+      1:['EO','EO','NS','EO','NS','NS','NS','EO'],
+      2:['NS','NS','EO','EO','NS','NS','EO','EO'],
+      3:['NS','NS','EO','NS','EO','EO','EO','NS'],
+      4:['EO','NS','EO','NS','EO','EO','NS','NS'],
+      5:['NS','EO','EO','NS','EO','NS','EO','NS'],
+      6:['EO','NS','NS','EO','NS','NS','EO','EO'],
+      7:['EO','NS','NS','EO','NS','EO','EO','NS'],
+      8:['EO','EO','EO','NS','EO','NS','NS','NS'],
+      9:['NS','EO','NS','NS','EO','EO','NS','EO'],
+      10:['NS','EO','NS','EO','NS','EO','NS','EO'],
     }
   },
   // --- HÉRÉDIA 11 paires, 3 donnes/tour, 8 jouées + 1 relais ---
@@ -811,6 +854,19 @@ const HOWELL_MOVES = {
       9: [{e:[19,21]},{relais:true},{e:[16,18]},{e:[28,30]},{e:[7,9]},{e:[1,3]},{e:[4,6]},{e:[13,15]},{e:[10,12]}],
       10:[{relais:true},{e:[4,6]},{e:[22,24]},{e:[13,15]},{e:[10,12]},{e:[25,27]},{e:[16,18]},{e:[1,3]},{e:[7,9]}],
       11:[{e:[13,15]},{e:[1,3]},{e:[10,12]},{e:[7,9]},{e:[28,30]},{e:[22,24]},{e:[4,6]},{e:[19,21]},{relais:true}],
+    },
+    sens:{
+      1:['NS','EO','NS','NS','EO','EO','EO','NS',null],
+      2:['NS','EO','EO','EO','EO','NS','NS','NS',null],
+      3:['EO','NS','NS','EO','EO','NS','EO',null,'NS'],
+      4:['EO','EO','NS','NS','EO','NS',null,'NS','EO'],
+      5:['NS','EO','EO','NS','NS',null,'NS','EO','EO'],
+      6:['NS','NS','EO','NS',null,'EO','EO','EO','NS'],
+      7:['EO','NS','EO',null,'NS','EO','EO','NS','NS'],
+      8:['EO','NS',null,'EO','NS','EO','NS','EO','NS'],
+      9:['EO',null,'EO','NS','NS','NS','NS','EO','EO'],
+      10:[null,'EO','NS','EO','NS','NS','NS','EO','EO'],
+      11:['NS','NS','NS','EO','EO','EO','EO','NS',null],
     }
   },
   // --- HÉRÉDIA 12 paires, 3 donnes/tour, 8 tours ---
@@ -829,6 +885,20 @@ const HOWELL_MOVES = {
       10:[{e:[16,18]},{e:[13,15]},{e:[4,6]},{e:[7,9]},{e:[10,12]},{e:[19,21]},{e:[1,3]},{e:[22,24]}],
       11:[{e:[1,3]},{e:[16,18]},{e:[13,15]},{e:[28,30]},{e:[25,27]},{e:[4,6]},{e:[7,9]},{e:[19,21]}],
       12:[{e:[25,27]},{e:[28,30]},{e:[10,12]},{e:[1,3]},{e:[4,6]},{e:[19,21]},{e:[22,24]},{e:[16,18]}],
+    },
+    sens:{
+      1:['EO','EO','EO','NS','NS','NS','NS','EO'],
+      2:['NS','NS','NS','EO','NS','EO','EO','EO'],
+      3:['NS','NS','NS','EO','EO','EO','EO','NS'],
+      4:['NS','EO','EO','NS','NS','EO','EO','NS'],
+      5:['EO','NS','EO','EO','EO','NS','NS','NS'],
+      6:['EO','NS','EO','EO','EO','NS','NS','NS'],
+      7:['EO','NS','NS','EO','NS','NS','EO','EO'],
+      8:['EO','NS','NS','EO','EO','EO','NS','NS'],
+      9:['NS','EO','EO','NS','NS','NS','EO','EO'],
+      10:['NS','EO','EO','NS','NS','NS','EO','EO'],
+      11:['EO','EO','NS','NS','EO','EO','NS','NS'],
+      12:['NS','EO','NS','NS','EO','EO','NS','EO'],
     }
   },
 };
@@ -846,6 +916,28 @@ const HOWELL_KEY_MAP = {
   'heredia_11_3': 'heredia_11_3',
   'heredia_12_3': 'heredia_12_3',
 };
+
+function howellSens(key, paire, tour) {
+  const realKey = HOWELL_KEY_MAP[key] || key;
+  const mv = HOWELL_MOVES[realKey];
+  if(!mv) return null;
+  if(mv.type==='classique') {
+    for(const table of mv.tables) {
+      const t = table[tour];
+      if(!t) continue;
+      const [ns,eo] = t;
+      if(ns===paire) return 'NS';
+      if(eo===paire) return 'EO';
+    }
+    return null;
+  }
+  if(mv.type==='heredia') {
+    const arr = mv.sens && mv.sens[paire];
+    if(!arr) return null;
+    return arr[tour] || null;
+  }
+  return null;
+}
 
 function howellDonnes(key, paire, tour) {
   const realKey = HOWELL_KEY_MAP[key] || key;
@@ -1115,13 +1207,21 @@ function updateEvents(){
   const simTmp=buildSim(T,N,R,mode,sens);
   const nbPaires=window._nbPairesConfig||N*2;
   const impair=nbPaires%2!==0;
+  const doitVerifierRelais=impair && sens===relaisLigne;
+  // Si la ligne relais est NS (paire fixe), on compare la table fixe (T) à la rotation
+  // "fantôme" de la ligne EO déficitaire. Si la ligne relais est EO, la paire EO tourne
+  // elle-même et passe par la table N une seule fois : le test direct suffit.
+  const phantomTmp=(doitVerifierRelais && sens==='NS')?buildPhantomSchedule(N,R,mode):null;
   const items=[];
   simTmp.forEach((tour,i)=>{
-    // Relais : la ligne du relais arrive à la table N
-    if(impair && sens===relaisLigne && tour.tableAffichee===String(N)){
+    // Relais : la ligne du relais arrive à la table N (EO) ou reçoit le fantôme (NS)
+    const estRelaisCe=doitVerifierRelais && (sens==='NS'
+      ? phantomTmp[i].tableAffichee===String(T)
+      : tour.tableAffichee===String(N));
+    if(estRelaisCe){
       items.push({
         type:'relais',
-        html:`<span style="font-size:12px;font-weight:600;color:#a78bfa">🔄 Relais tour ${i+1}</span><span style="font-size:11px;color:var(--text2);margin-left:6px">— vous serez à la table ${N}, sans adversaire</span>`
+        html:`<span style="font-size:12px;font-weight:600;color:#a78bfa">🔄 Relais tour ${i+1}</span><span style="font-size:11px;color:var(--text2);margin-left:6px">— vous serez à la table ${tour.tableAffichee}, sans adversaire</span>`
       });
     }
     // Saut : détecté par estSaut (uniquement paires EO)
@@ -1150,6 +1250,16 @@ function err(id,v){const el=document.getElementById(id);if(!el)return;if(el.clas
 
 function tToSlot(t,N){if(t===1||t===N)return 0;if(t<=N/2)return t-1;return t;}
 
+// La ligne "relais" (celle qui a une paire de plus) est complète (N paires fixes, une par table).
+// L'autre ligne est déficitaire d'une paire : il lui manque un membre parmi ses N positions
+// théoriques. Cette position manquante tourne de table en table exactement comme une paire
+// normale de cette ligne (même trajectoire, y compris le saut éventuel), en partant par
+// convention de la table N. Quand cette rotation "fantôme" tombe sur la table fixe d'une
+// paire de la ligne relais, cette paire n'a pas d'adversaire ce tour-là (relais).
+function buildPhantomSchedule(N,R,mode){
+  return buildSim(N,N,R,mode,'EO');
+}
+
 function buildSim(T,N,R,mode,sens){
   const withSaut=(mode==='saut')||(mode==='mitchell'&&N%2===0);
   const isGuerid=mode==='guerid';
@@ -1158,17 +1268,18 @@ function buildSim(T,N,R,mode,sens){
   let eoPos=T-1,eoTable=T;
   const tours=[];
   for(let t=0;t<R;t++){
-    let tableAffichee,blocIdx,estSaut=false;
+    let tableAffichee,blocIdx,estSaut=false,avantSaut=false;
     if(isGuerid){
       const tRef=sens==='NS'?T:eoTable;
       const slot=tToSlot(tRef,N);
       blocIdx=blocs[slot];
       tableAffichee=(tRef===1||tRef===N)?'1 & '+N:String(tRef);
     }else{
+      avantSaut=withSaut&&t===sautApres;
       if(sens==='NS'){blocIdx=blocs[T-1];tableAffichee=String(T);}
       else{blocIdx=blocs[eoPos];tableAffichee=String(eoPos+1);estSaut=withSaut&&t===sautApres+1;}
     }
-    tours.push({blocIdx,tableAffichee,estSaut});
+    tours.push({blocIdx,tableAffichee,estSaut,avantSaut});
     const nd=Array(N);
     if(isGuerid){for(let i=0;i<N;i++)nd[i]=blocs[(i+1)%N];}
     else{nd[N-1]=blocs[0];for(let i=0;i<N-1;i++)nd[i]=blocs[i+1];}
@@ -1194,7 +1305,8 @@ function start(){
     err('e-table',0);
     const nbPaires=window._nbPairesConfig||N*2;
     const impair=nbPaires%2!==0;
-    cfg={T,N,R,D,sens,mode,relaisLigne,impair};
+    const phantomSim=(impair && sens==='NS' && relaisLigne==='NS')?buildPhantomSchedule(N,R,mode):null;
+    cfg={T,N,R,D,sens,mode,relaisLigne,impair,phantomSim};
     sim=buildSim(T,N,R,mode,sens);
   }
   tourActuel=0;
@@ -1221,13 +1333,14 @@ function render(){
   let donnes=[];
   if(isHowell){
     document.getElementById('d-label-table').textContent='Paire';
-    document.getElementById('d-label-sens').textContent='Type';
+    document.getElementById('d-label-sens').textContent='Sens';
     const nbP=cfg.nbPaires||cfg.N*2;
     const hkey=m+'_'+nbP+'_'+D;
     const d=howellDonnes(hkey, cfg.paireHowell, t);
     donnes=d||[];
     document.getElementById('d-table').textContent='Paire '+cfg.paireHowell;
-    document.getElementById('d-sens').textContent=m==='classique'?'Classique':'Hérédia';
+    const sensH=howellSens(hkey, cfg.paireHowell, t);
+    document.getElementById('d-sens').textContent=sensH?(sensH==='NS'?'N / S':'E / O'):'—';
     document.getElementById('d-mode').textContent=MOUV_LABEL[m]||m;
     document.getElementById('d-relais').style.visibility=d?'hidden':'visible';
   } else {
@@ -1240,11 +1353,16 @@ function render(){
     donnes=Array.from({length:D},(_,i)=>first+i);
     document.getElementById('d-table').textContent=etat.tableAffichee;
     document.getElementById('d-sens').textContent=s==='NS'?'N / S':'E / O';
-    document.getElementById('d-mode').textContent=m==='guerid'?'Guéridon':m==='saut'?'Saut':'Simple';
+    document.getElementById('d-mode').textContent=m==='guerid'?'Guéridon':m==='saut'?'Mitchell à saut':'Mitchell';
     document.getElementById('d-saut').style.visibility=(s==='EO'&&etat.estSaut)?'visible':'hidden';
     document.getElementById('d-guerid').style.visibility=(m==='guerid'&&etat.tableAffichee.includes('&'))?'visible':'hidden';
-    // Relais : relaisLigne = ligne avec une paire de plus → quand une paire de cette ligne arrive table N, elle n'a pas d'adversaire
-    const estRelais=!!(impair && s===rl && etat.tableAffichee===String(N));
+    // Relais : ligne relais = ligne complète (une paire par table, fixe). L'autre ligne est
+    // déficitaire d'une paire ; côté EO, la paire déficitaire tourne normalement et passe une
+    // fois par la table N (test direct). Côté NS, on compare la table fixe à la rotation
+    // "fantôme" de la ligne EO déficitaire, précalculée dans cfg.phantomSim.
+    const estRelais=!!(impair && s===rl && (s==='NS'
+      ? (cfg.phantomSim && cfg.phantomSim[t] && cfg.phantomSim[t].tableAffichee===String(cfg.T))
+      : etat.tableAffichee===String(N)));
     document.getElementById('d-relais').style.visibility=estRelais?'visible':'hidden';
   }
   const container=document.getElementById('d-donnes');
@@ -1287,6 +1405,17 @@ function render(){
       container.appendChild(c);
     }
   });
+  const estAvantSaut=!!(sim&&sim[t]&&sim[t].avantSaut);
+  if(estAvantSaut){
+    const sautChip=document.createElement('div');
+    sautChip.className='chip';
+    sautChip.style.background='rgba(251,191,36,.15)';
+    sautChip.style.color='#fbbf24';
+    sautChip.style.border='1.5px solid rgba(251,191,36,.4)';
+    sautChip.style.fontSize='16px';
+    sautChip.textContent='⤵ Saut';
+    container.appendChild(sautChip);
+  }
   document.getElementById('btn-prev').disabled=t===0;
   document.getElementById('btn-next').disabled=t===R-1;
   document.getElementById('prog').style.width=Math.round(n/R*100)+'%';
