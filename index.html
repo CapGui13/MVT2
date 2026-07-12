@@ -101,7 +101,9 @@
   .chip-scores{display:flex;gap:0;border-radius:8px;overflow:hidden;width:fit-content}
   .chip-score-item{font-size:12px;font-weight:700;padding:3px 10px;display:flex;align-items:center;gap:4px}
   .chip-score-ns{background:rgba(74,222,128,.15);color:#4ade80}
-  .chip-score-eo{background:rgba(96,165,250,.15);color:#60a5fa}
+  .chip-score-eo{background:rgba(248,113,113,.15);color:#f87171}
+  .chip-score-mine{background:rgba(74,222,128,.15);color:#4ade80}
+  .chip-score-other{background:rgba(248,113,113,.15);color:#f87171}
   .chip-score-label{font-size:9px;font-weight:800;opacity:.7;letter-spacing:.05em}
   .chip-note{font-size:11px;color:var(--text2);font-style:italic}
   .chip-note-hidden{visibility:hidden;height:0;margin:0;padding:0}
@@ -1331,6 +1333,7 @@ function render(){
   if(circ){ const pct=n/R; circ.style.strokeDashoffset=188.5*(1-pct); }
 
   let donnes=[];
+  let mySens=null;
   if(isHowell){
     document.getElementById('d-label-table').textContent='Paire';
     document.getElementById('d-label-sens').textContent='Sens';
@@ -1340,6 +1343,7 @@ function render(){
     donnes=d||[];
     document.getElementById('d-table').textContent='Paire '+cfg.paireHowell;
     const sensH=howellSens(hkey, cfg.paireHowell, t);
+    mySens=sensH||null;
     document.getElementById('d-sens').textContent=sensH?(sensH==='NS'?'N / S':'E / O'):'—';
     document.getElementById('d-mode').textContent=MOUV_LABEL[m]||m;
     document.getElementById('d-relais').style.visibility=d?'hidden':'visible';
@@ -1347,6 +1351,7 @@ function render(){
     document.getElementById('d-label-table').textContent='Table';
     document.getElementById('d-label-sens').textContent='Sens';
     const {sens:s,relaisLigne:rl,impair}=cfg;
+    mySens=s;
     const etat=sim&&sim[t];
     if(!etat) return;
     const first=etat.blocIdx*D+1;
@@ -1383,15 +1388,21 @@ function render(){
       const div=document.createElement('div');
       div.className='chip-rich';
       div.style.opacity=chipsOpacity;
-      const nsHtml=info.ns?`<span class="chip-score-item chip-score-ns"><span class="chip-score-label">NS</span>${info.ns}</span>`:'';
-      // EO décalé si pas de NS (placeholder invisible pour aligner)
-      const eoPlaceholder=(!info.ns && info.eo)?`<span class="chip-score-item chip-score-ns" style="visibility:hidden"><span class="chip-score-label">NS</span>—</span>`:'';
-      const eoHtml=info.eo?`<span class="chip-score-item chip-score-eo"><span class="chip-score-label">EO</span>${info.eo}</span>`:'';
+      const isEoMine=mySens==='EO';
+      const mineVal=isEoMine?info.eo:info.ns;
+      const otherVal=isEoMine?info.ns:info.eo;
+      const mineLabel=isEoMine?'EO':'NS';
+      const otherLabel=isEoMine?'NS':'EO';
+      // Notre ligne (vert) toujours à gauche ; l'autre ligne (rouge) toujours à droite
+      const mineHtml=mineVal?`<span class="chip-score-item chip-score-mine"><span class="chip-score-label">${mineLabel}</span>${mineVal}</span>`:'';
+      // Placeholder invisible si l'autre ligne a un PAR mais pas la nôtre, pour garder l'alignement à droite
+      const otherPlaceholder=(!mineVal && otherVal)?`<span class="chip-score-item chip-score-mine" style="visibility:hidden"><span class="chip-score-label">${mineLabel}</span>—</span>`:'';
+      const otherHtml=otherVal?`<span class="chip-score-item chip-score-other"><span class="chip-score-label">${otherLabel}</span>${otherVal}</span>`:'';
       const noteHtml=info.note?`<div class="chip-note">${info.note}</div>`:'';
       div.innerHTML=`
         <div class="chip-num" onclick="openVisu(${d})" style="cursor:pointer;">${d}</div>
         <div class="chip-info">
-          <div class="chip-scores">${nsHtml}${eoPlaceholder}${eoHtml}</div>
+          <div class="chip-scores">${mineHtml}${otherPlaceholder}${otherHtml}</div>
           ${noteHtml}
         </div>`;
       container.appendChild(div);
