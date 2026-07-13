@@ -1043,10 +1043,16 @@ function showScreen(to, from){
   document.getElementById(to).classList.add('active');
 }
 
+const screenScrollPos={};
+
 function goTo(to){
   const screens=['s-tournoi','s-paires','s-tours','s-config','s-donnes','s-jeu','s-gen','s-delete','s-gen2','s-visu','s-liste-donnes'];
   const current=screens.find(s=>document.getElementById(s).classList.contains('active'));
-  if(current){ navHistory.push(current); document.getElementById(current).classList.remove('active'); }
+  if(current){
+    screenScrollPos[current]=window.scrollY;
+    navHistory.push(current);
+    document.getElementById(current).classList.remove('active');
+  }
   document.getElementById(to).classList.add('active');
 }
 
@@ -1056,6 +1062,9 @@ function goBack(){
   if(current) document.getElementById(current).classList.remove('active');
   const prev=navHistory.pop();
   document.getElementById(prev).classList.add('active');
+  if(prev==='s-liste-donnes' && screenScrollPos[prev]!==undefined){
+    requestAnimationFrame(()=>window.scrollTo(0, screenScrollPos[prev]));
+  }
   if(prev==='s-tournoi'){
     donnesData={};
     window._donnesFichier=null;
